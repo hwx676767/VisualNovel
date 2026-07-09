@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Visual Novel</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Outermost wrapper: fills viewport, black background -->
+  <div id="game-wrapper">
+
+    <!-- 16:9 game area, centered -->
+    <div id="game-canvas">
+
+      <!-- Pure white borders (top, bottom, left, right) -->
+      <div id="border-top">
+        <!-- Toolbar lives inside the top border -->
+        <nav id="toolbar" aria-label="Game toolbar">
+          <button type="button" class="toolbar-btn">BACK</button>
+          <span class="toolbar-divider">|</span>
+          <button type="button" class="toolbar-btn">LOG</button>
+          <span class="toolbar-divider">|</span>
+          <button type="button" class="toolbar-btn">PROGRESS</button>
+          <span class="toolbar-divider">|</span>
+          <button type="button" class="toolbar-btn">SKIP</button>
+          <span class="toolbar-divider">|</span>
+          <button type="button" class="toolbar-btn">AUTO</button>
+          <span class="toolbar-divider">|</span>
+          <button type="button" class="toolbar-btn">SAVE</button>
+          <span class="toolbar-divider">|</span>
+          <button type="button" class="toolbar-btn">LOAD</button>
+          <span class="toolbar-divider">|</span>
+          <button type="button" class="toolbar-btn">SETTINGS</button>
+        </nav>
+      </div>
+      <div id="border-bottom"></div>
+      <div id="border-left"></div>
+      <div id="border-right"></div>
+
+      <!-- Inner area inside the borders -->
+      <div id="game-content">
+
+        <!-- Background image layer (text placeholder until art assets exist) -->
+        <div id="background-layer">
+          <div id="background-label" aria-hidden="true"></div>
+        </div>
+
+        <!-- Character sprite layer -->
+        <div id="character-layer">
+          <div id="character-sprite" aria-hidden="true">
+            <span id="character-sprite-label"></span>
+          </div>
+        </div>
+
+        <!-- UI layer: dialogue box -->
+        <div id="ui-layer">
+          <div id="dialogue-box">
+            <div id="story-objective" hidden></div>
+            <div id="character-name">[NAME]</div>
+            <div id="dialogue-text"></div>
+            <div id="mode-hint" hidden></div>
+            <div id="suggestion-chips" hidden></div>
+            <div id="player-input-area">
+              <input
+                type="text"
+                id="player-input"
+                placeholder="输入你的回应…"
+                autocomplete="off"
+              >
+              <button type="button" id="send-btn">发送</button>
+            </div>
+            <button type="button" id="advance-mainline-btn" hidden>推进剧情 →</button>
+          </div>
+        </div>
+
+      </div><!-- /#game-content -->
+
+    </div><!-- /#game-canvas -->
+
+  </div><!-- /#game-wrapper -->
+
+  <script src="ai.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>

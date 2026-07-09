@@ -1,0 +1,32 @@
+{
+  "currentScene": "prologue_campsite",
+  "currentBackground": "campsite_night",
+  "currentCharacter": "xian",
+  "currentExpression": "neutral",
+  "day": 1,
+  "resources": {
+    "antibiotics": 3,
+    "gasoline": 5
+  },
+  "conviction": {
+    "xian": 0,
+    "ringo": 0,
+    "male_member": 0
+  },
+  "knotResolved": {
+    "xian": false,
+    "ringo": false,
+    "male_member": false
+  },
+  "seriousnessThreshold": 0,
+  "flags": {
+    "reachedRadioTower": false,
+    "xianAlive": true,
+    "prologueComplete": false,
+    "chapter01Complete": false,
+    "xianInjured": false,
+    "xianImmobile": false,
+    "highwayArcStarted": false
+  },
+  "currentChapter": "prologue"
+}

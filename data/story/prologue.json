@@ -1,0 +1,109 @@
+{
+  "id": "prologue",
+  "title": "序章：老师消失之夜",
+  "scenes": [
+    {
+      "id": "prologue_campsite",
+      "background": "campsite_night",
+      "speaker": "narrator",
+      "speakerName": "旁白",
+      "text": "毕业露营的最后一夜。林檎在弹一把旧吉他，火堆噼啪作响。你望向帐篷外——老师的睡袋是空的，只有风。"
+    },
+    {
+      "id": "prologue_teacher_missing",
+      "background": "campsite_night",
+      "speaker": "ringo",
+      "speakerName": "林檎",
+      "text": "……不对劲。老师说去取水，已经一个小时了。",
+      "character": "ringo",
+      "expression": "guilty"
+    },
+    {
+      "id": "prologue_xian_camera",
+      "background": "campsite_night",
+      "speaker": "xian",
+      "speakerName": "闲",
+      "text": "相机里什么都没有。只有噪点。……不，等等。那边有东西。",
+      "character": "xian",
+      "expression": "neutral"
+    },
+    {
+      "id": "prologue_decision",
+      "background": "campsite_night",
+      "speaker": "narrator",
+      "speakerName": "旁白",
+      "text": "三个人同时看向你。夜风灌进营地，火堆几乎要灭了。现在，必须由你开口。",
+      "playerTurn": true,
+      "interactive": {
+        "objective": "【当前目标】说服同伴：立刻开车回城找老师",
+        "playerPrompt": "你会对林檎和闲说什么？",
+        "suggestions": [
+          "不能再等了，我们现在就开车回城。",
+          "闲，你相机里到底拍到了什么？",
+          "林檎，你最后一次看见老师是什么时候？"
+        ],
+        "maxFreeReplies": 2,
+        "aiGoal": "这是序章第一个决策点。无论玩家怎么说，同伴最终应同意开车回城。回复要回应玩家的具体内容，1～3句，然后推动「发动房车离开营地」。不要跳到大人消失、枪伤等后续剧情。若对话已充分，设置 advanceMainline 为 true。",
+        "advanceSceneIds": [
+          "prologue_rv_departure",
+          "prologue_empty_city",
+          "prologue_ringo_react",
+          "prologue_interactive_city"
+        ]
+      }
+    },
+    {
+      "id": "prologue_rv_departure",
+      "background": "rv_interior",
+      "speaker": "narrator",
+      "speakerName": "旁白",
+      "text": "房车轮毂碾过碎石，露营地缩成后视镜里一点昏黄的火。林檎握着方向盘，闲蜷在后排，相机垂在胸前。"
+    },
+    {
+      "id": "prologue_empty_city",
+      "background": "empty_city",
+      "speaker": "narrator",
+      "speakerName": "旁白",
+      "text": "城市到了。路灯亮着，店铺的门敞开着——街上没有任何人。没有大人。一个人都没有。"
+    },
+    {
+      "id": "prologue_ringo_react",
+      "background": "empty_city",
+      "speaker": "ringo",
+      "speakerName": "林檎",
+      "text": "……先别慌。先找医院，或者药店。只要还有药，就还有办法。",
+      "character": "ringo",
+      "expression": "forced_smile"
+    },
+    {
+      "id": "prologue_interactive_city",
+      "background": "empty_city",
+      "speaker": "narrator",
+      "speakerName": "旁白",
+      "text": "空城的寂静压下来。林檎在强撑，闲盯着窗外。接下来怎么做，又需要你决定。",
+      "playerTurn": true,
+      "interactive": {
+        "objective": "【当前目标】在空城中做出下一步决定：找医院，还是先搜刮物资？",
+        "playerPrompt": "你打算怎么做？",
+        "suggestions": [
+          "先去最近的医院，看看还有没有药。",
+          "先搜刮便利店，储备抗生素和汽油。",
+          "让闲用相机看看有没有异常信号。"
+        ],
+        "maxFreeReplies": 2,
+        "aiGoal": "玩家正在空城决策。引导讨论去医院或搜刮物资，保持紧张但不绝望。不要跳到枪伤或广播塔。对话充分后 advanceMainline 为 true，由旁白过渡到「听见远处电波」作为序章收束。",
+        "advanceSceneIds": [
+          "prologue_closing"
+        ]
+      }
+    },
+    {
+      "id": "prologue_closing",
+      "background": "highway_wasteland",
+      "speaker": "narrator",
+      "speakerName": "旁白",
+      "text": "你们驶离空城，汇入通往郊区的公路。夜幕低垂，收音机里的杂音时断时续——像有人在很远的地方说话。"
+    }
+  ],
+  "nextChapter": "chapter01_highway"
+}

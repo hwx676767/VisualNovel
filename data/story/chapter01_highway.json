@@ -1,0 +1,229 @@
+{
+  "id": "chapter01_highway",
+  "title": "第一章：公路与枪声",
+  "summary": "驶离空城后，物资紧缺与恐慌引发误会。闲为救同伴中枪，众人送医后发现感染恶化。闲用相机捕捉到远方光柱与电波，公路片正式启程。",
+  "dayRange": [1, 2],
+  "scenes": [
+    {
+      "id": "ch1_highway_open",
+      "background": "highway_wasteland",
+      "speaker": "narrator",
+      "speakerName": "旁白",
+      "text": "驶离空城之后，公路在车头灯下像一条没有尽头的伤口。收音机里的杂音还在——沙沙，又像是有人在呼吸。"
+    },
+    {
+      "id": "ch1_gas_station",
+      "background": "gas_station",
+      "speaker": "narrator",
+      "speakerName": "旁白",
+      "text": "你们在城郊加油站停下。货架翻倒，地上有拖拽的痕迹。林檎让你和闲留在车里，自己去搬汽油。"
+    },
+    {
+      "id": "ch1_ringo_tense",
+      "background": "gas_station",
+      "speaker": "ringo",
+      "speakerName": "林檎",
+      "text": "……别出声。我好像听见店里面有动静。",
+      "character": "ringo",
+      "expression": "guilty"
+    },
+    {
+      "id": "ch1_xian_warns",
+      "background": "gas_station",
+      "speaker": "xian",
+      "speakerName": "闲",
+      "text": "不是人。是风。……不，镜头里有什么在动。",
+      "character": "xian",
+      "expression": "neutral"
+    },
+    {
+      "id": "ch1_interactive_tension",
+      "background": "gas_station",
+      "speaker": "narrator",
+      "speakerName": "旁白",
+      "text": "林檎握着撬棍僵在门口，闲举着相机。你必须立刻拿主意。",
+      "playerTurn": true,
+      "interactive": {
+        "objective": "【当前目标】化解加油站的对峙：稳住林檎，或让闲说明她看见了什么",
+        "playerPrompt": "你打算怎么做？",
+        "suggestions": [
+          "林檎，先退回来。我们三个人一起进去。",
+          "闲，把相机给我看看——你拍到了什么？",
+          "别进去了，拿了油就走，这里不对劲。"
+        ],
+        "maxFreeReplies": 2,
+        "aiGoal": "加油站紧张氛围。玩家选择后，林檎应短暂犹豫（呼应她的心结），但最终局势仍要恶化——为下一幕枪声做铺垫。不要直接描写中枪，本轮只制造误判与恐慌。",
+        "advanceSceneIds": [
+          "ch1_misread",
+          "ch1_shot"
+        ],
+        "onCompleteFlags": { "gasStationVisited": true }
+      }
+    },
+    {
+      "id": "ch1_misread",
+      "background": "gas_station",
+      "speaker": "narrator",
+      "speakerName": "旁白",
+      "text": "一声闷响从店铺深处传来。林檎猛地回头，撬棍脱手——你以为有人冲了出来。"
+    },
+    {
+      "id": "ch1_shot",
+      "background": "gas_station",
+      "speaker": "narrator",
+      "speakerName": "旁白",
+      "text": "枪声几乎是贴着耳朵炸开的。你还没看清来者，闲已经扑了过来。她把你按倒的瞬间，温热的血渗进你的衣领——是她的。",
+      "onEnterFlags": { "xianInjured": true },
+      "onEnterResources": { "gasoline": 1 }
+    },
+    {
+      "id": "ch1_xian_down",
+      "background": "rv_interior",
+      "speaker": "xian",
+      "speakerName": "闲",
+      "text": "……别管我。只是……擦伤而已。",
+      "character": "xian",
+      "expression": "pained"
+    },
+    {
+      "id": "ch1_ringo_guilt",
+      "background": "rv_interior",
+      "speaker": "ringo",
+      "speakerName": "林檎",
+      "text": "是我……如果我刚才果断一点，如果我……",
+      "character": "ringo",
+      "expression": "guilty"
+    },
+    {
+      "id": "ch1_interactive_after_shot",
+      "background": "rv_interior",
+      "speaker": "narrator",
+      "speakerName": "旁白",
+      "text": "闲脸色发白，林檎的手在发抖。房车在夜色里颠簸，你必须让这两个人还能往前走。",
+      "playerTurn": true,
+      "interactive": {
+        "objective": "【当前目标】安抚同伴，并决定：立刻去医院",
+        "playerPrompt": "你对林檎和闲说什么？",
+        "suggestions": [
+          "林檎，现在不是自责的时候——开车，去最近的医院。",
+          "闲，撑住，我们不会丢下你。",
+          "把伤口按住，我来指路。"
+        ],
+        "maxFreeReplies": 2,
+        "aiGoal": "闲中枪后房车内的情绪爆发。林檎自责、闲逞强。玩家发言后，众人同意驱车前往附近城市医院。不要跳到已经治好或公路片后期。",
+        "advanceSceneIds": [
+          "ch1_hospital_drive",
+          "ch1_hospital_arrival",
+          "ch1_infection"
+        ],
+        "onCompleteFlags": { "headingToHospital": true }
+      }
+    },
+    {
+      "id": "ch1_hospital_drive",
+      "background": "highway_wasteland",
+      "speaker": "narrator",
+      "speakerName": "旁白",
+      "text": "林檎把油门踩到底。你一边给闲加压，一边盯着导航上最近的一家医院——那座空城里的医院。"
+    },
+    {
+      "id": "ch1_hospital_arrival",
+      "background": "hospital",
+      "speaker": "narrator",
+      "speakerName": "旁白",
+      "text": "急诊大厅灯火通明，却没有医生。你们从废弃的药柜里翻出绷带和半盒抗生素，勉强稳住了血。"
+    },
+    {
+      "id": "ch1_infection",
+      "background": "hospital",
+      "speaker": "narrator",
+      "speakerName": "旁白",
+      "text": "但几个小时后，闲开始发烧。伤口发红肿胀——感染在扩散。她再也站不起来，只能躺在房车后座上。",
+      "onEnterFlags": { "xianImmobile": true },
+      "onEnterResources": { "antibiotics": -1 }
+    },
+    {
+      "id": "ch1_ringo_medicine",
+      "background": "hospital",
+      "speaker": "ringo",
+      "speakerName": "林檎",
+      "text": "抗生素……还剩多少？我们得一直找下去，对不对？",
+      "character": "ringo",
+      "expression": "forced_smile"
+    },
+    {
+      "id": "ch1_interactive_medicine",
+      "background": "hospital",
+      "speaker": "narrator",
+      "speakerName": "旁白",
+      "text": "药品在减少，汽油也是。下一步，关系到闲能不能活到下一站。",
+      "playerTurn": true,
+      "interactive": {
+        "objective": "【当前目标】制定搜刮计划：继续找药，还是先去追收音机里的电波？",
+        "playerPrompt": "你如何分配接下来的行动？",
+        "suggestions": [
+          "先搜刮药店和便利店，抗生素优先。",
+          "让闲用相机看看电波方向——她说过镜头里能看见东西。",
+          "分头行动：你去找药，林檎守车。"
+        ],
+        "maxFreeReplies": 2,
+        "aiGoal": "医院决策点。强调抗生素和汽油都关键。玩家表态后，闲应尝试用相机对准窗外/远方，隐约看见异常光柱或信号方向，为公路片指路。",
+        "advanceSceneIds": [
+          "ch1_xian_camera",
+          "ch1_signal",
+          "ch1_interactive_departure"
+        ],
+        "onCompleteFlags": { "signalDetected": true }
+      }
+    },
+    {
+      "id": "ch1_xian_camera",
+      "background": "hospital",
+      "speaker": "xian",
+      "speakerName": "闲",
+      "text": "……相机里，那条路在发光。不是路灯。是……有人在等我们过去。",
+      "character": "xian",
+      "expression": "hopeful"
+    },
+    {
+      "id": "ch1_signal",
+      "background": "highway_wasteland",
+      "speaker": "narrator",
+      "speakerName": "旁白",
+      "text": "收音机忽然清晰了一瞬。一个陌生的频率里，有人用平淡的语调念着什么——像新闻，又像祈祷。林檎看向你：要跟上那个声音吗？"
+    },
+    {
+      "id": "ch1_interactive_departure",
+      "background": "highway_wasteland",
+      "speaker": "narrator",
+      "speakerName": "旁白",
+      "text": "房车停在公路岔口。一条路通向城区废墟，另一条追着电波和光柱延伸向地平线。",
+      "playerTurn": true,
+      "interactive": {
+        "objective": "【当前目标】正式启程：选择沿电波方向前进（进入公路片）",
+        "playerPrompt": "你下达什么指令？",
+        "suggestions": [
+          "跟上电波，走那条发光的路。",
+          "先不去远方，在城里再搜一轮药。",
+          "林檎，你来开车。我相信闲看见的东西。"
+        ],
+        "maxFreeReplies": 2,
+        "aiGoal": "第一章收束。无论玩家怎么犹豫，最终应决定沿电波/光柱方向驶上公路（公路片开始）。林檎重新握紧方向盘，闲躺在后座。不要跳到广播塔或结局。",
+        "advanceSceneIds": [
+          "ch1_closing"
+        ],
+        "onCompleteFlags": { "highwayArcStarted": true }
+      }
+    },
+    {
+      "id": "ch1_closing",
+      "background": "highway_wasteland",
+      "speaker": "narrator",
+      "speakerName": "旁白",
+      "text": "房车驶入废土公路的深处。闲躺在后座，相机仍对着窗外那道看不见的光。第一章到此结束——前方的城镇与电波，等待着你。",
+      "chapterEnd": true
+    }
+  ],
+  "nextChapter": "chapter02_towns",
+  "notes": "对应 Figma：误会→闲中枪→医院→感染→电波/光柱→公路片。林檎不受伤，伤的是闲。"
+}

@@ -1,0 +1,82 @@
+{
+  "backgrounds": [
+    {
+      "id": "campsite_night",
+      "displayName": "毕业露营夜",
+      "description": "【背景占位】山林营地，篝火余烬，帐篷剪影。老师失踪的前夜。",
+      "color": "#1a1a2e"
+    },
+    {
+      "id": "rv_interior",
+      "displayName": "房车内",
+      "description": "【背景占位】90年代房车内部，狭窄过道，窗外废土公路。",
+      "color": "#2d2d44"
+    },
+    {
+      "id": "highway_wasteland",
+      "displayName": "废土公路",
+      "description": "【背景占位】空无一人的高速公路，路牌生锈，远处城市轮廓。",
+      "color": "#3d3d2e"
+    },
+    {
+      "id": "empty_city",
+      "displayName": "空城",
+      "description": "【背景占位】大人全部消失后的城市街道，静止的车辆与散落杂物。",
+      "color": "#2a2a35"
+    },
+    {
+      "id": "hospital",
+      "displayName": "废弃医院",
+      "description": "【背景占位】急诊大厅，冷白灯管闪烁，药架半空。",
+      "color": "#1e2a2e"
+    },
+    {
+      "id": "pharmacy_ruins",
+      "displayName": "药店废墟",
+      "description": "【背景占位】街角药店，破碎橱窗，抗生素是这里的战利品。",
+      "color": "#2e2a1e"
+    },
+    {
+      "id": "gas_station",
+      "displayName": "加油站",
+      "description": "【背景占位】废弃加油站，油泵停摆，汽油决定能否继续前进。",
+      "color": "#3a2e1a"
+    },
+    {
+      "id": "radio_tower",
+      "displayName": "广播塔",
+      "description": "【背景占位】远方光柱尽头，高耸的电波塔，塔顶空无一物。",
+      "color": "#1a2030"
+    },
+    {
+      "id": "rooftop_campfire",
+      "displayName": "塔顶篝火",
+      "description": "【背景占位】广播塔天台，星空下篝火，少年围坐长谈。",
+      "color": "#1a1a30"
+    },
+    {
+      "id": "modern_apartment",
+      "displayName": "现代出租屋",
+      "description": "【背景占位】逼仄都市出租屋，普通结局的真实界落点。",
+      "color": "#252525"
+    },
+    {
+      "id": "graveyard",
+      "displayName": "墓碑前",
+      "description": "【背景占位】十年后，黑西装，石碑，坏结局的真实界。",
+      "color": "#1a1a1a"
+    },
+    {
+      "id": "green_screen",
+      "displayName": "绿幕片场",
+      "description": "【背景占位】隐藏结局，角色打破第四面墙，离开片场。",
+      "color": "#1a3d1a"
+    },
+    {
+      "id": "meta_white",
+      "displayName": "纯白幕",
+      "description": "【背景占位】真结局 Meta 谢幕，角色以日常装扮站在光中。",
+      "color": "#e8e8e8"
+    }
+  ]
+}
