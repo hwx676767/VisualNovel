@@ -53,7 +53,18 @@ let storyProgressData = null;
 
 const CHAPTER_FILES = {
   prologue: 'data/story/prologue.json',
-  chapter01_highway: 'data/story/chapter01_highway.json'
+  chapter01_highway: 'data/story/chapter01_highway.json',
+  chapter02_towns: 'data/story/chapter02_towns.json',
+  chapter03_tower: 'data/story/chapter03_tower.json',
+  endings: 'data/story/endings.json'
+};
+
+/** Ending route thresholds (see data/story/endings.json) */
+const ENDING_CONFIG = {
+  hiddenSeriousness: 75,
+  goodConviction: 70,
+  trueConviction: 90,
+  trueSeriousnessMax: 45
 };
 
 // ---------------------------------------------------------------------------
@@ -138,9 +149,48 @@ async function loadGameData() {
 }
 
 /**
+ * Picks ending route from accumulated game state.
+ * @returns {'hidden'|'bad'|'true'|'good'|'normal'}
+ */
+function resolveEndingRoute(state = gameState) {
+  const { flags, resources, conviction, seriousnessThreshold } = state;
+
+  if (seriousnessThreshold >= ENDING_CONFIG.hiddenSeriousness) {
+    return 'hidden';
+  }
+
+  if (!flags.xianAlive || (resources.antibiotics <= 0 && flags.xianImmobile)) {
+    return 'bad';
+  }
+
+  const xianC = conviction.xian ?? 0;
+  const ringoC = conviction.ringo ?? 0;
+
+  if (
+    xianC >= ENDING_CONFIG.trueConviction &&
+    ringoC >= ENDING_CONFIG.trueConviction &&
+    seriousnessThreshold <= ENDING_CONFIG.trueSeriousnessMax &&
+    flags.campfireTalkComplete &&
+    flags.reachedRadioTower
+  ) {
+    return 'true';
+  }
+
+  if (
+    xianC >= ENDING_CONFIG.goodConviction &&
+    ringoC >= ENDING_CONFIG.goodConviction &&
+    flags.reachedRadioTower
+  ) {
+    return 'good';
+  }
+
+  return 'normal';
+}
+
+/**
  * Loads a chapter JSON into the active scene list.
  * @param {string} chapterId
- * @param {{ resetIndex?: boolean }} [options]
+ * @param {{ resetIndex?: boolean, routeId?: string }} [options]
  */
 async function loadChapter(chapterId, options = {}) {
   const path = CHAPTER_FILES[chapterId];
@@ -149,7 +199,19 @@ async function loadChapter(chapterId, options = {}) {
   const chapter = await loadJson(path);
   currentChapterMeta = chapter;
   gameState.currentChapter = chapterId;
-  storyScenes = chapter.scenes;
+
+  if (chapter.routes) {
+    const routeId = options.routeId || resolveEndingRoute(gameState);
+    gameState.endingRoute = routeId;
+    currentChapterMeta.activeRoute = routeId;
+    const intro = chapter.sharedIntro || [];
+    const routeScenes = chapter.routes[routeId] || chapter.routes.normal || [];
+    storyScenes = [...intro, ...routeScenes];
+  } else {
+    gameState.endingRoute = null;
+    storyScenes = chapter.scenes;
+  }
+
   if (options.resetIndex) storySceneIndex = 0;
 
   updateChapterProgressUI();
@@ -160,11 +222,95 @@ async function loadChapter(chapterId, options = {}) {
 // ---------------------------------------------------------------------------
 
 /**
+ * Resolves situational variant (injured etc.) from scene or auto rules.
+ * @param {string} characterId
+ * @param {string|null} sceneVariant
+ */
+function resolveCharacterVariant(characterId, sceneVariant) {
+  if (sceneVariant) return sceneVariant;
+
+  const character = charactersData[characterId];
+  if (!character?.situationalVariants) return null;
+
+  for (const [variantId, rule] of Object.entries(character.situationalVariants)) {
+    if (!rule?.autoWhen?.flag) continue;
+    const expected = rule.autoWhen.value ?? true;
+    if (gameState.flags[rule.autoWhen.flag] === expected) {
+      return variantId;
+    }
+  }
+  return null;
+}
+
+/**
+ * Builds ordered PNG paths for expression + optional situational variant.
+ */
+function buildSpriteCandidates(character, expression, variant) {
+  const candidates = [];
+  const base = character.spriteBase;
+  const expr =
+    character.expressions?.includes(expression) ? expression : character.expressionDefault || 'neutral';
+
+  if (base) {
+    if (variant) candidates.push(`${base}/${variant}_${expr}.png`);
+    if (variant) candidates.push(`${base}/${variant}.png`);
+    candidates.push(`${base}/${expr}.png`);
+    candidates.push(`${base}/base.png`);
+  }
+
+  if (character.spritePath) {
+    candidates.unshift(
+      character.spritePath
+        .replace('{expression}', expr)
+        .replace('{variant}', variant || 'default')
+    );
+  }
+
+  return [...new Set(candidates)];
+}
+
+function formatSpritePlaceholder(character, expression, variant) {
+  const exprLabel = character.expressionLabels?.[expression] || expression;
+  const variantLabel =
+    variant && character.situationalVariants?.[variant]?.label
+      ? ` · ${character.situationalVariants[variant].label}`
+      : '';
+  return (
+    character.textPlaceholder ||
+    `【立绘占位】${character.displayName} · 表情：${exprLabel}${variantLabel}`
+  );
+}
+
+/**
+ * Tries candidate paths until one loads; otherwise shows text placeholder.
+ */
+function tryLoadSpriteImage(candidates, onSuccess, onFail) {
+  let index = 0;
+
+  function tryNext() {
+    if (index >= candidates.length) {
+      onFail();
+      return;
+    }
+    const img = new Image();
+    img.onload = () => onSuccess(candidates[index]);
+    img.onerror = () => {
+      index += 1;
+      tryNext();
+    };
+    img.src = candidates[index];
+  }
+
+  tryNext();
+}
+
+/**
  * Swaps the character sprite (image or text placeholder).
  * @param {string} characterId
  * @param {string} expression
+ * @param {{ variant?: string|null }} [options]
  */
-function updateCharacterSprite(characterId, expression) {
+function updateCharacterSprite(characterId, expression, options = {}) {
   gameState.currentCharacter = characterId;
   gameState.currentExpression = expression;
 
@@ -174,35 +320,37 @@ function updateCharacterSprite(characterId, expression) {
     characterSpriteLabelEl.textContent = `【立绘占位】${characterId}`;
     characterSpriteEl.classList.remove('has-image');
     characterSpriteEl.style.backgroundImage = '';
+    characterSpriteEl.dataset.variant = '';
     return;
   }
 
-  const spritePath = character.spritePath
-    ? character.spritePath.replace('{expression}', expression)
-    : null;
+  const variant = resolveCharacterVariant(characterId, options.variant ?? null);
+  const candidates = buildSpriteCandidates(character, expression, variant);
 
-  console.log(`[updateCharacterSprite] ${character.displayName}, ${expression}`);
+  console.log(`[updateCharacterSprite] ${character.displayName}, ${expression}${variant ? `, ${variant}` : ''}`);
 
-  if (spritePath) {
-    const img = new Image();
-    img.onload = () => {
-      characterSpriteEl.style.backgroundImage = `url('${spritePath}')`;
-      characterSpriteEl.classList.add('has-image');
-      characterSpriteLabelEl.textContent = '';
-    };
-    img.onerror = () => {
-      characterSpriteEl.classList.remove('has-image');
-      characterSpriteEl.style.backgroundImage = '';
-      characterSpriteLabelEl.textContent =
-        character.textPlaceholder || `【立绘占位】${character.displayName} · ${expression}`;
-    };
-    img.src = spritePath;
-  } else {
+  characterSpriteEl.dataset.variant = variant || '';
+
+  if (candidates.length === 0) {
     characterSpriteEl.classList.remove('has-image');
     characterSpriteEl.style.backgroundImage = '';
-    characterSpriteLabelEl.textContent =
-      character.textPlaceholder || `【立绘占位】${character.displayName} · ${expression}`;
+    characterSpriteLabelEl.textContent = formatSpritePlaceholder(character, expression, variant);
+    return;
   }
+
+  tryLoadSpriteImage(
+    candidates,
+    (loadedPath) => {
+      characterSpriteEl.style.backgroundImage = `url('${loadedPath}')`;
+      characterSpriteEl.classList.add('has-image');
+      characterSpriteLabelEl.textContent = '';
+    },
+    () => {
+      characterSpriteEl.classList.remove('has-image');
+      characterSpriteEl.style.backgroundImage = '';
+      characterSpriteLabelEl.textContent = formatSpritePlaceholder(character, expression, variant);
+    }
+  );
 }
 
 /**
@@ -257,6 +405,13 @@ function applySceneEnterEffects(scene) {
 function applyInteractiveCompleteEffects(interactive) {
   if (interactive?.onCompleteFlags) {
     Object.assign(gameState.flags, interactive.onCompleteFlags);
+  }
+  if (interactive?.onCompleteResources) {
+    Object.entries(interactive.onCompleteResources).forEach(([key, delta]) => {
+      if (gameState.resources[key] !== undefined) {
+        gameState.resources[key] = clamp(gameState.resources[key] + delta, 0, 99);
+      }
+    });
   }
 }
 
@@ -400,7 +555,14 @@ function playScene(scene, options = {}) {
   updateBackground(scene.background);
 
   if (scene.character) {
-    updateCharacterSprite(scene.character, scene.expression || 'neutral');
+    updateCharacterSprite(scene.character, scene.expression || 'neutral', {
+      variant: scene.variant ?? null
+    });
+  }
+
+  if (scene.endingTitle) {
+    storyObjectiveEl.hidden = false;
+    storyObjectiveEl.textContent = scene.endingTitle;
   }
 
   const speakerName = scene.speakerName || '[NAME]';
@@ -430,7 +592,7 @@ function playScene(scene, options = {}) {
         return;
       }
       if (scene.chapterEnd) {
-        showChapterComplete();
+        handleChapterEnd();
         return;
       }
       if (scene.id === 'prologue_closing') {
@@ -445,6 +607,10 @@ function playScene(scene, options = {}) {
     };
   } else {
     onTypewriterComplete = () => {
+      if (scene.chapterEnd) {
+        handleChapterEnd();
+        return;
+      }
       if (storySceneIndex < storyScenes.length - 1) {
         storySceneIndex += 1;
         playScene(storyScenes[storySceneIndex]);
@@ -461,17 +627,69 @@ function playScene(scene, options = {}) {
 let onTypewriterCompleteAfterPlayerLine = null;
 
 /**
- * Auto-continue from prologue into chapter 01.
+ * Marks chapter completion flags before optional auto-transition.
+ */
+function markCurrentChapterComplete() {
+  const chapterId = gameState.currentChapter;
+  if (chapterId === 'prologue') {
+    gameState.flags.prologueComplete = true;
+  }
+  if (chapterId === 'chapter01_highway') {
+    gameState.flags.chapter01Complete = true;
+    gameState.flags.highwayArcStarted = true;
+  }
+  if (chapterId === 'chapter02_towns') {
+    gameState.flags.chapter02Complete = true;
+    gameState.flags.towerVisible = true;
+  }
+  if (chapterId === 'chapter03_tower') {
+    gameState.flags.chapter03Complete = true;
+    gameState.flags.reachedRadioTower = true;
+  }
+  if (chapterId === 'endings') {
+    gameState.flags.endingsComplete = true;
+  }
+}
+
+/**
+ * Ends a chapter; auto-continues when the next chapter file is ready.
+ */
+function handleChapterEnd() {
+  markCurrentChapterComplete();
+
+  const nextId = currentChapterMeta?.nextChapter;
+  const nextChapterInfo = storyProgressData?.chapters?.find((c) => c.id === nextId);
+
+  if (nextChapterInfo?.status === 'implemented' && CHAPTER_FILES[nextId]) {
+    transitionToNextChapter();
+    return;
+  }
+
+  showChapterComplete();
+}
+
+/**
+ * Auto-continue into the next chapter JSON.
  */
 async function transitionToNextChapter() {
   const nextId = currentChapterMeta?.nextChapter;
   if (!nextId || !CHAPTER_FILES[nextId]) return;
 
-  gameState.flags.prologueComplete = true;
   await loadChapter(nextId, { resetIndex: true });
 
   storyObjectiveEl.hidden = false;
-  storyObjectiveEl.textContent = `【${currentChapterMeta.title}】`;
+  if (nextId === 'endings' && gameState.endingRoute) {
+    const routeLabels = {
+      hidden: '隐藏结局',
+      bad: '坏结局',
+      normal: '普通结局',
+      good: '好结局',
+      true: '真结局'
+    };
+    storyObjectiveEl.textContent = `【结局 · ${routeLabels[gameState.endingRoute] || gameState.endingRoute}】`;
+  } else {
+    storyObjectiveEl.textContent = `【${currentChapterMeta.title}】`;
+  }
   modeHintEl.hidden = false;
   modeHintEl.textContent = '章节衔接中…点击继续';
 
@@ -483,11 +701,7 @@ async function transitionToNextChapter() {
  * Shown when a chapter's last scene finishes.
  */
 function showChapterComplete() {
-  const chapterId = gameState.currentChapter;
-  if (chapterId === 'chapter01_highway') {
-    gameState.flags.chapter01Complete = true;
-    gameState.flags.highwayArcStarted = true;
-  }
+  markCurrentChapterComplete();
 
   exitInteractiveMode();
   setStoryMode('scripted');
@@ -503,6 +717,9 @@ function showChapterComplete() {
 
   if (nextChapterInfo?.status === 'implemented' && CHAPTER_FILES[nextId]) {
     modeHintEl.textContent = '下一章已就绪。刷新页面将从序章重玩；后续将支持存档续玩。';
+  } else if (gameState.flags.gameComplete) {
+    const route = gameState.endingRoute || gameState.flags.endingAchieved || 'unknown';
+    modeHintEl.textContent = `全剧终（${route}）。刷新可从头重玩，或查看 PROGRESS。`;
   } else {
     modeHintEl.textContent = `下一章「${nextChapterInfo?.title || '未定'}」尚在制作中。可查看 PROGRESS 了解总进度。`;
   }
@@ -737,7 +954,9 @@ function processPlayerInput(text, options = {}) {
         : character?.expressions?.[0] || 'neutral';
 
       if (character && reply.speakerId !== 'narrator') {
-        updateCharacterSprite(reply.speakerId, expression);
+        updateCharacterSprite(reply.speakerId, expression, {
+          variant: resolveCharacterVariant(reply.speakerId, null)
+        });
       }
 
       const maxReplies = gameState.currentInteractive?.maxFreeReplies ?? 2;
@@ -782,6 +1001,9 @@ function applyAIStateChanges(reply) {
     Object.entries(reply.convictionDelta).forEach(([id, delta]) => {
       if (gameState.conviction[id] !== undefined && typeof delta === 'number') {
         gameState.conviction[id] = clamp(gameState.conviction[id] + delta, 0, 100);
+        if (gameState.conviction[id] >= 100 && gameState.knotResolved[id] !== undefined) {
+          gameState.knotResolved[id] = true;
+        }
       }
     });
   }
@@ -816,7 +1038,7 @@ async function verifyGameServer() {
     return { ok: false, reason: 'file-protocol' };
   }
   try {
-    const response = await fetch('/api/ai/status');
+    const response = await VNAuth.apiFetch('/api/ai/status');
     if (!response.ok) return { ok: false, reason: 'status-fail' };
     const data = await response.json();
     return { ok: true, data };

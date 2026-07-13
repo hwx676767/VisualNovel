@@ -1,0 +1,362 @@
+{
+  "id": "endings",
+  "title": "结局",
+  "summary": "根据坚定值、不认真阈值、闲的生存状态与塔顶经历，进入五条结局之一。",
+  "routePriority": ["hidden", "bad", "true", "good", "normal"],
+  "sharedIntro": [
+    {
+      "id": "ending_transition",
+      "background": "highway_wasteland",
+      "speaker": "narrator",
+      "speakerName": "旁白",
+      "text": "广播塔在身后缩成一点红光。前方的公路在黎明里分成几条几乎一样的岔道——不，你心里有数，能选的路其实不多。"
+    }
+  ],
+  "routes": {
+    "hidden": [
+      {
+        "id": "hidden_open",
+        "background": "green_screen",
+        "speaker": "xian",
+        "speakerName": "闲",
+        "text": "……等等。你是不是……一直在说些有的没的？",
+        "character": "xian",
+        "expression": "neutral",
+        "endingTitle": "隐藏结局 · 绿幕烤串"
+      },
+      {
+        "id": "hidden_ringo",
+        "background": "green_screen",
+        "speaker": "ringo",
+        "speakerName": "林檎",
+        "text": "我演不下去了。真的，这段公路片太长了。",
+        "character": "ringo",
+        "expression": "forced_smile"
+      },
+      {
+        "id": "hidden_break",
+        "background": "green_screen",
+        "speaker": "xian",
+        "speakerName": "闲",
+        "text": "……作为编剧，我想问：你是不是累了？不想演了？",
+        "character": "xian",
+        "expression": "hopeful",
+        "meta": true
+      },
+      {
+        "id": "hidden_exit",
+        "background": "green_screen",
+        "speaker": "narrator",
+        "speakerName": "旁白",
+        "text": "绿幕被扯开一角。没有人中枪，没有电波塔——只有几个少年互相看着，决定离开片场，去吃烤串。"
+      },
+      {
+        "id": "hidden_end",
+        "background": "green_screen",
+        "speaker": "narrator",
+        "speakerName": "旁白",
+        "text": "【隐藏结局】不认真的人，连悲剧也会被你们聊成喜剧。——游戏结束。",
+        "onEnterFlags": { "gameComplete": true, "endingAchieved": "hidden" },
+        "chapterEnd": true
+      }
+    ],
+    "bad": [
+      {
+        "id": "bad_open",
+        "background": "rv_interior",
+        "speaker": "narrator",
+        "speakerName": "旁白",
+        "text": "抗生素用完了。闲的烧再也没有退下去。",
+        "endingTitle": "坏结局 · 墓碑"
+      },
+      {
+        "id": "bad_xian",
+        "background": "rv_interior",
+        "speaker": "xian",
+        "speakerName": "闲",
+        "text": "……别哭。我……本来就该……停在最好看的时候。",
+        "character": "xian",
+        "expression": "numb",
+        "variant": "injured"
+      },
+      {
+        "id": "bad_ringo",
+        "background": "rv_interior",
+        "speaker": "ringo",
+        "speakerName": "林檎",
+        "text": "不——不！我不能再——",
+        "character": "ringo",
+        "expression": "guilty"
+      },
+      {
+        "id": "bad_collapse",
+        "background": "highway_wasteland",
+        "speaker": "narrator",
+        "speakerName": "旁白",
+        "text": "林檎的眼神暗下去。你后来听说，她们走上了以暴制暴的路——而你没能阻止。白光撕碎废土。",
+        "onEnterFlags": { "xianAlive": false }
+      },
+      {
+        "id": "bad_grave",
+        "background": "graveyard",
+        "speaker": "narrator",
+        "speakerName": "旁白",
+        "text": "十年后。没有超自然，没有大人。你穿黑西装站在墓碑前——闲的真实墓碑。同伴们早已失联，只有你还来。"
+      },
+      {
+        "id": "bad_truth",
+        "background": "graveyard",
+        "speaker": "narrator",
+        "speakerName": "旁白",
+        "text": "你幻想里，闲为救同伴而死。现实中，她因找不到活着的意义，独自离开。你攥着那本编造的废土小说，当作从未懦弱的证明。"
+      },
+      {
+        "id": "bad_end",
+        "background": "graveyard",
+        "speaker": "narrator",
+        "speakerName": "旁白",
+        "text": "【坏结局】你转身走回成人社会。风很大，墓碑很静。——游戏结束。",
+        "onEnterFlags": { "gameComplete": true, "endingAchieved": "bad" },
+        "chapterEnd": true
+      }
+    ],
+    "normal": [
+      {
+        "id": "normal_open",
+        "background": "rooftop_campfire",
+        "speaker": "narrator",
+        "speakerName": "旁白",
+        "text": "塔是空的，电波是死的。你们在星空下坐了很久，谁也没说「值得」。",
+        "endingTitle": "普通结局 · 出租屋来电"
+      },
+      {
+        "id": "normal_talk",
+        "background": "rooftop_campfire",
+        "speaker": "ringo",
+        "speakerName": "林檎",
+        "text": "……宇宙很冷漠。我们终究要长大，对不对？",
+        "character": "ringo",
+        "expression": "calm"
+      },
+      {
+        "id": "normal_xian",
+        "background": "rooftop_campfire",
+        "speaker": "xian",
+        "speakerName": "闲",
+        "text": "……嗯。但今晚还在。",
+        "character": "xian",
+        "expression": "neutral",
+        "variant": "injured"
+      },
+      {
+        "id": "normal_tv",
+        "background": "modern_apartment",
+        "speaker": "narrator",
+        "speakerName": "旁白",
+        "text": "星空像老电视被拔了插头——画面一斜，杂音切断。你坐在逼仄的出租屋里，成为疲惫的成年人。"
+      },
+      {
+        "id": "normal_life",
+        "background": "modern_apartment",
+        "speaker": "narrator",
+        "speakerName": "旁白",
+        "text": "邮件、KPI、房租。时代没有变温柔，只是你学会了不再问「为什么」。"
+      },
+      {
+        "id": "normal_call",
+        "background": "modern_apartment",
+        "speaker": "narrator",
+        "speakerName": "旁白",
+        "text": "手机震了一下。来电显示：闲。"
+      },
+      {
+        "id": "normal_smile",
+        "background": "modern_apartment",
+        "speaker": "narrator",
+        "speakerName": "旁白",
+        "text": "你接起来。没有奇迹，没有废土——只有一声熟悉的呼吸。你笑了，很淡，很真实。"
+      },
+      {
+        "id": "normal_end",
+        "background": "modern_apartment",
+        "speaker": "narrator",
+        "speakerName": "旁白",
+        "text": "【普通结局】羁绊很弱，但够你在虚无的日常里，找到一个坐标。——游戏结束。",
+        "onEnterFlags": { "gameComplete": true, "endingAchieved": "normal" },
+        "chapterEnd": true
+      }
+    ],
+    "good": [
+      {
+        "id": "good_open",
+        "background": "campsite_night",
+        "speaker": "narrator",
+        "speakerName": "旁白",
+        "text": "你们听见「老师」的呼唤——然后发现，自己仍站在找不到老师的那片营地。时间仿佛从未离开过这一夜。",
+        "endingTitle": "好结局 · 成年重聚"
+      },
+      {
+        "id": "good_city",
+        "background": "campsite_night",
+        "speaker": "narrator",
+        "speakerName": "旁白",
+        "text": "远方，丑恶的城市在夜里熠熠生辉。你们不再恐惧。房车、枪伤、空塔——都成了可以讲述的故事。"
+      },
+      {
+        "id": "good_ringo",
+        "background": "campsite_night",
+        "speaker": "ringo",
+        "speakerName": "林檎",
+        "text": "……原来最好的战利品，是过程本身。",
+        "character": "ringo",
+        "expression": "smile"
+      },
+      {
+        "id": "good_xian",
+        "background": "campsite_night",
+        "speaker": "xian",
+        "speakerName": "闲",
+        "text": "……我拍下来了。全部。",
+        "character": "xian",
+        "expression": "determined"
+      },
+      {
+        "id": "good_skip",
+        "background": "campsite_night",
+        "speaker": "narrator",
+        "speakerName": "旁白",
+        "text": "叙事跳过了最痛的部分。十年后的千禧年露营地，四个人再次围坐在火堆旁——这次，都是成年人。"
+      },
+      {
+        "id": "good_adult",
+        "background": "campsite_night",
+        "speaker": "xian",
+        "speakerName": "闲",
+        "text": "……我把那年的事，写成了小说。改了很多。但你们还在。",
+        "character": "xian",
+        "expression": "hopeful"
+      },
+      {
+        "id": "good_phone",
+        "background": "campsite_night",
+        "speaker": "narrator",
+        "speakerName": "旁白",
+        "text": "你的手机响了——老板催命。你挂断，抢过林檎手里的烤肉。少年感与成年身份重叠在一起，并不完美，但足够。"
+      },
+      {
+        "id": "good_warm",
+        "background": "campsite_night",
+        "speaker": "ringo",
+        "speakerName": "林檎",
+        "text": "喂，别抢我的！……算了，给你。",
+        "character": "ringo",
+        "expression": "smile"
+      },
+      {
+        "id": "good_end",
+        "background": "campsite_night",
+        "speaker": "narrator",
+        "speakerName": "旁白",
+        "text": "【好结局】你们与不完美的现实达成和解。你以为这就是全部。——游戏结束？",
+        "onEnterFlags": { "gameComplete": true, "endingAchieved": "good" },
+        "chapterEnd": true
+      }
+    ],
+    "true": [
+      {
+        "id": "true_open",
+        "background": "radio_tower",
+        "speaker": "teacher",
+        "speakerName": "老师",
+        "text": "……你们到了。塔上什么都没有，对不对？",
+        "endingTitle": "真结局 · Meta 谢幕"
+      },
+      {
+        "id": "true_sigh",
+        "background": "radio_tower",
+        "speaker": "teacher",
+        "speakerName": "老师",
+        "text": "我羡慕你们这群不完美的少年——拥有犯错的权利，和不必完美的自由。",
+        "character": "teacher",
+        "expression": "silhouette"
+      },
+      {
+        "id": "true_hint",
+        "background": "radio_tower",
+        "speaker": "narrator",
+        "speakerName": "旁白",
+        "text": "你想问什么，却听见更深处传来风声——像烂尾楼上的夜，像199X年某个欲跳未跳的瞬间。"
+      },
+      {
+        "id": "true_reveal",
+        "background": "campsite_night",
+        "speaker": "narrator",
+        "speakerName": "旁白",
+        "text": "露营、老师、四人旅行——有些是真的，有些是后来写进剧本的。但当年的逃离与陪伴，是真的。"
+      },
+      {
+        "id": "true_good_merge",
+        "background": "campsite_night",
+        "speaker": "ringo",
+        "speakerName": "林檎",
+        "text": "……过程就是答案。我们活到了这里。",
+        "character": "ringo",
+        "expression": "resolute"
+      },
+      {
+        "id": "true_meta",
+        "background": "meta_white",
+        "speaker": "narrator",
+        "speakerName": "旁白",
+        "text": "篝火熄灭。纯白光幕升起。角色们以日常装扮站在那里，像刚学会演戏的新手——有一点生涩，也有一点真。"
+      },
+      {
+        "id": "true_xian",
+        "background": "meta_white",
+        "speaker": "xian",
+        "speakerName": "闲",
+        "text": "……在我写的剧本里，我本该无论如何都要死。",
+        "character": "xian",
+        "expression": "determined"
+      },
+      {
+        "id": "true_player",
+        "background": "meta_white",
+        "speaker": "xian",
+        "speakerName": "闲",
+        "text": "是你。你的选择——充满瑕疵，不讲逻辑——撕掉了那个结局。",
+        "character": "xian",
+        "expression": "hopeful",
+        "meta": true
+      },
+      {
+        "id": "true_camera",
+        "background": "meta_white",
+        "speaker": "narrator",
+        "speakerName": "旁白",
+        "text": "闲走到光幕边缘，举起旧相机，直视屏幕外的你。快门声响起。"
+      },
+      {
+        "id": "true_end",
+        "background": "meta_white",
+        "speaker": "xian",
+        "speakerName": "闲",
+        "text": "这部电影献给你。请勇敢保持自身的「杂音」，做真实的自己。",
+        "character": "xian",
+        "expression": "determined",
+        "meta": true
+      },
+      {
+        "id": "true_credits",
+        "background": "meta_white",
+        "speaker": "narrator",
+        "speakerName": "旁白",
+        "text": "【真结局】演职员表滚动。光幕渐暗。——游戏结束。",
+        "onEnterFlags": { "gameComplete": true, "endingAchieved": "true" },
+        "chapterEnd": true
+      }
+    ]
+  },
+  "nextChapter": null,
+  "notes": "路由判定见 main.js resolveEndingRoute。优先级：隐藏>坏>真>好>普通。"
+}

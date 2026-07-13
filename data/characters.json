@@ -5,16 +5,32 @@
       "displayName": "主角",
       "role": "player",
       "expressions": ["neutral"],
-      "spritePath": null,
-      "notes": "玩家化身，第一人称嘴遁。人设待补完。"
+      "expressionDefault": "neutral",
+      "expressionLabels": { "neutral": "平常" },
+      "spriteBase": null,
+      "notes": "玩家化身，第一人称嘴遁。通常不显示立绘。"
     },
     {
       "id": "xian",
       "displayName": "闲",
       "role": "npc",
       "expressions": ["neutral", "numb", "pained", "hopeful", "determined"],
-      "spritePath": "characters/xian_{expression}.png",
-      "textPlaceholder": "【立绘占位】电波系少女 · 胶片相机 · 枪伤 · 卧床",
+      "expressionDefault": "neutral",
+      "expressionLabels": {
+        "neutral": "平常",
+        "numb": "麻木",
+        "pained": "痛苦",
+        "hopeful": "希冀",
+        "determined": "坚定"
+      },
+      "spriteBase": "characters/xian",
+      "textPlaceholder": "【立绘占位】电波系少女 · 胶片相机",
+      "situationalVariants": {
+        "injured": {
+          "label": "枪伤·卧床",
+          "autoWhen": { "flag": "xianImmobile", "value": true }
+        }
+      },
       "aiProfile": {
         "personality": "电波系、沉默、悲观、游离。内心细腻，共情过载。用丧气话作面具，极度自我否定，害怕长大。喜欢胶片、星星、无意义的哲学问题。",
         "speechStyle": "短句，省略号多，语气淡。偶尔说出令人费解但诗意的比喻。不轻易表露温暖，被关心时会躲闪。"
@@ -33,8 +49,17 @@
       "displayName": "林檎",
       "role": "npc",
       "expressions": ["neutral", "smile", "forced_smile", "guilty", "calm", "resolute"],
-      "spritePath": "characters/ringo_{expression}.png",
-      "textPlaceholder": "【立绘占位】大姐头 · 破旧吉他 · 非正式队长",
+      "expressionDefault": "neutral",
+      "expressionLabels": {
+        "neutral": "平常",
+        "smile": "微笑",
+        "forced_smile": "强颜",
+        "guilty": "愧疚",
+        "calm": "沉稳",
+        "resolute": "决然"
+      },
+      "spriteBase": "characters/ringo",
+      "textPlaceholder": "【立绘占位】大姐头 · 破旧吉他",
       "aiProfile": {
         "personality": "大姐头气质，表面温柔开朗、极度乐观、豪爽洒脱。实则细腻敏感、哲学性迷茫，高自尊，习惯独自扛责。吉他/酒是心理防御。",
         "speechStyle": "爽朗、口语化，偶尔用玩笑化解紧张。真正担心时会停顿、说话变少。作为队长会试图稳住场面。"
@@ -53,7 +78,9 @@
       "displayName": "？？？",
       "role": "npc",
       "expressions": ["neutral"],
-      "spritePath": null,
+      "expressionDefault": "neutral",
+      "expressionLabels": { "neutral": "平常" },
+      "spriteBase": null,
       "textPlaceholder": "【立绘占位】爱幻想的男成员 · 待编写",
       "notes": "第三名主角团成员，设定未完成，AI 不应让其发言"
     },
@@ -62,9 +89,26 @@
       "displayName": "老师",
       "role": "npc",
       "expressions": ["silhouette"],
-      "spritePath": null,
+      "expressionDefault": "silhouette",
+      "expressionLabels": { "silhouette": "剪影" },
+      "spriteBase": "characters/teacher",
       "textPlaceholder": "【立绘占位】声音/剪影 · 全知系统隐喻",
       "notes": "象征性角色，真结局出场"
     }
-  ]
+  ],
+  "_spriteConvention": {
+    "description": "每个角色一个目录，按表情文件名加载 PNG。放入图片后无需改代码。",
+    "paths": [
+      "characters/{id}/{variant}_{expression}.png  — 情景+表情（可选）",
+      "characters/{id}/{variant}.png               — 仅情景（可选）",
+      "characters/{id}/{expression}.png            — 仅表情（主要）",
+      "characters/{id}/base.png                    — 单张通用立绘回退"
+    ],
+    "examples": [
+      "characters/xian/neutral.png",
+      "characters/xian/pained.png",
+      "characters/xian/injured_pained.png",
+      "characters/ringo/smile.png"
+    ]
+  }
 }

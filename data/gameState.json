@@ -24,9 +24,23 @@
     "xianAlive": true,
     "prologueComplete": false,
     "chapter01Complete": false,
+    "chapter02Complete": false,
+    "chapter03Complete": false,
     "xianInjured": false,
     "xianImmobile": false,
-    "highwayArcStarted": false
+    "highwayArcStarted": false,
+    "townOneCleared": false,
+    "bbContactMade": false,
+    "towerVisible": false,
+    "towerAscentStarted": false,
+    "towerEmpty": false,
+    "teacherVoiceHeard": false,
+    "acceptedEmptyTower": false,
+    "campfireTalkComplete": false,
+    "endingsComplete": false,
+    "gameComplete": false,
+    "endingAchieved": null
   },
+  "endingRoute": null,
   "currentChapter": "prologue"
 }

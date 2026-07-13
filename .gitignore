@@ -1,2 +1,5 @@
 .env
+.dev.vars
+.deploy-token.txt
 node_modules/
+.wrangler/

@@ -1,0 +1,12 @@
+name = "visual-novel"
+compatibility_date = "2024-12-01"
+pages_build_output_dir = "."
+
+[vars]
+AI_MODEL = "glm-4-flash"
+AI_BASE_URL = "https://open.bigmodel.cn/api/paas/v4"
+AI_JSON_MODE = "true"
+
+# Secrets (set via dashboard or `wrangler pages secret put`):
+# - AI_API_KEY        (required for AI dialogue)
+# - SITE_ACCESS_TOKEN (optional — enables /login.html gate)

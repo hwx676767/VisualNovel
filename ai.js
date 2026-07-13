@@ -16,7 +16,7 @@ const AI = (() => {
    * @returns {Promise<{configured: boolean, model: string, baseUrl: string}>}
    */
   async function getStatus() {
-    const response = await fetch('/api/ai/status');
+    const response = await VNAuth.apiFetch('/api/ai/status');
     if (!response.ok) throw new Error('无法连接 AI 服务');
     return response.json();
   }
@@ -218,7 +218,7 @@ const AI = (() => {
       { role: 'user', content: playerText }
     ];
 
-    const response = await fetch('/api/chat', {
+    const response = await VNAuth.apiFetch('/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ messages })

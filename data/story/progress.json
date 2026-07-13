@@ -1,6 +1,6 @@
 {
   "title": "Paul 项目 · 故事进度表",
-  "updated": "2026-06-24",
+  "updated": "2026-07-13",
   "legend": {
     "implemented": "已在游戏中可玩",
     "planned": "设计已有，脚本未写",
@@ -74,40 +74,60 @@
     },
     {
       "id": "chapter02_towns",
-      "title": "第二章：公路片 · 城镇节点（暂定）",
-      "status": "planned",
-      "file": null,
+      "title": "第二章：城镇与电波",
+      "status": "implemented",
+      "file": "data/story/chapter02_towns.json",
       "layer": "layer1",
+      "summary": "两座城镇搜刮 → 房车夜话 → 汽油危机 → BB机神秘讯号 → 广播塔远景",
       "beats": [
-        { "id": "c2_1", "title": "途经城镇 1 · 搜刮/交涉", "status": "planned" },
-        { "id": "c2_2", "title": "途经城镇 2 · BB机/电台 NPC", "status": "planned" },
-        { "id": "c2_3", "title": "抗生素/汽油危机事件", "status": "planned" },
-        { "id": "c2_4", "title": "坚定值阶段性成长", "status": "planned" },
-        { "id": "c2_5", "title": "逼近广播塔", "status": "planned" }
+        { "id": "c2_1", "title": "公路片黎明启程", "status": "implemented", "sceneId": "ch2_highway_dawn" },
+        { "id": "c2_2", "title": "城镇 1 · 药店搜刮", "status": "implemented", "sceneId": "ch2_first_town" },
+        { "id": "c2_3", "title": "互动 · 搜刮方式", "status": "implemented", "sceneId": "ch2_interactive_town1" },
+        { "id": "c2_4", "title": "回房车（移动据点）", "status": "implemented", "sceneId": "ch2_rv_night" },
+        { "id": "c2_5", "title": "互动 · 车内夜话", "status": "implemented", "sceneId": "ch2_interactive_night" },
+        { "id": "c2_6", "title": "汽油告急", "status": "implemented", "sceneId": "ch2_gas_low" },
+        { "id": "c2_7", "title": "互动 · 物资危机", "status": "implemented", "sceneId": "ch2_interactive_gas" },
+        { "id": "c2_8", "title": "BB机神秘讯号", "status": "implemented", "sceneId": "ch2_bb_find" },
+        { "id": "c2_9", "title": "互动 · 回应 BB 机", "status": "implemented", "sceneId": "ch2_interactive_bb" },
+        { "id": "c2_10", "title": "林檎 · 坚定值成长", "status": "implemented", "sceneId": "ch2_ringo_moment" },
+        { "id": "c2_11", "title": "闲相机看见塔影", "status": "implemented", "sceneId": "ch2_xian_lens" },
+        { "id": "c2_12", "title": "互动 · 驶向广播塔", "status": "implemented", "sceneId": "ch2_interactive_tower" },
+        { "id": "c2_13", "title": "第二章收束 · 塔影显现", "status": "implemented", "sceneId": "ch2_closing" }
       ]
     },
     {
       "id": "chapter03_tower",
-      "title": "第三章：广播塔与分歧（暂定）",
-      "status": "outline",
+      "title": "第三章：广播塔与空无一物",
+      "status": "implemented",
+      "file": "data/story/chapter03_tower.json",
       "layer": "layer1",
+      "summary": "登塔 → 空无一物 → 老师之声 → 塔顶篝火长谈 → 结局分岔前夜",
       "beats": [
-        { "id": "c3_1", "title": "抵达广播塔", "status": "outline" },
-        { "id": "c3_2", "title": "塔顶空无一物", "status": "outline" },
-        { "id": "c3_3", "title": "老师之声 / 篝火长谈", "status": "outline" }
+        { "id": "c3_1", "title": "抵达广播塔", "status": "implemented", "sceneId": "ch3_tower_base" },
+        { "id": "c3_2", "title": "互动 · 登塔分工", "status": "implemented", "sceneId": "ch3_interactive_climb" },
+        { "id": "c3_3", "title": "塔顶空无一物", "status": "implemented", "sceneId": "ch3_rooftop_empty" },
+        { "id": "c3_4", "title": "互动 · 面对空塔", "status": "implemented", "sceneId": "ch3_interactive_empty" },
+        { "id": "c3_5", "title": "塔顶篝火", "status": "implemented", "sceneId": "ch3_campfire_lit" },
+        { "id": "c3_6", "title": "老师之声", "status": "implemented", "sceneId": "ch3_teacher_voice" },
+        { "id": "c3_7", "title": "互动 · 篝火长谈", "status": "implemented", "sceneId": "ch3_interactive_campfire" },
+        { "id": "c3_8", "title": "林檎 / 闲袒露心结", "status": "implemented", "sceneId": "ch3_ringo_confess" },
+        { "id": "c3_9", "title": "互动 · 下山决定", "status": "implemented", "sceneId": "ch3_interactive_descent" },
+        { "id": "c3_10", "title": "第三章收束 · 结局分岔", "status": "implemented", "sceneId": "ch3_closing" }
       ]
     },
     {
       "id": "endings",
       "title": "结局分支",
-      "status": "outline",
+      "status": "implemented",
+      "file": "data/story/endings.json",
       "layer": "layer1-4",
+      "summary": "按坚定值/阈值/生存状态进入五条结局",
       "beats": [
-        { "id": "e_bad", "title": "坏结局 · 闲死亡 / 墓碑", "status": "outline", "trigger": "未到广播塔且闲死亡" },
-        { "id": "e_normal", "title": "普通结局 · 出租屋来电", "status": "outline", "trigger": "走完旅程未打破恐惧" },
-        { "id": "e_good", "title": "好结局 · 成年重聚", "status": "outline", "trigger": "全员坚定值 100" },
-        { "id": "e_true", "title": "真结局 · Meta 谢幕", "status": "outline", "trigger": "好结局 + 全员解开心结" },
-        { "id": "e_hidden", "title": "隐藏结局 · 绿幕烤串", "status": "outline", "trigger": "不认真阈值过高" }
+        { "id": "e_hidden", "title": "隐藏结局 · 绿幕烤串", "status": "implemented", "trigger": "不认真阈值 ≥ 75" },
+        { "id": "e_bad", "title": "坏结局 · 墓碑", "status": "implemented", "trigger": "闲死亡或抗生素耗尽" },
+        { "id": "e_true", "title": "真结局 · Meta 谢幕", "status": "implemented", "trigger": "坚定值≥90 + 篝火长谈 + 低不认真" },
+        { "id": "e_good", "title": "好结局 · 成年重聚", "status": "implemented", "trigger": "坚定值≥70 + 抵达广播塔" },
+        { "id": "e_normal", "title": "普通结局 · 出租屋来电", "status": "implemented", "trigger": "默认" }
       ]
     }
   ],

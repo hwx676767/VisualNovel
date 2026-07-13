@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Visual Novel · 访问验证</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .login-wrap {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #111;
+      color: #eee;
+      padding: 24px;
+    }
+    .login-card {
+      width: min(420px, 100%);
+      border: 2px solid #fff;
+      padding: 28px;
+      background: #1a1a24;
+    }
+    .login-card h1 {
+      margin: 0 0 8px;
+      font-size: 1.25rem;
+    }
+    .login-card p {
+      margin: 0 0 20px;
+      color: #aaa;
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+    .login-card input {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 10px 12px;
+      margin-bottom: 12px;
+      border: 1px solid #555;
+      background: #0f0f14;
+      color: #fff;
+      font-size: 1rem;
+    }
+    .login-card button {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      background: #c45c8a;
+      color: #fff;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    .login-card button:disabled {
+      opacity: 0.6;
+      cursor: wait;
+    }
+    .login-error {
+      color: #ff8a8a;
+      min-height: 1.2em;
+      margin-top: 10px;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-wrap">
+    <div class="login-card">
+      <h1>访问验证</h1>
+      <p>此站点已启用访问保护。请输入管理员提供的访问令牌以进入游戏。</p>
+      <form id="login-form">
+        <input
+          id="token-input"
+          type="password"
+          autocomplete="current-password"
+          placeholder="访问令牌"
+          required
+        />
+        <button type="submit" id="login-btn">进入游戏</button>
+      </form>
+      <div class="login-error" id="login-error" aria-live="polite"></div>
+    </div>
+  </div>
+
+  <script src="auth.js"></script>
+  <script>
+    const form = document.getElementById('login-form');
+    const input = document.getElementById('token-input');
+    const errorEl = document.getElementById('login-error');
+    const btn = document.getElementById('login-btn');
+
+    async function tryEnter(token) {
+      btn.disabled = true;
+      errorEl.textContent = '';
+
+      VNAuth.setToken(token);
+      try {
+        const response = await fetch('/api/ai/status', {
+          headers: VNAuth.apiHeaders()
+        });
+
+        if (response.status === 401) {
+          VNAuth.clearToken();
+          errorEl.textContent = '令牌无效，请重试。';
+          return;
+        }
+
+        if (!response.ok) {
+          errorEl.textContent = '无法连接服务器，请稍后再试。';
+          return;
+        }
+
+        window.location.href = '/index.html';
+      } catch {
+        VNAuth.clearToken();
+        errorEl.textContent = '网络错误，请检查连接。';
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const token = input.value.trim();
+      if (token) tryEnter(token);
+    });
+
+    if (VNAuth.getToken()) {
+      tryEnter(VNAuth.getToken());
+    }
+  </script>
+</body>
+</html>

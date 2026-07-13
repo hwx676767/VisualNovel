@@ -1,0 +1,7 @@
+# Copy to .dev.vars for local `wrangler pages dev`
+AI_API_KEY=sk-your-key-here
+AI_BASE_URL=https://open.bigmodel.cn/api/paas/v4
+AI_MODEL=glm-4-flash
+AI_JSON_MODE=true
+# Optional — leave empty to disable login gate locally
+SITE_ACCESS_TOKEN=

@@ -1,0 +1,270 @@
+{
+  "id": "chapter02_towns",
+  "title": "第二章：城镇与电波",
+  "summary": "沿光柱方向驶入公路片。途经两座空城搜刮物资，房车成为移动据点。汽油与抗生素告急，BB机收到神秘讯号。林檎与闲的坚定值悄然变化，远方广播塔的轮廓第一次清晰可见。",
+  "dayRange": [2, 4],
+  "scenes": [
+    {
+      "id": "ch2_highway_dawn",
+      "background": "highway_wasteland",
+      "speaker": "narrator",
+      "speakerName": "旁白",
+      "text": "第二天黎明，房车仍追着收音机里断断续续的杂音。后座上传来闲压抑的喘息——抗生素在减少，路却越来越长。"
+    },
+    {
+      "id": "ch2_first_town",
+      "background": "empty_city",
+      "speaker": "narrator",
+      "speakerName": "旁白",
+      "text": "公路旁出现第一座小镇。招牌褪色，橱窗完好，像被按了暂停键。林檎减了速：「先补给，别在夜里赶路。」"
+    },
+    {
+      "id": "ch2_pharmacy",
+      "background": "pharmacy_ruins",
+      "speaker": "narrator",
+      "speakerName": "旁白",
+      "text": "街角药店玻璃碎了一地。货架上还剩零星药盒，地上却有新鲜的脚印——有人比你们先来过。"
+    },
+    {
+      "id": "ch2_ringo_watch",
+      "background": "pharmacy_ruins",
+      "speaker": "ringo",
+      "speakerName": "林檎",
+      "text": "……我守在门口。你们动作快一点。",
+      "character": "ringo",
+      "expression": "guilty"
+    },
+    {
+      "id": "ch2_interactive_town1",
+      "background": "pharmacy_ruins",
+      "speaker": "narrator",
+      "speakerName": "旁白",
+      "text": "时间不多，汽油在怠速里一滴一滴掉。你必须决定怎么搜刮这座小镇。",
+      "playerTurn": true,
+      "interactive": {
+        "objective": "【当前目标】城镇 1 · 搜刮药店：选择行动方式",
+        "playerPrompt": "你如何分配任务？",
+        "suggestions": [
+          "我和林檎一起进去，闲留在车里。",
+          "我一个人快速扫荡，你们两个都守着车。",
+          "先绕一圈看看脚印，确认没有别人再动手。"
+        ],
+        "maxFreeReplies": 2,
+        "aiGoal": "城镇1搜刮决策。林檎会因加油站阴影而短暂犹豫（呼应心结），但最终应完成搜刮、获得少量抗生素。不要引入枪战或新角色登场。搜刮后众人回到房车。",
+        "advanceSceneIds": [
+          "ch2_loot",
+          "ch2_rv_night"
+        ],
+        "onCompleteFlags": { "townOneCleared": true },
+        "onCompleteResources": { "antibiotics": 1 }
+      }
+    },
+    {
+      "id": "ch2_loot",
+      "background": "pharmacy_ruins",
+      "speaker": "narrator",
+      "speakerName": "旁白",
+      "text": "你们从废墟里翻出半箱未过期的抗生素和几瓶消毒水。林檎把药扔回车上时，手还在微微发抖——她什么也没说。"
+    },
+    {
+      "id": "ch2_rv_night",
+      "background": "rv_interior",
+      "speaker": "narrator",
+      "speakerName": "旁白",
+      "text": "搜刮结束，你们没有逗留。房车驶离小镇，在公路边停下——这是新的规矩：找完就走，不在空城里过夜。",
+      "onEnterResources": { "gasoline": -1 }
+    },
+    {
+      "id": "ch2_xian_fever",
+      "background": "rv_interior",
+      "speaker": "xian",
+      "speakerName": "闲",
+      "text": "……好吵。你们说话的声音……像针。",
+      "character": "xian",
+      "expression": "pained"
+    },
+    {
+      "id": "ch2_ringo_guitar",
+      "background": "rv_interior",
+      "speaker": "ringo",
+      "speakerName": "林檎",
+      "text": "那我小声点。……不，干脆不弹了。你睡吧。",
+      "character": "ringo",
+      "expression": "forced_smile"
+    },
+    {
+      "id": "ch2_interactive_night",
+      "background": "rv_interior",
+      "speaker": "narrator",
+      "speakerName": "旁白",
+      "text": "夜里房车厢闷热。闲的额头烫得吓人，林檎坐在驾驶座上假装看路。她需要听见一句能撑到天亮的话。",
+      "playerTurn": true,
+      "interactive": {
+        "objective": "【当前目标】房车内夜话：稳住林檎，让闲愿意接受换药",
+        "playerPrompt": "你对同伴说什么？",
+        "suggestions": [
+          "林檎，你已经做得很好了。天亮我们继续找药。",
+          "闲，换完这剂药会好受一点——我陪着你。",
+          "今晚我守夜。你们两个都休息一下。"
+        ],
+        "maxFreeReplies": 2,
+        "aiGoal": "房车夜话。闲痛觉回归、抗拒治疗（坚定值0→30阶段）。林檎自责但强撑。玩家安抚后，闲勉强同意换药，林檎稍微放松。不要跳到广播塔或结局。",
+        "advanceSceneIds": [
+          "ch2_dawn_depart",
+          "ch2_gas_low"
+        ],
+        "onCompleteResources": { "antibiotics": -1 }
+      }
+    },
+    {
+      "id": "ch2_dawn_depart",
+      "background": "highway_wasteland",
+      "speaker": "narrator",
+      "speakerName": "旁白",
+      "text": "第三天清晨，你们再次上路。闲的脸色比昨夜好了一点点——只是一点点。"
+    },
+    {
+      "id": "ch2_gas_low",
+      "background": "highway_wasteland",
+      "speaker": "ringo",
+      "speakerName": "林檎",
+      "text": "油表……不太妙。下一个能加油的地方，可能很远。",
+      "character": "ringo",
+      "expression": "guilty"
+    },
+    {
+      "id": "ch2_second_stop",
+      "background": "gas_station",
+      "speaker": "narrator",
+      "speakerName": "旁白",
+      "text": "前方路口有一座更大的加油站综合体，旁边连着便利店和修车铺。收音机里的杂音在这里突然变强——像有人在近处说话。"
+    },
+    {
+      "id": "ch2_interactive_gas",
+      "background": "gas_station",
+      "speaker": "narrator",
+      "speakerName": "旁白",
+      "text": "汽油见底，抗生素也只剩最后几剂。你必须在「搜油」和「追电波」之间做出取舍。",
+      "playerTurn": true,
+      "interactive": {
+        "objective": "【当前目标】物资危机：优先汽油，还是跟着电波走？",
+        "playerPrompt": "你下什么决定？",
+        "suggestions": [
+          "先搜加油站，没有油我们哪儿也去不了。",
+          "电波在这里最强——跟着声音走，油不够再说。",
+          "分头：林檎搬油，我去便利店找补给。"
+        ],
+        "maxFreeReplies": 2,
+        "aiGoal": "汽油危机决策。无论玩家选什么，最终应勉强补足汽油（+1或+2），但消耗时间、闲的状态仍危险。可提及远处有塔状剪影，不要进入塔顶或结局。",
+        "advanceSceneIds": [
+          "ch2_gas_found",
+          "ch2_bb_find"
+        ],
+        "onCompleteResources": { "gasoline": 2 }
+      }
+    },
+    {
+      "id": "ch2_gas_found",
+      "background": "gas_station",
+      "speaker": "narrator",
+      "speakerName": "旁白",
+      "text": "地下油罐里居然还剩一些沉淀汽油。你们用虹吸管一点点抽上来——够撑到下一个小镇，但不会再多了。"
+    },
+    {
+      "id": "ch2_bb_find",
+      "background": "gas_station",
+      "speaker": "narrator",
+      "speakerName": "旁白",
+      "text": "便利店收银台后，一台老式 BB 机在黑暗中闪了一下。屏幕亮起，跳出一行字：「你们也在找老师吗？」"
+    },
+    {
+      "id": "ch2_interactive_bb",
+      "background": "gas_station",
+      "speaker": "narrator",
+      "speakerName": "旁白",
+      "text": "讯号没有署名。BB 机的指示灯一闪一闪，像在等你的回复。",
+      "playerTurn": true,
+      "interactive": {
+        "objective": "【当前目标】BB 机讯号：回应陌生留言（建立异步联系）",
+        "playerPrompt": "你要回复什么？",
+        "suggestions": [
+          "你是谁？老师在哪里？",
+          "我们也丢了大人。你在哪个方向？",
+          "别卖关子——要合作就发坐标。"
+        ],
+        "maxFreeReplies": 2,
+        "aiGoal": "BB机互动。对方是神秘幸存者（尚未露面，不要用男成员名字发言）。回复应含糊、友善或警惕，给出「往电波塔方向」的暗示。可提及对方也在找老师。不要揭露身份，不要跳到塔顶。",
+        "advanceSceneIds": [
+          "ch2_bb_reply",
+          "ch2_radio_clear"
+        ],
+        "onCompleteFlags": { "bbContactMade": true }
+      }
+    },
+    {
+      "id": "ch2_bb_reply",
+      "background": "gas_station",
+      "speaker": "narrator",
+      "speakerName": "旁白",
+      "text": "几秒后，BB 机吐出第二行字：「往北。塔在发光。……别放弃那个拿相机的人。」然后屏幕熄了。"
+    },
+    {
+      "id": "ch2_radio_clear",
+      "background": "highway_wasteland",
+      "speaker": "narrator",
+      "speakerName": "旁白",
+      "text": "驶离加油站后，收音机杂音突然清晰了一瞬。一个平淡的声音重复着坐标般的数字，随后又被风沙吞没。"
+    },
+    {
+      "id": "ch2_ringo_moment",
+      "background": "rv_interior",
+      "speaker": "ringo",
+      "speakerName": "林檎",
+      "text": "我不是什么好队长。但……只要你们还在车上，我就会把车开下去。",
+      "character": "ringo",
+      "expression": "calm"
+    },
+    {
+      "id": "ch2_xian_lens",
+      "background": "rv_interior",
+      "speaker": "xian",
+      "speakerName": "闲",
+      "text": "……镜头里，塔比昨天近了一点。不是幻觉。",
+      "character": "xian",
+      "expression": "hopeful"
+    },
+    {
+      "id": "ch2_interactive_tower",
+      "background": "highway_wasteland",
+      "speaker": "narrator",
+      "speakerName": "旁白",
+      "text": "地平线上，一座电波塔的剪影刺进暮色。BB 机的方向、收音机的杂音、闲相机里的光——全都指向那里。",
+      "playerTurn": true,
+      "interactive": {
+        "objective": "【当前目标】第二章收束：是否全速驶向广播塔？",
+        "playerPrompt": "你下达什么指令？",
+        "suggestions": [
+          "全速前进。在闲撑不住之前赶到塔下。",
+          "先找个地方歇一晚，明天再冲。",
+          "林檎，按电波方向开。我相信闲看见的光。"
+        ],
+        "maxFreeReplies": 2,
+        "aiGoal": "第二章收束。无论玩家怎么犹豫，最终应决定驶向广播塔。林檎握紧方向盘，闲在后座握紧相机。不要进入塔顶、篝火或任何结局。",
+        "advanceSceneIds": [
+          "ch2_closing"
+        ],
+        "onCompleteFlags": { "towerVisible": true }
+      }
+    },
+    {
+      "id": "ch2_closing",
+      "background": "radio_tower",
+      "speaker": "narrator",
+      "speakerName": "旁白",
+      "text": "房车冲入最后一道弯。广播塔矗立在荒原尽头，红光一闪一闪，像一颗缓慢跳动的心脏。第二章到此结束——塔下有什么，没有人说得准。",
+      "chapterEnd": true
+    }
+  ],
+  "nextChapter": "chapter03_tower",
+  "notes": "对应 Figma：搜刮→回房车→持续向前；BB机异步联系；汽油/抗生素危机；坚定值成长铺垫。男成员仅通过BB机暗示，尚未露面。中间城镇节点为作者留白，本章用两座功能节点（药店镇+加油站综合体）填充。"
+}

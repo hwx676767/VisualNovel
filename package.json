@@ -4,10 +4,15 @@
   "type": "module",
   "scripts": {
     "start": "node server.js",
-    "dev": "node server.js"
+    "dev": "node server.js",
+    "pages:dev": "wrangler pages dev .",
+    "pages:deploy": "wrangler pages deploy . --project-name=visual-novel"
   },
   "dependencies": {
     "dotenv": "^16.4.7",
     "express": "^4.21.2"
+  },
+  "devDependencies": {
+    "wrangler": "^4.107.1"
   }
 }

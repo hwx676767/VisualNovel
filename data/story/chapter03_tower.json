@@ -1,0 +1,255 @@
+{
+  "id": "chapter03_tower",
+  "title": "第三章：广播塔与空无一物",
+  "summary": "抵达电波塔下，众人登顶却发现发射台空无一物——电波与光柱都是骗局。塔顶篝火旁，老师的声音在杂音中响起。林檎与闲在星空下袒露心结，第一层旅程迎来分水岭。",
+  "dayRange": [4, 5],
+  "scenes": [
+    {
+      "id": "ch3_tower_base",
+      "background": "radio_tower",
+      "speaker": "narrator",
+      "speakerName": "旁白",
+      "text": "第四天黄昏，房车停在广播塔下。塔身锈红，警示灯规律闪烁。追了一路的电波，在这里反而听不见了。",
+      "onEnterFlags": { "reachedRadioTower": true }
+    },
+    {
+      "id": "ch3_xian_weak",
+      "background": "rv_interior",
+      "speaker": "xian",
+      "speakerName": "闲",
+      "text": "……到了。相机里，塔比眼睛看见的……更亮。",
+      "character": "xian",
+      "expression": "hopeful"
+    },
+    {
+      "id": "ch3_ringo_steady",
+      "background": "radio_tower",
+      "speaker": "ringo",
+      "speakerName": "林檎",
+      "text": "我去看看塔顶。你们……在这里等我。不，这次我不一个人去。",
+      "character": "ringo",
+      "expression": "resolute"
+    },
+    {
+      "id": "ch3_interactive_climb",
+      "background": "radio_tower",
+      "speaker": "narrator",
+      "speakerName": "旁白",
+      "text": "电梯停摆，只剩消防梯。闲无法行动，塔内漆黑，风从缝隙灌进来。你必须分配谁守车、谁登塔。",
+      "playerTurn": true,
+      "interactive": {
+        "objective": "【当前目标】登塔决策：谁留守，谁上去找电波源？",
+        "playerPrompt": "你如何安排？",
+        "suggestions": [
+          "林檎和我上去，闲留在车里——需要人给她换药。",
+          "我一个人去塔顶，你们两个都在下面等我。",
+          "林檎守车，我带相机上去——让闲告诉我镜头里看见什么。"
+        ],
+        "maxFreeReplies": 2,
+        "aiGoal": "登塔前决策。林檎应不再独自硬扛（呼应坚定值成长），但最终必须有人抵达塔顶。闲可通过相机远程提示。不要描写塔顶内容，本轮只完成分工并开始攀登。",
+        "advanceSceneIds": [
+          "ch3_stairwell",
+          "ch3_rooftop_door"
+        ],
+        "onCompleteFlags": { "towerAscentStarted": true }
+      }
+    },
+    {
+      "id": "ch3_stairwell",
+      "background": "radio_tower",
+      "speaker": "narrator",
+      "speakerName": "旁白",
+      "text": "铁梯在风里咯吱作响。越往上，城市废墟越远，像被撒落一盘的棋子。林檎的呼吸在窄井里回响。"
+    },
+    {
+      "id": "ch3_rooftop_door",
+      "background": "radio_tower",
+      "speaker": "narrator",
+      "speakerName": "旁白",
+      "text": "天台的门被锈粘住，你们合力撞开。风灌进来——然后，是令人窒息的安静。"
+    },
+    {
+      "id": "ch3_rooftop_empty",
+      "background": "rooftop_campfire",
+      "speaker": "narrator",
+      "speakerName": "旁白",
+      "text": "塔顶空无一物。发射机倾覆在角落，指示灯全灭。没有大人，没有答案，没有等待你们的「主持者」。电波，从头到尾都是死机的回音。",
+      "onEnterFlags": { "towerEmpty": true }
+    },
+    {
+      "id": "ch3_ringo_break",
+      "background": "rooftop_campfire",
+      "speaker": "ringo",
+      "speakerName": "林檎",
+      "text": "……我们追了一个……不存在的信号？",
+      "character": "ringo",
+      "expression": "guilty"
+    },
+    {
+      "id": "ch3_xian_radio",
+      "background": "rv_interior",
+      "speaker": "xian",
+      "speakerName": "闲",
+      "text": "……不。镜头里，塔顶刚才……有人站过。现在走了。",
+      "character": "xian",
+      "expression": "neutral"
+    },
+    {
+      "id": "ch3_interactive_empty",
+      "background": "rooftop_campfire",
+      "speaker": "narrator",
+      "speakerName": "旁白",
+      "text": "空塔、死机、一路的枪伤与抗生素——所有代价指向这里，而这里什么都没有。林檎蹲在发射机旁，肩膀开始发抖。",
+      "playerTurn": true,
+      "interactive": {
+        "objective": "【当前目标】面对空塔：稳住林檎，或承认这场旅程可能没有答案",
+        "playerPrompt": "你对林檎说什么？",
+        "suggestions": [
+          "没有答案不代表白走。闲还在等我们把药带回去。",
+          "林檎，站起来——空塔也是答案，说明大人们真的不在了。",
+          "先别崩溃。我们下去和闲汇合，三个人一起想。"
+        ],
+        "maxFreeReplies": 2,
+        "aiGoal": "空塔情感爆发点。林檎短暂绝望但不彻底崩溃。玩家发言后，应决定在天台暂留——点起篝火，等夜。不要触发结局或切到露营/现实层。",
+        "advanceSceneIds": [
+          "ch3_campfire_lit",
+          "ch3_teacher_static"
+        ],
+        "onCompleteFlags": { "acceptedEmptyTower": true }
+      }
+    },
+    {
+      "id": "ch3_campfire_lit",
+      "background": "rooftop_campfire",
+      "speaker": "narrator",
+      "speakerName": "旁白",
+      "text": "你们用塔顶的废木点了堆篝火。火光在夜风里摇晃，把三个人的影子投在空无一物的发射台上——像毕业露营那夜的缩小版。"
+    },
+    {
+      "id": "ch3_teacher_static",
+      "background": "rooftop_campfire",
+      "speaker": "narrator",
+      "speakerName": "旁白",
+      "text": "收音机忽然自己亮了。杂音里，有一个声音在说话——不年轻，不苍老，像从很远的地方借来的：「……你们来了。」"
+    },
+    {
+      "id": "ch3_teacher_voice",
+      "background": "rooftop_campfire",
+      "speaker": "teacher",
+      "speakerName": "老师",
+      "text": "……我羡慕你们。拥有犯错的权利，和不必完美的自由。",
+      "onEnterFlags": { "teacherVoiceHeard": true }
+    },
+    {
+      "id": "ch3_ringo_listen",
+      "background": "rooftop_campfire",
+      "speaker": "ringo",
+      "speakerName": "林檎",
+      "text": "老师……？你在哪里？我们找了你好久——",
+      "character": "ringo",
+      "expression": "calm"
+    },
+    {
+      "id": "ch3_xian_reach",
+      "background": "rv_interior",
+      "speaker": "xian",
+      "speakerName": "闲",
+      "text": "……声音不是从塔顶来的。是从……我们来的那条路上。",
+      "character": "xian",
+      "expression": "hopeful"
+    },
+    {
+      "id": "ch3_interactive_campfire",
+      "background": "rooftop_campfire",
+      "speaker": "narrator",
+      "speakerName": "旁白",
+      "text": "篝火噼啪，星空压在头顶。林檎盯着火焰，闲在无线电里呼吸。这是第一层旅程里，第一次所有人都在「听」——包括你。",
+      "playerTurn": true,
+      "interactive": {
+        "objective": "【当前目标】塔顶长谈：回应老师的话，或打开林檎/闲的心结",
+        "playerPrompt": "你想说什么？",
+        "suggestions": [
+          "老师，我们不需要完美——我们只需要还在一起。",
+          "林檎，中枪不是你的错。闲选择扑过来，是因为她在乎。",
+          "闲，痛觉回来了也没关系。活着本身就有意义。"
+        ],
+        "maxFreeReplies": 2,
+        "aiGoal": "塔顶篝火长谈（Figma 好结局前奏）。老师声音可再叹一句，但不揭露 Meta/剧本真相。林檎应触及「犹豫与愧疚」心结；闲应触及「自我否定」心结。玩家嘴遁后，众人稍许释然，但心结未完全解开（knotResolved 保持 false）。不要切到露营重聚或出租屋结局。",
+        "advanceSceneIds": [
+          "ch3_ringo_confess",
+          "ch3_xian_confess",
+          "ch3_stars"
+        ],
+        "onCompleteFlags": { "campfireTalkComplete": true }
+      }
+    },
+    {
+      "id": "ch3_ringo_confess",
+      "background": "rooftop_campfire",
+      "speaker": "ringo",
+      "speakerName": "林檎",
+      "text": "……我以为当队长就不能怕。可我怕。我怕再犹豫一次，就失去所有人。",
+      "character": "ringo",
+      "expression": "calm"
+    },
+    {
+      "id": "ch3_xian_confess",
+      "background": "rooftop_campfire",
+      "speaker": "xian",
+      "speakerName": "闲",
+      "text": "……我也怕。怕痛，怕长大，怕你们为了我停下来。",
+      "character": "xian",
+      "expression": "pained"
+    },
+    {
+      "id": "ch3_stars",
+      "background": "rooftop_campfire",
+      "speaker": "narrator",
+      "speakerName": "旁白",
+      "text": "风停了片刻。塔下是废土，塔上是星空。没有大人，没有广播，只有三个少年和一堆火——也许这就够了。"
+    },
+    {
+      "id": "ch3_teacher_fade",
+      "background": "rooftop_campfire",
+      "speaker": "teacher",
+      "speakerName": "老师",
+      "text": "……回去吧。路还在你们脚下。",
+      "character": "teacher",
+      "expression": "silhouette"
+    },
+    {
+      "id": "ch3_interactive_descent",
+      "background": "radio_tower",
+      "speaker": "narrator",
+      "speakerName": "旁白",
+      "text": "篝火将尽。抗生素只剩最后一剂，闲的烧似乎退了又起。塔下还有路，结局尚未写定——但你们必须做出今夜最后一个决定。",
+      "playerTurn": true,
+      "interactive": {
+        "objective": "【当前目标】第三章收束：带闲离开塔，还是留到天明再搜塔基？",
+        "playerPrompt": "你下达什么指令？",
+        "suggestions": [
+          "下山，回房车。路还长，闲不能继续在塔上吹风。",
+          "天亮前再搜一遍塔基——也许空塔下面还有东西。",
+          "林檎，我们三个都活到了这里。这就够了，回家。"
+        ],
+        "maxFreeReplies": 2,
+        "aiGoal": "第三章收束。无论玩家如何选择，最终应决定下山回到房车，承认旅程进入「塔后」阶段——结局分支即将开启。不要播放任何具体结局（坏/普通/好/真/隐藏）。",
+        "advanceSceneIds": [
+          "ch3_closing"
+        ],
+        "onCompleteFlags": { "chapter03Complete": true },
+        "onCompleteResources": { "antibiotics": -1 }
+      }
+    },
+    {
+      "id": "ch3_closing",
+      "background": "highway_wasteland",
+      "speaker": "narrator",
+      "speakerName": "旁白",
+      "text": "你们走下广播塔，房车灯再次划破荒原。塔顶的空与星留在背后，前方的分岔路在黎明里显现——不同的选择，将把你们带向不同的结局。第三章到此结束。",
+      "chapterEnd": true
+    }
+  ],
+  "nextChapter": "endings",
+  "notes": "对应 Figma：抵达塔→塔顶空无一物→老师叹息→篝火长谈→第一层分水岭。不触发具体结局，留 endings 章节。老师为声音/剪影，不揭露 Meta。"
+}
