@@ -39,12 +39,7 @@ npx wrangler pages secret put SITE_ACCESS_TOKEN --project-name visual-novel
 | `AI_API_KEY` | 是 | 智谱 / DeepSeek 等 API 密钥 |
 | `AI_BASE_URL` | 否 | 默认 `https://open.bigmodel.cn/api/paas/v4` |
 | `AI_MODEL` | 否 | 默认 `glm-4-flash` |
-| `SITE_ACCESS_TOKEN` | 否 | 设置后访客需先访问 `/login.html` 输入令牌 |
-
-### 访问保护
-
-- **简单令牌**：设置 `SITE_ACCESS_TOKEN`，分享令牌给测试者
-- **Cloudflare Access**（可选）：Zero Trust → 为 `*.pages.dev` 或自定义域名配置邮箱/Google 登录，适合正式内测
+| `SITE_ACCESS_TOKEN` | 否 | 可选；设置后访客需先访问 `/login.html` 输入令牌。不设则公开访问 |
 
 ### 本地模拟 Pages
 

@@ -11,12 +11,12 @@
   "conviction": {
     "xian": 0,
     "ringo": 0,
-    "male_member": 0
+    "miles": 0
   },
   "knotResolved": {
     "xian": false,
     "ringo": false,
-    "male_member": false
+    "miles": false
   },
   "seriousnessThreshold": 0,
   "flags": {

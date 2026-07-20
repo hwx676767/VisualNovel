@@ -135,7 +135,7 @@
     { "id": "protagonist", "name": "主角", "sheet": "待补完", "inGame": "partial" },
     { "id": "xian", "name": "闲", "sheet": "完整", "inGame": "yes" },
     { "id": "ringo", "name": "林檎", "sheet": "完整", "inGame": "yes" },
-    { "id": "male_member", "name": "男成员", "sheet": "未编写", "inGame": "no" },
+    { "id": "miles", "name": "Miles", "sheet": "完整（含语料）", "inGame": "yes" },
     { "id": "teacher", "name": "老师", "sheet": "象征性", "inGame": "no" }
   ]
 }

@@ -32,14 +32,21 @@ const AI = (() => {
       .map((c) => {
         const conviction = gameState.conviction[c.id] ?? 0;
         const stage = pickConvictionStage(c.convictionStages, conviction);
+        const samples = pickSpeechSamples(c.speechCorpus, conviction);
+        const sampleBlock = samples.length
+          ? `语气参考（模仿口吻与节奏，勿整句照抄）：\n${samples.map((s) => `- 「${s}」`).join('\n')}`
+          : '';
         return [
           `【${c.displayName} / id:${c.id}】`,
           `性格：${c.aiProfile.personality}`,
           `说话风格：${c.aiProfile.speechStyle}`,
           `心结：${c.knot || '无'}`,
           `当前坚定值：${conviction}（${stage}）`,
-          `可用表情：${c.expressions.join(', ')}`
-        ].join('\n');
+          `可用表情：${c.expressions.join(', ')}`,
+          sampleBlock
+        ]
+          .filter(Boolean)
+          .join('\n');
       })
       .join('\n\n');
 
@@ -100,6 +107,26 @@ const AI = (() => {
       if (value >= t) return stages[String(t)];
     }
     return stages['0'] || '未知';
+  }
+
+  /**
+   * Picks general + current-stage speech samples for AI to mimic.
+   */
+  function pickSpeechSamples(corpus, conviction) {
+    if (!corpus) return [];
+    const general = Array.isArray(corpus.general) ? corpus.general : [];
+    const byStage = corpus.byConviction || {};
+    const thresholds = Object.keys(byStage)
+      .map(Number)
+      .sort((a, b) => b - a);
+    let stageSamples = [];
+    for (const t of thresholds) {
+      if (conviction >= t) {
+        stageSamples = Array.isArray(byStage[String(t)]) ? byStage[String(t)] : [];
+        break;
+      }
+    }
+    return [...stageSamples, ...general].filter(Boolean).slice(0, 6);
   }
 
   /**

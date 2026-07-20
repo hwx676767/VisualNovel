@@ -19,8 +19,8 @@ const gameState = {
   typewriterTimer: null,
   day: 1,
   resources: { antibiotics: 3, gasoline: 5 },
-  conviction: { xian: 0, ringo: 0, male_member: 0 },
-  knotResolved: { xian: false, ringo: false, male_member: false },
+  conviction: { xian: 0, ringo: 0, miles: 0 },
+  knotResolved: { xian: false, ringo: false, miles: false },
   seriousnessThreshold: 0,
   flags: {
     reachedRadioTower: false,
@@ -165,10 +165,12 @@ function resolveEndingRoute(state = gameState) {
 
   const xianC = conviction.xian ?? 0;
   const ringoC = conviction.ringo ?? 0;
+  const milesC = conviction.miles ?? 0;
 
   if (
     xianC >= ENDING_CONFIG.trueConviction &&
     ringoC >= ENDING_CONFIG.trueConviction &&
+    milesC >= ENDING_CONFIG.trueConviction &&
     seriousnessThreshold <= ENDING_CONFIG.trueSeriousnessMax &&
     flags.campfireTalkComplete &&
     flags.reachedRadioTower
@@ -179,6 +181,7 @@ function resolveEndingRoute(state = gameState) {
   if (
     xianC >= ENDING_CONFIG.goodConviction &&
     ringoC >= ENDING_CONFIG.goodConviction &&
+    milesC >= ENDING_CONFIG.goodConviction &&
     flags.reachedRadioTower
   ) {
     return 'good';
