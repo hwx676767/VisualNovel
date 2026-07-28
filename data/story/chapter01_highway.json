@@ -54,8 +54,7 @@
         "maxFreeReplies": 2,
         "aiGoal": "加油站紧张氛围。玩家选择后，林檎应短暂犹豫（呼应她的心结），但最终局势仍要恶化——为下一幕枪声做铺垫。不要直接描写中枪，本轮只制造误判与恐慌。",
         "advanceSceneIds": [
-          "ch1_misread",
-          "ch1_shot"
+          "ch1_misread"
         ],
         "onCompleteFlags": { "gasStationVisited": true }
       }
@@ -65,23 +64,87 @@
       "background": "gas_station",
       "speaker": "narrator",
       "speakerName": "旁白",
-      "text": "一声闷响从店铺深处传来。林檎猛地回头，撬棍脱手——你以为有人冲了出来。"
+      "text": "货架后先响起的是塑料袋摩擦声，接着是一只鞋踩碎玻璃的脆响。林檎的撬棍垂下去半寸；闲的相机镜头里，便利店深处有个和你们差不多大的影子，正一步步退向冷柜。",
+      "soundCue": { "label": "紧张氛围 · 低频杂音" }
+    },
+    {
+      "id": "ch1_student_warning",
+      "background": "gas_station",
+      "speaker": "student",
+      "speakerName": "持枪学生",
+      "text": "别过来。油、药，还有那辆车，都留下。再往前一步，我就开枪。"
+    },
+    {
+      "id": "ch1_student_fear",
+      "background": "gas_station",
+      "speaker": "student",
+      "speakerName": "持枪学生",
+      "text": "我不是要抢你们的……我已经两天没见过活人了。你们刚才在门口说什么？你们是不是也要把我丢下？"
+    },
+    {
+      "id": "ch1_ringo_deescalate",
+      "background": "gas_station",
+      "speaker": "ringo",
+      "speakerName": "林檎",
+      "text": "没人要丢下你。把枪口放低一点，我们可以谈。你手在抖，先别逼自己做以后会后悔的事。",
+      "character": "ringo",
+      "expression": "guilty"
+    },
+    {
+      "id": "ch1_student_panics",
+      "background": "gas_station",
+      "speaker": "student",
+      "speakerName": "持枪学生",
+      "text": "别骗我！每个人都这么说——等我把枪放下，你们就会跑。"
     },
     {
       "id": "ch1_shot",
       "background": "gas_station",
       "speaker": "narrator",
       "speakerName": "旁白",
-      "text": "枪声几乎是贴着耳朵炸开的。你还没看清来者，闲已经扑了过来。她把你按倒的瞬间，温热的血渗进你的衣领——是她的。",
+      "text": "枪响不是威胁，而是被恐惧扣下的扳机。闲在你身侧猛地一震，仍本能地把你扑倒。温热的血迅速浸透你的衣领；持枪学生盯着自己的手，脸色比墙上的灰还白。",
+      "soundCue": { "label": "枪响 · 短促耳鸣" },
       "onEnterFlags": { "xianInjured": true },
       "onEnterResources": { "gasoline": 1 }
+    },
+    {
+      "id": "ch1_student_breaks",
+      "background": "gas_station",
+      "speaker": "student",
+      "speakerName": "持枪学生",
+      "text": "我……我没想开枪。我以为她会抢枪……我不是故意的。"
+    },
+    {
+      "id": "ch1_resistance",
+      "background": "gas_station",
+      "speaker": "narrator",
+      "speakerName": "旁白",
+      "text": "林檎没有给任何人崩溃的时间。她用撬棍拨开枪口，把人逼回货架后；你跪在地上按住闲的伤处，闲咬着牙，指节死死抓住你的袖口。远处又有铁门被风撞响，像有什么正被枪声叫醒。",
+      "soundCue": { "label": "警报感 · 脚步逼近" }
+    },
+    {
+      "id": "ch1_ringo_evacuate",
+      "background": "gas_station",
+      "speaker": "ringo",
+      "speakerName": "林檎",
+      "text": "不追了。带闲上车，马上走。你看着她，我来开车——现在，谁都别回头。",
+      "character": "ringo",
+      "expression": "resolute"
+    },
+    {
+      "id": "ch1_escape",
+      "background": "rv_interior",
+      "speaker": "narrator",
+      "speakerName": "旁白",
+      "text": "车门砰地合上，房车几乎是撞着路沿冲出去的。后视镜里，加油站的白灯越来越小；那名学生没有追来，只是站在门口，像被自己的一声枪响钉在原地。",
+      "soundCue": { "label": "房车急驶 · 引擎轰鸣" }
     },
     {
       "id": "ch1_xian_down",
       "background": "rv_interior",
       "speaker": "xian",
       "speakerName": "闲",
-      "text": "……别管我。只是……擦伤而已。",
+      "text": "……别看我。只是擦伤。你别把手松开，松开了才会真的痛。",
       "character": "xian",
       "expression": "pained"
     },
@@ -90,16 +153,24 @@
       "background": "rv_interior",
       "speaker": "ringo",
       "speakerName": "林檎",
-      "text": "是我……如果我刚才果断一点，如果我……",
+      "text": "是我让你们下车的。也是我没有把她带出来……我明明看见那孩子拿着枪。",
       "character": "ringo",
       "expression": "guilty"
+    },
+    {
+      "id": "ch1_steady_xian",
+      "background": "rv_interior",
+      "speaker": "narrator",
+      "speakerName": "旁白",
+      "text": "车厢被发动机震得发颤。你用外套压住伤口，数着闲每一次越来越浅的呼吸；林檎的车开得很快，却没有再一次急刹。她把恐惧压进方向盘里，只留下一个方向：最近的医院。",
+      "soundCue": { "label": "心跳 · 压迫感" }
     },
     {
       "id": "ch1_interactive_after_shot",
       "background": "rv_interior",
       "speaker": "narrator",
       "speakerName": "旁白",
-      "text": "闲脸色发白，林檎的手在发抖。房车在夜色里颠簸，你必须让这两个人还能往前走。",
+      "text": "闲的意识在清醒与昏沉之间来回滑落，林檎等着你的声音，像等一个能把她从自责里拽出来的命令。现在的每一句话都很轻，却能让车继续向前。",
       "playerTurn": true,
       "interactive": {
         "objective": "【当前目标】安抚同伴，并决定：立刻去医院",
@@ -110,7 +181,7 @@
           "把伤口按住，我来指路。"
         ],
         "maxFreeReplies": 2,
-        "aiGoal": "闲中枪后房车内的情绪爆发。林檎自责、闲逞强。玩家发言后，众人同意驱车前往附近城市医院。不要跳到已经治好或公路片后期。",
+        "aiGoal": "闲中枪后的房车内情绪爆发。先回应玩家，再让林檎从自责转为执行救援，闲在疼痛中逞强却接受陪伴。持枪学生是恐惧失控的同龄人，不把他写成纯粹恶人。回复保持连续对白，不插入旁白。玩家发言后，众人明确驱车前往附近城市医院；不要跳到已经治好或公路片后期。",
         "advanceSceneIds": [
           "ch1_hospital_drive",
           "ch1_hospital_arrival",

@@ -82,10 +82,24 @@ const dialogueBoxEl = document.getElementById('dialogue-box');
 const storyObjectiveEl = document.getElementById('story-objective');
 const modeHintEl = document.getElementById('mode-hint');
 const suggestionChipsEl = document.getElementById('suggestion-chips');
+const toggleSuggestionsBtnEl = document.getElementById('toggle-suggestions-btn');
 const advanceMainlineBtnEl = document.getElementById('advance-mainline-btn');
 const playerInputEl = document.getElementById('player-input');
 const playerInputAreaEl = document.getElementById('player-input-area');
 const sendBtnEl = document.getElementById('send-btn');
+
+let soundCueTimer = null;
+function showSoundCue(cue) {
+  if (!cue) return;
+  const existing = document.getElementById('sound-cue');
+  const cueEl = existing || document.createElement('div');
+  cueEl.id = 'sound-cue';
+  cueEl.textContent = `♪ ${cue.label || cue}`;
+  if (!existing) gameContentEl.appendChild(cueEl);
+  cueEl.hidden = false;
+  clearTimeout(soundCueTimer);
+  soundCueTimer = setTimeout(() => { cueEl.hidden = true; }, 2600);
+}
 
 /** Full text of the dialogue currently being typewritten (for click-to-skip). */
 let currentTypewriterText = '';
@@ -452,6 +466,8 @@ function exitInteractiveMode() {
   modeHintEl.hidden = true;
   suggestionChipsEl.hidden = true;
   suggestionChipsEl.innerHTML = '';
+  toggleSuggestionsBtnEl.hidden = true;
+  toggleSuggestionsBtnEl.setAttribute('aria-expanded', 'false');
   advanceMainlineBtnEl.hidden = true;
 }
 
@@ -460,8 +476,13 @@ function renderSuggestionChips(suggestions) {
 
   if (!suggestions.length) {
     suggestionChipsEl.hidden = true;
+    toggleSuggestionsBtnEl.hidden = true;
     return;
   }
+
+  toggleSuggestionsBtnEl.hidden = false;
+  toggleSuggestionsBtnEl.textContent = '显示快捷行动';
+  toggleSuggestionsBtnEl.setAttribute('aria-expanded', 'false');
 
   const label = document.createElement('div');
   label.className = 'suggestion-label';
@@ -481,7 +502,8 @@ function renderSuggestionChips(suggestions) {
     });
     suggestionChipsEl.appendChild(chip);
   });
-  suggestionChipsEl.hidden = false;
+  // Keep suggested choices out of the way until the player asks for them.
+  suggestionChipsEl.hidden = true;
 }
 
 /**
@@ -556,6 +578,7 @@ function playScene(scene, options = {}) {
   gameState.currentScene = scene.id;
   applySceneEnterEffects(scene);
   updateBackground(scene.background);
+  showSoundCue(scene.soundCue);
 
   if (scene.character) {
     updateCharacterSprite(scene.character, scene.expression || 'neutral', {
@@ -1341,6 +1364,13 @@ document.getElementById('ai-recheck-btn').addEventListener('click', refreshAISta
 advanceMainlineBtnEl.addEventListener('click', () => {
   if (gameState.storyMode !== 'interactive' || gameState.isTyping || gameState.isWaitingForAI) return;
   endInteractiveAndAdvanceMainline();
+});
+
+toggleSuggestionsBtnEl.addEventListener('click', () => {
+  const willShow = suggestionChipsEl.hidden;
+  suggestionChipsEl.hidden = !willShow;
+  toggleSuggestionsBtnEl.textContent = willShow ? '收起快捷行动' : '显示快捷行动';
+  toggleSuggestionsBtnEl.setAttribute('aria-expanded', String(willShow));
 });
 
 loadGameData()
