@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Visual Novel · 访问验证</title>
+  <title>Visual Novel · Access</title>
   <link rel="stylesheet" href="style.css" />
   <style>
     .login-wrap {
@@ -65,17 +65,17 @@
 <body>
   <div class="login-wrap">
     <div class="login-card">
-      <h1>访问验证</h1>
-      <p>此站点已启用访问保护。请输入管理员提供的访问令牌以进入游戏。</p>
+      <h1>Access verification</h1>
+      <p>This site is access-protected. Enter the token your admin gave you to play.</p>
       <form id="login-form">
         <input
           id="token-input"
           type="password"
           autocomplete="current-password"
-          placeholder="访问令牌"
+          placeholder="Access token"
           required
         />
-        <button type="submit" id="login-btn">进入游戏</button>
+        <button type="submit" id="login-btn">Enter game</button>
       </form>
       <div class="login-error" id="login-error" aria-live="polite"></div>
     </div>
@@ -100,19 +100,19 @@
 
         if (response.status === 401) {
           VNAuth.clearToken();
-          errorEl.textContent = '令牌无效，请重试。';
+          errorEl.textContent = 'Invalid token. Please try again.';
           return;
         }
 
         if (!response.ok) {
-          errorEl.textContent = '无法连接服务器，请稍后再试。';
+          errorEl.textContent = "Couldn't reach the server. Try again later.";
           return;
         }
 
         window.location.href = '/index.html';
       } catch {
         VNAuth.clearToken();
-        errorEl.textContent = '网络错误，请检查连接。';
+        errorEl.textContent = 'Network error. Check your connection.';
       } finally {
         btn.disabled = false;
       }

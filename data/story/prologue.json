@@ -1,28 +1,28 @@
 {
   "id": "prologue",
-  "title": "序章：老师消失之夜",
+  "title": "Prologue: The Night Teacher Disappeared",
   "scenes": [
     {
       "id": "prologue_campsite",
       "background": "campsite_night",
       "speaker": "narrator",
       "speakerName": "",
-      "bgm": { "id": "campsite", "label": "BGM · 露营夜" },
-      "text": "毕业露营的最后一夜。火堆把四个人的影子拉得很长。林檎在弹一把旧吉他，Miles 往铁锅里添柴；你望向帐篷外——老师的睡袋是空的，只有风。"
+      "bgm": { "id": "campsite", "label": "BGM · Campfire Night" },
+      "text": "Last night of the graduation camping trip. The fire stretches four long shadows. Ringo's strumming an old guitar, Miles is adding wood to the iron pot; you look past the tent—the Teacher's sleeping bag is empty. Just wind."
     },
     {
       "id": "prologue_empty_bag",
       "background": "campsite_night",
       "speaker": "narrator",
       "speakerName": "",
-      "text": "水壶还靠在石头边，瓶盖没拧紧。取水不需要一个小时。松针被踩乱的方向通向林更深的地方，却没有回来的脚印叠上去。"
+      "text": "The water bottle's still leaning against a rock, cap not screwed on tight. Getting water shouldn't take an hour. Trampled pine needles lead deeper into the woods, but there are no return footprints on top."
     },
     {
       "id": "prologue_teacher_missing",
       "background": "campsite_night",
       "speaker": "ringo",
-      "speakerName": "林檎",
-      "text": "……不对劲。老师说去取水，已经一个小时了。",
+      "speakerName": "Ringo",
+      "text": "...Something's wrong. Teacher went to get water. It's been an hour.",
       "character": "ringo",
       "expression": "guilty"
     },
@@ -33,14 +33,14 @@
       "speakerName": "Miles",
       "character": "miles",
       "expression": "tired",
-      "text": "我去林子边上喊过两声。……没人应。风太大了？"
+      "text": "I shouted toward the treeline twice. ...Nobody answered. Wind's too loud, maybe?"
     },
     {
       "id": "prologue_xian_camera",
       "background": "campsite_night",
       "speaker": "xian",
-      "speakerName": "闲",
-      "text": "相机里什么都没有。只有噪点。……不，等等。那边有东西。",
+      "speakerName": "Xian",
+      "text": "There's nothing on the camera. Just static. ...No, wait. There's something over there.",
       "character": "xian",
       "expression": "neutral"
     },
@@ -49,18 +49,18 @@
       "background": "campsite_night",
       "speaker": "narrator",
       "speakerName": "",
-      "text": "四个人同时看向你。夜风灌进营地，火堆几乎要灭了。吉他弦还在余震，像一根绷紧的神经。现在，必须由你开口。",
+      "text": "All four of them look at you at once. Night wind pours into camp, the fire's almost out. The guitar string's still vibrating, like a nerve pulled tight. Now you have to speak.",
       "playerTurn": true,
       "interactive": {
-        "objective": "【当前目标】说服同伴：立刻开车回城找老师",
-        "playerPrompt": "你会对林檎、闲和 Miles 说什么？",
+        "objective": "[Current Objective] Convince your friends: drive back to the city right now to find Teacher",
+        "playerPrompt": "What do you say to Ringo, Xian, and Miles?",
         "suggestions": [
-          "不能再等了，我们现在就开车回城。",
-          "闲，你相机里到底拍到了什么？",
-          "Miles，把东西收上车。林檎，你最后一次看见老师是什么时候？"
+          "We can't wait anymore. Let's drive back to the city now.",
+          "Xian, what did your camera actually capture?",
+          "Miles, get everything in the RV. Ringo, when did you last see Teacher?"
         ],
         "maxFreeReplies": 2,
-        "aiGoal": "序章第一个决策点。无论玩家怎么说，同伴最终应同意开车回城。可让林檎/闲/Miles 之一回应。不要跳到大人消失、枪伤。充分后 advanceMainline true。",
+        "aiGoal": "First decision point in the prologue. No matter what the player says, the group should ultimately agree to drive back to the city. Have Ringo/Xian/Miles respond if needed. Don't jump to adults disappearing or gunshots. When enough has played out, advanceMainline true.",
         "advanceSceneIds": [
           "prologue_pack",
           "prologue_rv_departure",
@@ -75,37 +75,37 @@
       "background": "campsite_night",
       "speaker": "narrator",
       "speakerName": "",
-      "sfx": { "id": "engine", "label": "SFX · 发动房车" },
-      "text": "Miles 把没吃完的罐头塞进纸箱，林檎踢灭余烬。闲坐进后排，相机镜头对着仍旧空着的那只睡袋，快门没按下去。"
+      "sfx": { "id": "engine", "label": "SFX · RV Engine Start" },
+      "text": "Miles stuffs half-eaten cans into a cardboard box, Ringo kicks out the embers. Xian climbs into the back seat, camera pointed at the still-empty sleeping bag. She doesn't press the shutter."
     },
     {
       "id": "prologue_rv_departure",
       "background": "rv_interior",
       "speaker": "narrator",
       "speakerName": "",
-      "bgm": { "id": "highway", "label": "BGM · 驶离营地" },
-      "text": "房车轮毂碾过碎石，露营地缩成后视镜里一点昏黄的火。林檎握着方向盘，Miles 盯着窗外树影，闲蜷在后排，相机垂在胸前。"
+      "bgm": { "id": "highway", "label": "BGM · Leaving Camp" },
+      "text": "The RV tires crunch over gravel. The campsite shrinks to a faint orange glow in the rearview. Ringo's at the wheel, Miles stares at the tree shadows outside, Xian curls up in back with the camera hanging from her neck."
     },
     {
       "id": "prologue_empty_city",
       "background": "empty_city",
       "speaker": "narrator",
       "speakerName": "",
-      "text": "城市到了。路灯亮着，店铺的门敞开着，红绿灯仍按节奏切换——街上没有任何人。没有大人。一个人都没有。像整座城被按下了静音。"
+      "text": "You reach the city. Streetlights are on, shop doors stand open, traffic lights still cycling on schedule—and there's nobody on the streets. No adults. Not a single person. Like the whole city got muted."
     },
     {
       "id": "prologue_city_detail",
       "background": "empty_city",
       "speaker": "narrator",
       "speakerName": "",
-      "text": "便利店玻璃门里，冰柜还在嗡嗡响。一份没吃完的便当搁在收银台上，筷子斜插着，像主人只是去了后巷。Miles 下意识放轻脚步，生怕惊动这份过分完整的空。"
+      "text": "Inside the convenience store, the freezer's still humming. A half-eaten bento sits on the counter, chopsticks stuck in at an angle, like the owner just stepped out back. Miles instinctively lightens his step, afraid to disturb this too-perfect emptiness."
     },
     {
       "id": "prologue_ringo_react",
       "background": "empty_city",
       "speaker": "ringo",
-      "speakerName": "林檎",
-      "text": "……先别慌。先找医院，或者药店。只要还有药，就还有办法。",
+      "speakerName": "Ringo",
+      "text": "...Don't panic yet. Find a hospital first, or a pharmacy. As long as there's still medicine, we've still got options.",
       "character": "ringo",
       "expression": "forced_smile"
     },
@@ -114,18 +114,18 @@
       "background": "empty_city",
       "speaker": "narrator",
       "speakerName": "",
-      "text": "空城的寂静压下来。林檎在强撑，Miles 握紧背包带，闲盯着窗外。接下来怎么做，又需要你决定。",
+      "text": "The empty city's silence presses down. Ringo's holding it together, Miles grips his backpack strap, Xian stares out the window. What to do next—that's your call again.",
       "playerTurn": true,
       "interactive": {
-        "objective": "【当前目标】在空城中做出下一步决定：找医院，还是先搜刮物资？",
-        "playerPrompt": "你打算怎么做？",
+        "objective": "[Current Objective] Decide your next move in the empty city: find a hospital, or scavenge supplies first?",
+        "playerPrompt": "What are you going to do?",
         "suggestions": [
-          "先去最近的医院，看看还有没有药。",
-          "先搜刮便利店，储备抗生素和汽油。",
-          "让闲用相机看看有没有异常信号。"
+          "Head to the nearest hospital and see if there's any medicine left.",
+          "Hit the convenience stores first—stock up on antibiotics and gas.",
+          "Have Xian use her camera to check for anything weird."
         ],
         "maxFreeReplies": 2,
-        "aiGoal": "空城决策。引导讨论医院或搜刮，保持紧张。可让 Miles 提醒物资。不要跳到枪伤或广播塔。充分后 advanceMainline true。",
+        "aiGoal": "Empty city decision. Guide discussion toward hospital or scavenging, keep the tension up. Miles can remind them about supplies. Don't jump to gunshots or the radio tower. When enough has played out, advanceMainline true.",
         "advanceSceneIds": [
           "prologue_closing"
         ]
@@ -136,8 +136,8 @@
       "background": "highway_wasteland",
       "speaker": "narrator",
       "speakerName": "",
-      "sfx": { "id": "radio_static", "label": "SFX · 收音机杂音" },
-      "text": "你们驶离空城，汇入通往郊区的公路。夜幕低垂，收音机里的杂音时断时续——像有人在很远的地方说话。"
+      "sfx": { "id": "radio_static", "label": "SFX · Radio Static" },
+      "text": "You leave the empty city and merge onto the highway toward the suburbs. Night hangs low. Static crackles through the radio on and off—like someone's talking from very far away."
     }
   ],
   "nextChapter": "chapter01_highway"

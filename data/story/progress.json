@@ -1,144 +1,144 @@
 {
-  "title": "Paul 项目 · 故事进度表",
+  "title": "Paul Project · Story Progress Tracker",
   "updated": "2026-07-13",
   "legend": {
-    "implemented": "已在游戏中可玩",
-    "planned": "设计已有，脚本未写",
-    "outline": "Figma 大纲仅有"
+    "implemented": "Playable in game",
+    "planned": "Designed, script not written yet",
+    "outline": "Figma outline only"
   },
   "layers": [
     {
       "id": "layer1",
-      "name": "第一层 · 大人消失的异世界",
-      "note": "90% 剧情主舞台"
+      "name": "Layer 1 · Otherworld where adults vanished",
+      "note": "Main stage for ~90% of the story"
     },
     {
       "id": "layer2",
-      "name": "第二层 · 毕业露营（时间暂停）",
-      "note": "好结局回归；与第三层边界模糊"
+      "name": "Layer 2 · Graduation camp (time paused)",
+      "note": "Good ending return; boundary with Layer 3 is blurry"
     },
     {
       "id": "layer3",
-      "name": "第三层 · 199X 现实",
-      "note": "闲欲轻生，同伴陪伴"
+      "name": "Layer 3 · 199X reality",
+      "note": "Xian on the edge; companions stay with her"
     },
     {
       "id": "layer4",
-      "name": "第四层 · Meta 电影谢幕",
-      "note": "仅真结局"
+      "name": "Layer 4 · Meta film curtain call",
+      "note": "True ending only"
     }
   ],
   "chapters": [
     {
       "id": "prologue",
-      "title": "序章：老师消失之夜",
+      "title": "Prologue: The Night the Teacher Vanished",
       "status": "implemented",
       "file": "data/story/prologue.json",
       "layer": "layer1",
       "beats": [
-        { "id": "p1", "title": "毕业露营夜", "status": "implemented", "sceneId": "prologue_campsite" },
-        { "id": "p2", "title": "老师失踪", "status": "implemented", "sceneId": "prologue_teacher_missing" },
-        { "id": "p3", "title": "闲的相机", "status": "implemented", "sceneId": "prologue_xian_camera" },
-        { "id": "p4", "title": "互动：决定回城", "status": "implemented", "sceneId": "prologue_decision" },
-        { "id": "p5", "title": "房车出发", "status": "implemented", "sceneId": "prologue_rv_departure" },
-        { "id": "p6", "title": "空城（大人消失）", "status": "implemented", "sceneId": "prologue_empty_city" },
-        { "id": "p7", "title": "林檎强撑", "status": "implemented", "sceneId": "prologue_ringo_react" },
-        { "id": "p8", "title": "互动：空城决策", "status": "implemented", "sceneId": "prologue_interactive_city" },
-        { "id": "p9", "title": "驶上公路 · 收音机杂音", "status": "implemented", "sceneId": "prologue_closing" }
+        { "id": "p1", "title": "Graduation Camp Night", "status": "implemented", "sceneId": "prologue_campsite" },
+        { "id": "p2", "title": "Teacher Missing", "status": "implemented", "sceneId": "prologue_teacher_missing" },
+        { "id": "p3", "title": "Xian's Camera", "status": "implemented", "sceneId": "prologue_xian_camera" },
+        { "id": "p4", "title": "Interactive: Decide to Head Back", "status": "implemented", "sceneId": "prologue_decision" },
+        { "id": "p5", "title": "RV Departure", "status": "implemented", "sceneId": "prologue_rv_departure" },
+        { "id": "p6", "title": "Empty City (Adults Gone)", "status": "implemented", "sceneId": "prologue_empty_city" },
+        { "id": "p7", "title": "Ringo Holds It Together", "status": "implemented", "sceneId": "prologue_ringo_react" },
+        { "id": "p8", "title": "Interactive: Empty City Decision", "status": "implemented", "sceneId": "prologue_interactive_city" },
+        { "id": "p9", "title": "Onto the Highway · Radio Static", "status": "implemented", "sceneId": "prologue_closing" }
       ]
     },
     {
       "id": "chapter01_highway",
-      "title": "第一章：公路与枪声",
+      "title": "Chapter 1: Highway and Gunfire",
       "status": "implemented",
       "file": "data/story/chapter01_highway.json",
       "layer": "layer1",
-      "summary": "加油站误会 → 闲中枪 → 医院感染 → 电波/光柱 → 公路片启程",
+      "summary": "Gas station misunderstanding → Xian shot → hospital infection → signal/light beam → road trip begins",
       "beats": [
-        { "id": "c1_1", "title": "废土公路启程", "status": "implemented", "sceneId": "ch1_highway_open" },
-        { "id": "c1_2", "title": "加油站搜刮", "status": "implemented", "sceneId": "ch1_gas_station" },
-        { "id": "c1_3", "title": "紧张对峙", "status": "implemented", "sceneId": "ch1_ringo_tense" },
-        { "id": "c1_4", "title": "互动：化解对峙", "status": "implemented", "sceneId": "ch1_interactive_tension" },
-        { "id": "c1_5", "title": "持枪学生现身", "status": "implemented", "sceneId": "ch1_student_warning" },
-        { "id": "c1_5b", "title": "互动：对峙交涉", "status": "implemented", "sceneId": "ch1_interactive_standoff" },
-        { "id": "c1_6", "title": "闲中枪（救同伴）", "status": "implemented", "sceneId": "ch1_shot" },
-        { "id": "c1_7", "title": "抵抗与逃车", "status": "implemented", "sceneId": "ch1_resistance" },
-        { "id": "c1_7b", "title": "公路沉默之后", "status": "implemented", "sceneId": "ch1_drive_silence" },
-        { "id": "c1_8", "title": "互动：驱车去医院", "status": "implemented", "sceneId": "ch1_interactive_after_shot" },
-        { "id": "c1_9", "title": "废弃医院", "status": "implemented", "sceneId": "ch1_hospital_arrival" },
-        { "id": "c1_10", "title": "伤口感染 · 闲无法行动", "status": "implemented", "sceneId": "ch1_infection" },
-        { "id": "c1_11", "title": "互动：药品与电波", "status": "implemented", "sceneId": "ch1_interactive_medicine" },
-        { "id": "c1_12", "title": "闲相机看见光柱", "status": "implemented", "sceneId": "ch1_xian_camera" },
-        { "id": "c1_13", "title": "收音机电波", "status": "implemented", "sceneId": "ch1_signal" },
-        { "id": "c1_14", "title": "互动：正式上路", "status": "implemented", "sceneId": "ch1_interactive_departure" },
-        { "id": "c1_15", "title": "第一章收束", "status": "implemented", "sceneId": "ch1_closing" }
+        { "id": "c1_1", "title": "Wasteland Highway Departure", "status": "implemented", "sceneId": "ch1_highway_open" },
+        { "id": "c1_2", "title": "Scavenging the Gas Station", "status": "implemented", "sceneId": "ch1_gas_station" },
+        { "id": "c1_3", "title": "Tense Standoff", "status": "implemented", "sceneId": "ch1_ringo_tense" },
+        { "id": "c1_4", "title": "Interactive: Defuse the Standoff", "status": "implemented", "sceneId": "ch1_interactive_tension" },
+        { "id": "c1_5", "title": "Armed Student Appears", "status": "implemented", "sceneId": "ch1_student_warning" },
+        { "id": "c1_5b", "title": "Interactive: Negotiate the Standoff", "status": "implemented", "sceneId": "ch1_interactive_standoff" },
+        { "id": "c1_6", "title": "Xian Shot (Saving a Companion)", "status": "implemented", "sceneId": "ch1_shot" },
+        { "id": "c1_7", "title": "Resistance and Escape", "status": "implemented", "sceneId": "ch1_resistance" },
+        { "id": "c1_7b", "title": "Silence on the Road After", "status": "implemented", "sceneId": "ch1_drive_silence" },
+        { "id": "c1_8", "title": "Interactive: Drive to the Hospital", "status": "implemented", "sceneId": "ch1_interactive_after_shot" },
+        { "id": "c1_9", "title": "Abandoned Hospital", "status": "implemented", "sceneId": "ch1_hospital_arrival" },
+        { "id": "c1_10", "title": "Infected Wound · Xian Immobile", "status": "implemented", "sceneId": "ch1_infection" },
+        { "id": "c1_11", "title": "Interactive: Medicine and Signal", "status": "implemented", "sceneId": "ch1_interactive_medicine" },
+        { "id": "c1_12", "title": "Xian's Camera Sees the Light Beam", "status": "implemented", "sceneId": "ch1_xian_camera" },
+        { "id": "c1_13", "title": "Radio Signal", "status": "implemented", "sceneId": "ch1_signal" },
+        { "id": "c1_14", "title": "Interactive: Officially Hit the Road", "status": "implemented", "sceneId": "ch1_interactive_departure" },
+        { "id": "c1_15", "title": "Chapter 1 Closing", "status": "implemented", "sceneId": "ch1_closing" }
       ]
     },
     {
       "id": "chapter02_towns",
-      "title": "第二章：城镇与电波",
+      "title": "Chapter 2: Towns and Signals",
       "status": "implemented",
       "file": "data/story/chapter02_towns.json",
       "layer": "layer1",
-      "summary": "两座城镇搜刮 → 房车夜话 → 汽油危机 → BB机神秘讯号 → 广播塔远景",
+      "summary": "Two towns scavenged → RV night talk → gas crisis → mysterious pager message → radio tower in the distance",
       "beats": [
-        { "id": "c2_1", "title": "公路片黎明启程", "status": "implemented", "sceneId": "ch2_highway_dawn" },
-        { "id": "c2_2", "title": "城镇 1 · 药店搜刮", "status": "implemented", "sceneId": "ch2_first_town" },
-        { "id": "c2_3", "title": "互动 · 搜刮方式", "status": "implemented", "sceneId": "ch2_interactive_town1" },
-        { "id": "c2_4", "title": "回房车（移动据点）", "status": "implemented", "sceneId": "ch2_rv_night" },
-        { "id": "c2_5", "title": "互动 · 车内夜话", "status": "implemented", "sceneId": "ch2_interactive_night" },
-        { "id": "c2_6", "title": "汽油告急", "status": "implemented", "sceneId": "ch2_gas_low" },
-        { "id": "c2_7", "title": "互动 · 物资危机", "status": "implemented", "sceneId": "ch2_interactive_gas" },
-        { "id": "c2_8", "title": "BB机神秘讯号", "status": "implemented", "sceneId": "ch2_bb_find" },
-        { "id": "c2_9", "title": "互动 · 回应 BB 机", "status": "implemented", "sceneId": "ch2_interactive_bb" },
-        { "id": "c2_10", "title": "林檎 · 坚定值成长", "status": "implemented", "sceneId": "ch2_ringo_moment" },
-        { "id": "c2_11", "title": "闲相机看见塔影", "status": "implemented", "sceneId": "ch2_xian_lens" },
-        { "id": "c2_12", "title": "互动 · 驶向广播塔", "status": "implemented", "sceneId": "ch2_interactive_tower" },
-        { "id": "c2_13", "title": "第二章收束 · 塔影显现", "status": "implemented", "sceneId": "ch2_closing" }
+        { "id": "c2_1", "title": "Road Movie Dawn Departure", "status": "implemented", "sceneId": "ch2_highway_dawn" },
+        { "id": "c2_2", "title": "Town 1 · Pharmacy Scavenge", "status": "implemented", "sceneId": "ch2_first_town" },
+        { "id": "c2_3", "title": "Interactive · Scavenge Approach", "status": "implemented", "sceneId": "ch2_interactive_town1" },
+        { "id": "c2_4", "title": "Back to the RV (Mobile Base)", "status": "implemented", "sceneId": "ch2_rv_night" },
+        { "id": "c2_5", "title": "Interactive · Night Talk Inside", "status": "implemented", "sceneId": "ch2_interactive_night" },
+        { "id": "c2_6", "title": "Running Low on Gas", "status": "implemented", "sceneId": "ch2_gas_low" },
+        { "id": "c2_7", "title": "Interactive · Supply Crisis", "status": "implemented", "sceneId": "ch2_interactive_gas" },
+        { "id": "c2_8", "title": "Mysterious Pager Message", "status": "implemented", "sceneId": "ch2_bb_find" },
+        { "id": "c2_9", "title": "Interactive · Reply on the Pager", "status": "implemented", "sceneId": "ch2_interactive_bb" },
+        { "id": "c2_10", "title": "Ringo · Conviction Growth", "status": "implemented", "sceneId": "ch2_ringo_moment" },
+        { "id": "c2_11", "title": "Xian's Camera Sees the Tower", "status": "implemented", "sceneId": "ch2_xian_lens" },
+        { "id": "c2_12", "title": "Interactive · Head for the Radio Tower", "status": "implemented", "sceneId": "ch2_interactive_tower" },
+        { "id": "c2_13", "title": "Chapter 2 Closing · Tower Revealed", "status": "implemented", "sceneId": "ch2_closing" }
       ]
     },
     {
       "id": "chapter03_tower",
-      "title": "第三章：广播塔与空无一物",
+      "title": "Chapter 3: Radio Tower and Nothing There",
       "status": "implemented",
       "file": "data/story/chapter03_tower.json",
       "layer": "layer1",
-      "summary": "登塔 → 空无一物 → 老师之声 → 塔顶篝火长谈 → 结局分岔前夜",
+      "summary": "Climb the tower → nothing at the top → teacher's voice → rooftop campfire talk → night before ending split",
       "beats": [
-        { "id": "c3_1", "title": "抵达广播塔", "status": "implemented", "sceneId": "ch3_tower_base" },
-        { "id": "c3_2", "title": "互动 · 登塔分工", "status": "implemented", "sceneId": "ch3_interactive_climb" },
-        { "id": "c3_3", "title": "塔顶空无一物", "status": "implemented", "sceneId": "ch3_rooftop_empty" },
-        { "id": "c3_4", "title": "互动 · 面对空塔", "status": "implemented", "sceneId": "ch3_interactive_empty" },
-        { "id": "c3_5", "title": "塔顶篝火", "status": "implemented", "sceneId": "ch3_campfire_lit" },
-        { "id": "c3_6", "title": "老师之声", "status": "implemented", "sceneId": "ch3_teacher_voice" },
-        { "id": "c3_7", "title": "互动 · 篝火长谈", "status": "implemented", "sceneId": "ch3_interactive_campfire" },
-        { "id": "c3_8", "title": "林檎 / 闲袒露心结", "status": "implemented", "sceneId": "ch3_ringo_confess" },
-        { "id": "c3_9", "title": "互动 · 下山决定", "status": "implemented", "sceneId": "ch3_interactive_descent" },
-        { "id": "c3_10", "title": "第三章收束 · 结局分岔", "status": "implemented", "sceneId": "ch3_closing" }
+        { "id": "c3_1", "title": "Arrive at the Radio Tower", "status": "implemented", "sceneId": "ch3_tower_base" },
+        { "id": "c3_2", "title": "Interactive · Climb Division of Labor", "status": "implemented", "sceneId": "ch3_interactive_climb" },
+        { "id": "c3_3", "title": "Nothing at the Top", "status": "implemented", "sceneId": "ch3_rooftop_empty" },
+        { "id": "c3_4", "title": "Interactive · Facing the Empty Tower", "status": "implemented", "sceneId": "ch3_interactive_empty" },
+        { "id": "c3_5", "title": "Rooftop Campfire", "status": "implemented", "sceneId": "ch3_campfire_lit" },
+        { "id": "c3_6", "title": "Teacher's Voice", "status": "implemented", "sceneId": "ch3_teacher_voice" },
+        { "id": "c3_7", "title": "Interactive · Campfire Long Talk", "status": "implemented", "sceneId": "ch3_interactive_campfire" },
+        { "id": "c3_8", "title": "Ringo / Xian Open Up", "status": "implemented", "sceneId": "ch3_ringo_confess" },
+        { "id": "c3_9", "title": "Interactive · Decision to Descend", "status": "implemented", "sceneId": "ch3_interactive_descent" },
+        { "id": "c3_10", "title": "Chapter 3 Closing · Ending Split", "status": "implemented", "sceneId": "ch3_closing" }
       ]
     },
     {
       "id": "endings",
-      "title": "结局分支",
+      "title": "Ending Branches",
       "status": "implemented",
       "file": "data/story/endings.json",
       "layer": "layer1-4",
-      "summary": "按坚定值/阈值/生存状态进入五条结局",
+      "summary": "Five endings based on conviction / thresholds / survival state",
       "beats": [
-        { "id": "e_hidden", "title": "隐藏结局 · 绿幕烤串", "status": "implemented", "trigger": "不认真阈值 ≥ 75" },
-        { "id": "e_bad", "title": "坏结局 · 墓碑", "status": "implemented", "trigger": "闲死亡或抗生素耗尽" },
-        { "id": "e_true", "title": "真结局 · Meta 谢幕", "status": "implemented", "trigger": "坚定值≥90 + 篝火长谈 + 低不认真" },
-        { "id": "e_good", "title": "好结局 · 成年重聚", "status": "implemented", "trigger": "坚定值≥70 + 抵达广播塔" },
-        { "id": "e_normal", "title": "普通结局 · 出租屋来电", "status": "implemented", "trigger": "默认" }
+        { "id": "e_hidden", "title": "Hidden Ending · Green Screen BBQ", "status": "implemented", "trigger": "Unserious threshold ≥ 75" },
+        { "id": "e_bad", "title": "Bad Ending · Headstone", "status": "implemented", "trigger": "Xian dies or antibiotics run out" },
+        { "id": "e_true", "title": "True Ending · Meta Curtain Call", "status": "implemented", "trigger": "Conviction ≥90 + campfire talk + low unserious" },
+        { "id": "e_good", "title": "Good Ending · Reunion as Adults", "status": "implemented", "trigger": "Conviction ≥70 + reach radio tower" },
+        { "id": "e_normal", "title": "Normal Ending · Apartment Phone Call", "status": "implemented", "trigger": "Default" }
       ]
     }
   ],
   "characters": [
-    { "id": "protagonist", "name": "主角", "sheet": "待补完", "inGame": "partial" },
-    { "id": "xian", "name": "闲", "sheet": "完整", "inGame": "yes" },
-    { "id": "ringo", "name": "林檎", "sheet": "完整", "inGame": "yes" },
-    { "id": "miles", "name": "Miles", "sheet": "完整（含语料）", "inGame": "yes" },
-    { "id": "teacher", "name": "老师", "sheet": "象征性", "inGame": "partial" },
-    { "id": "student", "name": "持枪学生", "sheet": "第一章对峙", "inGame": "yes" }
+    { "id": "protagonist", "name": "Protagonist", "sheet": "To be completed", "inGame": "partial" },
+    { "id": "xian", "name": "Xian", "sheet": "Complete", "inGame": "yes" },
+    { "id": "ringo", "name": "Ringo", "sheet": "Complete", "inGame": "yes" },
+    { "id": "miles", "name": "Miles", "sheet": "Complete (with corpus)", "inGame": "yes" },
+    { "id": "teacher", "name": "Teacher", "sheet": "Symbolic", "inGame": "partial" },
+    { "id": "student", "name": "Armed Student", "sheet": "Chapter 1 standoff", "inGame": "yes" }
   ]
 }

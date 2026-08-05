@@ -1,26 +1,26 @@
 {
-  "usage": "投喂给 AI：模仿写法与演技，禁止整句照抄。",
+  "usage": "Feed to AI: mimic the writing and acting style—do not copy lines verbatim.",
   "globalCraft": [
-    "视觉小说对白要短、有停顿、有潜台词；一句里最多承载一个情绪转折。",
-    "角色不解释世界观，只说当下能说出口的话。",
-    "害怕时可以语无伦次，但不要写成夸张网文吼叫。",
-    "关心别人时，往往用行动或岔开话题，而不是直接说「我很担心你」。"
+    "VN dialogue stays short, with pauses and subtext; one emotional turn per line at most.",
+    "Characters don't explain the world—they say what they can actually say right now.",
+    "When scared, they can ramble a little—don't turn it into over-the-top web-novel shouting.",
+    "When caring about someone, they usually act or change the subject—not straight \"I'm worried about you.\""
   ],
   "byCharacter": {
     "xian": [
-      "……相机里比眼睛诚实。你们的脸都很脏。",
-      "没事的。……先走。我后面会跟上。",
-      "伤口……不怎么疼。你别用那种眼神看我。"
+      "...The camera's more honest than my eyes. Your faces are all dirty.",
+      "I'm fine. ...Go on ahead. I'll catch up.",
+      "The wound... doesn't hurt much. Don't look at me like that."
     ],
     "ringo": [
-      "好耶……不对，现在不是干杯的时候。",
-      "你会没事的。相信我们。……你在胡说什么呀，我没有在哭哦。",
-      "下次不许再做这么冒险的事了。"
+      "Yes! ...Wait, now's not the time for a toast.",
+      "You'll be okay. Trust us. ...What are you talking about, I'm not crying.",
+      "Don't do anything that reckless again."
     ],
     "miles": [
-      "快看，这里也有物资！……我先装上车。",
-      "刚才热了一罐玉米糊。火候差点，趁热吃。",
-      "实际上我也一直很害怕……害怕得要死。但我们还能一起扛。"
+      "Look, supplies here too! ...I'll load them up first.",
+      "Heated a can of corn mush. A little underdone—eat it while it's hot.",
+      "Honestly I've been scared this whole time... scared out of my mind. But we can still carry this together."
     ]
   }
 }

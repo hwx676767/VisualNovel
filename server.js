@@ -27,7 +27,7 @@ app.post('/api/chat', async (req, res) => {
   const apiKey = process.env.AI_API_KEY;
   if (!apiKey) {
     return res.status(503).json({
-      error: '未配置 AI_API_KEY。请复制 .env.example 为 .env 并填入密钥，然后重启服务器。'
+      error: 'AI_API_KEY is not set. Copy .env.example to .env, add your key, then restart the server.'
     });
   }
 
@@ -36,7 +36,7 @@ app.post('/api/chat', async (req, res) => {
   const { messages } = req.body;
 
   if (!Array.isArray(messages) || messages.length === 0) {
-    return res.status(400).json({ error: 'messages 不能为空' });
+    return res.status(400).json({ error: 'messages cannot be empty' });
   }
 
   try {
@@ -63,13 +63,13 @@ app.post('/api/chat', async (req, res) => {
     const data = await response.json();
 
     if (!response.ok) {
-      const message = data.error?.message || data.message || 'AI 请求失败';
+      const message = data.error?.message || data.message || 'AI request failed';
       return res.status(response.status).json({ error: message });
     }
 
     res.json(data);
   } catch (error) {
-    res.status(500).json({ error: error.message || '服务器内部错误' });
+    res.status(500).json({ error: error.message || 'Internal server error' });
   }
 });
 

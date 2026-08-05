@@ -316,7 +316,7 @@ body {
 }
 
 #dialogue-text.awaiting-advance::after {
-  content: "点击继续 ▼";
+  content: "Click to continue ▼";
   display: block;
   margin-top: 12px;
   font-size: 12px;

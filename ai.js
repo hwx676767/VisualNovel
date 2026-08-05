@@ -8,7 +8,7 @@ const AI = (() => {
   async function loadDirectorPrompt() {
     if (directorPrompt) return directorPrompt;
     const response = await fetch('data/prompts/director.json');
-    if (!response.ok) throw new Error('无法加载 director.json');
+    if (!response.ok) throw new Error('Failed to load director.json');
     directorPrompt = await response.json();
     return directorPrompt;
   }
@@ -30,7 +30,7 @@ const AI = (() => {
    */
   async function getStatus() {
     const response = await VNAuth.apiFetch('/api/ai/status');
-    if (!response.ok) throw new Error('无法连接 AI 服务');
+    if (!response.ok) throw new Error('Cannot reach AI service');
     return response.json();
   }
 
@@ -56,23 +56,23 @@ const AI = (() => {
         const stage = pickConvictionStage(c.convictionStages, conviction);
         const samples = pickSpeechSamples(c.speechCorpus, conviction);
         const sampleBlock = samples.length
-          ? `语气参考（模仿口吻与节奏，勿整句照抄）：\n${samples.map((s) => `- 「${s}」`).join('\n')}`
+          ? `Voice reference (match tone and rhythm; do NOT copy whole lines):\n${samples.map((s) => `- "${s}"`).join('\n')}`
           : '';
         const actingNote = c.aiProfile.actingNotes
-          ? `演技要点：${c.aiProfile.actingNotes}`
+          ? `Acting notes: ${c.aiProfile.actingNotes}`
           : '';
         const styleExamples = acting?.byCharacter?.[c.id];
         const exampleBlock = Array.isArray(styleExamples) && styleExamples.length
-          ? `写法示范（模仿气质，禁止照抄）：\n${styleExamples.map((s) => `- 「${s}」`).join('\n')}`
+          ? `Writing examples (match vibe; do NOT copy):\n${styleExamples.map((s) => `- "${s}"`).join('\n')}`
           : '';
         return [
-          `【${c.displayName} / id:${c.id}】`,
-          `性格：${c.aiProfile.personality}`,
-          `说话风格：${c.aiProfile.speechStyle}`,
+          `[${c.displayName} / id:${c.id}]`,
+          `Personality: ${c.aiProfile.personality}`,
+          `Speech style: ${c.aiProfile.speechStyle}`,
           actingNote,
-          `心结：${c.knot || '无'}`,
-          `当前坚定值：${conviction}（${stage}）`,
-          `可用表情：${c.expressions.join(', ')}`,
+          `Knot: ${c.knot || 'none'}`,
+          `Current conviction: ${conviction} (${stage})`,
+          `Expressions: ${c.expressions.join(', ')}`,
           sampleBlock,
           exampleBlock
         ]
@@ -82,67 +82,67 @@ const AI = (() => {
       .join('\n\n');
 
     const craftBlock = Array.isArray(acting?.globalCraft) && acting.globalCraft.length
-      ? ['', '## 对白写法（小说/游戏味）', ...acting.globalCraft.map((r, i) => `${i + 1}. ${r}`)].join('\n')
+      ? ['', '## Dialogue craft (VN / novel feel)', ...acting.globalCraft.map((r, i) => `${i + 1}. ${r}`)].join('\n')
       : '';
 
     const beatSection = interactive
       ? [
           '',
-          '## 当前节拍（必须遵守）',
+          '## Current beat (must follow)',
           interactive.objective,
-          `玩家提示：${interactive.playerPrompt}`,
-          `导演目标：${interactive.aiGoal}`,
-          `已自由对话 ${gameState.interactiveReplyCount || 0} / ${interactive.maxFreeReplies} 轮`,
+          `Player prompt: ${interactive.playerPrompt}`,
+          `Director goal: ${interactive.aiGoal}`,
+          `Free replies so far ${gameState.interactiveReplyCount || 0} / ${interactive.maxFreeReplies}`,
           isDecisive
-            ? '【重要】玩家刚刚做出了明确决策（快捷行动）。请回应这个决定，然后必须 advanceMainline: true，不要再追问或展开闲聊。'
+            ? '[IMPORTANT] The player just made a clear decision (quick action). Respond to it, then set advanceMainline: true. Do not keep chatting.'
             : gameState.interactiveReplyCount >= interactive.maxFreeReplies - 1
-              ? '【重要】下一轮或本轮必须 advanceMainline: true，把故事推向主线。'
+              ? '[IMPORTANT] This reply or the next must set advanceMainline: true and push the main story.'
               : ''
         ].join('\n')
       : '';
 
     return [
-      '你是这款视觉小说的 AI 叙事导演。',
+      'You are the AI narrative director for this visual novel.',
       '',
-      '## 世界观',
+      '## World',
       director.world,
       '',
-      '## 基调',
+      '## Tone',
       director.tone,
       '',
-      '## 叙事层级',
+      '## Narrative layers',
       director.layers,
       '',
-      '## 规则',
+      '## Rules',
       ...director.rules.map((r, i) => `${i + 1}. ${r}`),
       craftBlock,
       '',
-      '## 当前游戏状态',
-      `场景：${scene?.id || 'unknown'} — ${scene?.speakerName || ''}`,
-      `背景：${background?.displayName || gameState.currentBackground} — ${background?.description || ''}`,
-      `第 ${gameState.day} 天`,
-      `抗生素：${gameState.resources.antibiotics}，汽油：${gameState.resources.gasoline}`,
-      `不认真阈值：${gameState.seriousnessThreshold}`,
+      '## Current game state',
+      `Scene: ${scene?.id || 'unknown'} — ${scene?.speakerName || ''}`,
+      `Background: ${background?.displayName || gameState.currentBackground} — ${background?.description || ''}`,
+      `Day ${gameState.day}`,
+      `Antibiotics: ${gameState.resources.antibiotics}, gasoline: ${gameState.resources.gasoline}`,
+      `Unserious threshold: ${gameState.seriousnessThreshold}`,
       '',
-      '## 角色档案',
-      npcLines || '（角色档案待补充）',
+      '## Character sheets',
+      npcLines || '(character sheets pending)',
       beatSection,
       '',
-      '## 输出格式',
-      '只输出一个 JSON 对象，不要 markdown，不要代码块。字段：',
+      '## Output format',
+      'Output only one JSON object. No markdown. No code fences. Fields:',
       JSON.stringify(director.responseSchema, null, 2)
     ].join('\n');
   }
 
   function pickConvictionStage(stages, value) {
-    if (!stages) return '未知';
+    if (!stages) return 'unknown';
     const thresholds = Object.keys(stages)
       .map(Number)
       .sort((a, b) => b - a);
     for (const t of thresholds) {
       if (value >= t) return stages[String(t)];
     }
-    return stages['0'] || '未知';
+    return stages['0'] || 'unknown';
   }
 
   /**
@@ -199,9 +199,9 @@ const AI = (() => {
 
   function buildFallbackReply(fallbackSpeaker, playerText, isDecisive) {
     const snippets = [
-      `……我听到了。${isDecisive ? '就按你说的办。' : '让我想想。'}`,
-      '林檎看了你一眼，没有立刻回答。',
-      '闲没有说话，只是把相机握得更紧了一些。'
+      `...I heard you.${isDecisive ? " Okay. We'll do it your way." : ' Let me think.'}`,
+      "Ringo looks at you and doesn't answer right away.",
+      "Xian doesn't say anything. She just grips her camera a little tighter."
     ];
     const hash = normalizeForCompare(playerText).length % snippets.length;
     return {
@@ -299,7 +299,7 @@ const AI = (() => {
 
     const data = await response.json();
     if (!response.ok) {
-      throw new Error(data.error || `AI 请求失败 (${response.status})`);
+      throw new Error(data.error || `AI request failed (${response.status})`);
     }
 
     const rawContent = data.choices?.[0]?.message?.content || '';

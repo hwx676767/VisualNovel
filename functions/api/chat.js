@@ -12,5 +12,5 @@ export async function onRequestPost(context) {
 }
 
 export async function onRequest(context) {
-  return jsonResponse({ error: '请使用 POST' }, 405);
+  return jsonResponse({ error: 'Use POST' }, 405);
 }

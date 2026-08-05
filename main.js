@@ -113,7 +113,7 @@ function resolveSpeakerDisplayName(scene) {
   if (!scene) return '';
   if (scene.speaker === 'narrator') return '';
   const name = scene.speakerName;
-  if (name === '旁白' || name === undefined || name === null) {
+  if (name === '旁白' || name === 'Narrator' || name === undefined || name === null) {
     return scene.speaker === 'narrator' ? '' : name || '';
   }
   return name;
@@ -229,7 +229,7 @@ function resolveEndingRoute(state = gameState) {
  */
 async function loadChapter(chapterId, options = {}) {
   const path = CHAPTER_FILES[chapterId];
-  if (!path) throw new Error(`未知章节: ${chapterId}`);
+  if (!path) throw new Error(`Unknown chapter: ${chapterId}`);
 
   const chapter = await loadJson(path);
   currentChapterMeta = chapter;
@@ -312,7 +312,7 @@ function formatSpritePlaceholder(character, expression, variant) {
       : '';
   return (
     character.textPlaceholder ||
-    `【立绘占位】${character.displayName} · 表情：${exprLabel}${variantLabel}`
+    `[Sprite placeholder] ${character.displayName} · Expression: ${exprLabel}${variantLabel}`
   );
 }
 
@@ -352,7 +352,7 @@ function updateCharacterSprite(characterId, expression, options = {}) {
   const character = charactersData[characterId];
   if (!character) {
     console.warn(`[updateCharacterSprite] Unknown character: ${characterId}`);
-    characterSpriteLabelEl.textContent = `【立绘占位】${characterId}`;
+    characterSpriteLabelEl.textContent = `[Sprite placeholder] ${characterId}`;
     characterSpriteEl.classList.remove('has-image');
     characterSpriteEl.style.backgroundImage = '';
     characterSpriteEl.dataset.variant = '';
@@ -399,7 +399,7 @@ function updateBackground(backgroundId) {
   if (!bg) {
     console.warn(`[updateBackground] Unknown background: ${backgroundId}`);
     backgroundLayerEl.style.backgroundColor = 'var(--color-bg-layer)';
-    backgroundLabelEl.textContent = `【背景占位】${backgroundId}`;
+    backgroundLabelEl.textContent = `[BG placeholder] ${backgroundId}`;
     backgroundLayerEl.classList.remove('has-image', 'is-bright');
     backgroundLayerEl.style.backgroundImage = '';
     return;
@@ -468,7 +468,7 @@ function enterInteractiveMode(interactive) {
   storyObjectiveEl.textContent = interactive.objective;
   storyObjectiveEl.hidden = false;
   modeHintEl.textContent =
-    `${interactive.playerPrompt} · 点「快捷行动」= 决策后推进；自己打字 = 可多聊 ${interactive.maxFreeReplies} 轮`;
+    `${interactive.playerPrompt} · Tap "Quick actions" to decide and advance; type your own reply for up to ${interactive.maxFreeReplies} free turns`;
   modeHintEl.hidden = false;
 
   renderSuggestionChips(interactive.suggestions || []);
@@ -499,12 +499,12 @@ function renderSuggestionChips(suggestions) {
   }
 
   toggleSuggestionsBtnEl.hidden = false;
-  toggleSuggestionsBtnEl.textContent = '显示快捷行动';
+  toggleSuggestionsBtnEl.textContent = 'Show quick actions';
   toggleSuggestionsBtnEl.setAttribute('aria-expanded', 'false');
 
   const label = document.createElement('div');
   label.className = 'suggestion-label';
-  label.textContent = '▸ 快捷行动（角色回应后自动推进剧情）';
+  label.textContent = '▸ Quick actions (auto-advances after the character responds)';
   suggestionChipsEl.appendChild(label);
 
   suggestions.forEach((text) => {
@@ -544,7 +544,7 @@ function updateAdvanceButtonLabel() {
   const max = gameState.currentInteractive?.maxFreeReplies ?? 2;
   const left = Math.max(0, max - gameState.interactiveReplyCount);
   advanceMainlineBtnEl.textContent =
-    left > 0 ? `推进剧情 →（还可聊 ${left} 轮）` : '推进剧情 →';
+    left > 0 ? `Continue story → (${left} free ${left === 1 ? 'turn' : 'turns'} left)` : 'Continue story →';
 }
 
 /**
@@ -732,18 +732,18 @@ async function transitionToNextChapter() {
   storyObjectiveEl.hidden = false;
   if (nextId === 'endings' && gameState.endingRoute) {
     const routeLabels = {
-      hidden: '隐藏结局',
-      bad: '坏结局',
-      normal: '普通结局',
-      good: '好结局',
-      true: '真结局'
+      hidden: 'Hidden Ending',
+      bad: 'Bad Ending',
+      normal: 'Normal Ending',
+      good: 'Good Ending',
+      true: 'True Ending'
     };
-    storyObjectiveEl.textContent = `【结局 · ${routeLabels[gameState.endingRoute] || gameState.endingRoute}】`;
+    storyObjectiveEl.textContent = `[Ending · ${routeLabels[gameState.endingRoute] || gameState.endingRoute}]`;
   } else {
-    storyObjectiveEl.textContent = `【${currentChapterMeta.title}】`;
+    storyObjectiveEl.textContent = `[${currentChapterMeta.title}]`;
   }
   modeHintEl.hidden = false;
-  modeHintEl.textContent = '章节衔接中…点击继续';
+  modeHintEl.textContent = 'Loading next chapter… click to continue';
 
   onTypewriterComplete = null;
   playScene(storyScenes[0]);
@@ -764,16 +764,16 @@ function showChapterComplete() {
   const nextChapterInfo = storyProgressData?.chapters?.find((c) => c.id === nextId);
 
   storyObjectiveEl.hidden = false;
-  storyObjectiveEl.textContent = `【${currentChapterMeta?.title || '章节'} · 已完成】`;
+  storyObjectiveEl.textContent = `[${currentChapterMeta?.title || 'Chapter'} · Complete]`;
   modeHintEl.hidden = false;
 
   if (nextChapterInfo?.status === 'implemented' && CHAPTER_FILES[nextId]) {
-    modeHintEl.textContent = '下一章已就绪。刷新页面将从序章重玩；后续将支持存档续玩。';
+    modeHintEl.textContent = 'Next chapter is ready. Refreshing will restart from the prologue; save/load coming soon.';
   } else if (gameState.flags.gameComplete) {
     const route = gameState.endingRoute || gameState.flags.endingAchieved || 'unknown';
-    modeHintEl.textContent = `全剧终（${route}）。刷新可从头重玩，或查看 PROGRESS。`;
+    modeHintEl.textContent = `The end (${route}). Refresh to replay from the start, or open PROGRESS.`;
   } else {
-    modeHintEl.textContent = `下一章「${nextChapterInfo?.title || '未定'}」尚在制作中。可查看 PROGRESS 了解总进度。`;
+    modeHintEl.textContent = `Next chapter "${nextChapterInfo?.title || 'TBD'}" is still in development. Open PROGRESS for the full roadmap.`;
   }
 
   advanceMainlineBtnEl.hidden = true;
@@ -800,7 +800,7 @@ function updateChapterProgressUI() {
 
   if (gameState.storyMode === 'scripted' && !awaitingSceneAdvance) {
     storyObjectiveEl.hidden = false;
-    storyObjectiveEl.textContent = `【${chapterEntry.title}】进度 ${step}/${total}`;
+    storyObjectiveEl.textContent = `[${chapterEntry.title}] Progress ${step}/${total}`;
   }
 }
 
@@ -811,14 +811,14 @@ function updateChapterProgressUI() {
 function lockInput() {
   playerInputEl.disabled = true;
   sendBtnEl.disabled = true;
-  playerInputEl.placeholder = '等待中…';
+  playerInputEl.placeholder = 'Waiting…';
   playerInputAreaEl.classList.add('input-locked');
 }
 
 function unlockInput() {
   playerInputEl.disabled = false;
   sendBtnEl.disabled = false;
-  playerInputEl.placeholder = '输入你的回应…';
+  playerInputEl.placeholder = 'Type your reply…';
   playerInputAreaEl.classList.remove('input-locked');
 }
 
@@ -887,7 +887,7 @@ function finishTypewriter() {
     readDelayTimer = setTimeout(() => {
       readDelayTimer = null;
       setAwaitingAdvance(true);
-      modeHintEl.textContent = '点击文字或按空格继续';
+      modeHintEl.textContent = 'Click the text or press Space to continue';
       modeHintEl.hidden = false;
     }, MIN_READ_MS);
     return;
@@ -900,7 +900,7 @@ function finishTypewriter() {
     callback();
     gameState.turn = 'player';
     unlockInput();
-    modeHintEl.textContent = gameState.currentInteractive?.playerPrompt || '输入你的回应…';
+    modeHintEl.textContent = gameState.currentInteractive?.playerPrompt || 'Type your reply…';
     playerInputEl.focus();
     return;
   }
@@ -1027,7 +1027,7 @@ function processPlayerInput(text, options = {}) {
       }
 
       const replyName =
-        reply.speakerId === 'narrator' || reply.speakerName === '旁白'
+        reply.speakerId === 'narrator' || reply.speakerName === '旁白' || reply.speakerName === 'Narrator'
           ? ''
           : reply.speakerName;
       displayDialogue(replyName, reply.text);
@@ -1042,7 +1042,7 @@ function processPlayerInput(text, options = {}) {
       const fallbackId = scene?.character || 'ringo';
       updateCharacterSprite(fallbackId, 'neutral');
 
-      displayDialogue('系统', formatAIError(error));
+      displayDialogue('System', formatAIError(error));
     });
 }
 
@@ -1079,16 +1079,16 @@ function formatAIError(error) {
   const msg = error?.message || String(error);
   if (msg === 'Failed to fetch' || msg.includes('NetworkError') || msg.includes('Load failed')) {
     return [
-      '浏览器无法连接本地服务器（Failed to fetch）。',
+      "The browser couldn't reach the local server (Failed to fetch).",
       '',
-      '请确认：',
-      '1) 终端已运行 npm start（不是 npx serve）',
-      '2) 地址栏是 http://localhost:8765（不要双击 index.html）',
-      '3) 若用 Cursor 内置浏览器失败，请改用 Chrome/Edge 打开上述地址',
-      '4) 修改 .env 后需重启 npm start'
+      'Please check:',
+      '1) npm start is running in your terminal (not npx serve)',
+      "2) The address bar shows http://localhost:8765 (don't open index.html directly)",
+      "3) If Cursor's built-in browser fails, try Chrome/Edge at that address",
+      '4) Restart npm start after editing .env'
     ].join('\n');
   }
-  return `AI 暂时无法回复：${msg}`;
+  return `AI couldn't respond right now: ${msg}`;
 }
 
 async function verifyGameServer() {
@@ -1189,11 +1189,11 @@ function renderProgressPanel() {
   const beatIndex = chapter?.beats.findIndex((b) => b.sceneId === gameState.currentScene) ?? -1;
 
   let html = `<h2 class="progress-title">${storyProgressData.title}</h2>`;
-  html += `<p class="progress-current">当前：${chapter?.title || '—'} · 第 ${beatIndex >= 0 ? beatIndex + 1 : '?'} / ${chapter?.beats.length || '?'} 节拍</p>`;
+  html += `<p class="progress-current">Now: ${chapter?.title || '—'} · Beat ${beatIndex >= 0 ? beatIndex + 1 : '?'} / ${chapter?.beats.length || '?'}</p>`;
 
   storyProgressData.chapters.forEach((ch) => {
     const statusLabel =
-      ch.status === 'implemented' ? '可玩' : ch.status === 'planned' ? '待写' : '大纲';
+      ch.status === 'implemented' ? 'Playable' : ch.status === 'planned' ? 'Planned' : 'Outline';
     const isCurrent = ch.id === gameState.currentChapter;
     html += `<section class="progress-chapter${isCurrent ? ' is-current' : ''}">`;
     html += `<h3>${ch.title} <span class="progress-status">[${statusLabel}]</span></h3>`;
@@ -1289,65 +1289,65 @@ settingsPanelEl.id = 'settings-panel';
 settingsPanelEl.hidden = true;
 settingsPanelEl.innerHTML = `
   <button type="button" id="settings-panel-close">[X]</button>
-  <h2 id="settings-title">设置</h2>
+  <h2 id="settings-title">Settings</h2>
   <div id="settings-content">
-    <h3 class="settings-subtitle">音频</h3>
-    <p class="settings-hint">BGM / 音效与表情同机制：把文件放入 <code>audio/bgm/</code>、<code>audio/sfx/</code>，场景 JSON 写 <code>bgm</code>/<code>sfx</code> id 即可。暂无文件时显示占位提示。</p>
-    <label class="settings-hint" for="audio-volume">音量</label>
+    <h3 class="settings-subtitle">Audio</h3>
+    <p class="settings-hint">BGM / SFX work like sprites: drop files in <code>audio/bgm/</code> and <code>audio/sfx/</code>, then reference <code>bgm</code>/<code>sfx</code> ids in scene JSON. A placeholder shows when no file is found.</p>
+    <label class="settings-hint" for="audio-volume">Volume</label>
     <input type="range" id="audio-volume" min="0" max="100" value="55" style="width:100%;margin:8px 0;" />
-    <label class="settings-hint"><input type="checkbox" id="audio-mute" /> 静音</label>
+    <label class="settings-hint"><input type="checkbox" id="audio-mute" /> Mute</label>
 
-    <p id="ai-status-line">AI 状态：检测中…</p>
+    <p id="ai-status-line">AI status: Checking…</p>
     <p id="ai-model-line"></p>
 
-    <h3 class="settings-subtitle">你需要什么 API？</h3>
+    <h3 class="settings-subtitle">What API do you need?</h3>
     <p class="settings-hint">
-      <strong>Cursor 会员不能用于游戏。</strong>Cursor Pro 是编辑器里的 AI，不能接到你这个项目里。<br>
-      需要单独去一个大模型平台注册，拿到 <code>API Key</code>（按量计费，通常很便宜）。
+      <strong>Cursor membership can't power the game.</strong> Cursor Pro is editor AI—it doesn't plug into this project.<br>
+      Sign up with a model provider separately and get an <code>API Key</code> (pay-as-you-go; usually very cheap).
     </p>
 
     <table class="settings-table">
-      <thead><tr><th>平台</th><th>适合</th><th>获取地址</th></tr></thead>
+      <thead><tr><th>Platform</th><th>Best for</th><th>Sign up</th></tr></thead>
       <tbody>
         <tr>
           <td><strong>智谱 AI</strong></td>
-          <td>glm-4-flash 免费</td>
+          <td>glm-4-flash free tier</td>
           <td>open.bigmodel.cn</td>
         </tr>
         <tr>
           <td><strong>DeepSeek</strong></td>
-          <td>推荐试玩，便宜</td>
+          <td>Recommended for trying; cheap</td>
           <td>platform.deepseek.com</td>
         </tr>
         <tr>
           <td>OpenAI</td>
-          <td>质量稳定，需外币支付</td>
+          <td>Stable quality; foreign payment needed</td>
           <td>platform.openai.com</td>
         </tr>
         <tr>
           <td>Moonshot</td>
-          <td>国内可用</td>
+          <td>Available in China</td>
           <td>platform.moonshot.cn</td>
         </tr>
         <tr>
           <td>通义千问</td>
-          <td>国内可用</td>
+          <td>Available in China</td>
           <td>dashscope.aliyuncs.com</td>
         </tr>
       </tbody>
     </table>
 
-    <h3 class="settings-subtitle">配置步骤（只需一次）</h3>
+    <h3 class="settings-subtitle">Setup (one-time)</h3>
     <ol class="settings-steps">
-      <li>打开项目根目录的 <code>.env</code> 文件</li>
-      <li>把 <code>AI_API_KEY=</code> 后面贴上你的密钥</li>
-      <li>如用 DeepSeek，注释掉 OpenAI 两行，取消 DeepSeek 两行注释</li>
-      <li>终端运行 <code>npm start</code> 重启服务器</li>
-      <li>点下方「重新检测」确认已连接</li>
+      <li>Open the <code>.env</code> file in the project root</li>
+      <li>Paste your key after <code>AI_API_KEY=</code></li>
+      <li>For DeepSeek: comment out the OpenAI lines and uncomment the DeepSeek lines</li>
+      <li>Run <code>npm start</code> in your terminal to restart the server</li>
+      <li>Click "Check again" below to confirm you're connected</li>
     </ol>
 
-    <p class="settings-hint">不要把 .env 发给任何人，也不要提交到 git。</p>
-    <button type="button" id="ai-recheck-btn" class="settings-action-btn">重新检测</button>
+    <p class="settings-hint">Never share your .env or commit it to git.</p>
+    <button type="button" id="ai-recheck-btn" class="settings-action-btn">Check again</button>
   </div>
 `;
 gameContentEl.appendChild(settingsPanelEl);
@@ -1356,27 +1356,27 @@ const aiStatusLineEl = document.getElementById('ai-status-line');
 const aiModelLineEl = document.getElementById('ai-model-line');
 
 async function refreshAIStatus() {
-  aiStatusLineEl.textContent = 'AI 状态：检测中…';
+  aiStatusLineEl.textContent = 'AI status: Checking…';
   aiModelLineEl.textContent = '';
 
   if (window.location.protocol === 'file:') {
-    aiStatusLineEl.textContent = 'AI 状态：无法使用（请用 npm start 打开）';
-    aiModelLineEl.textContent = '不要直接打开 index.html 文件';
+    aiStatusLineEl.textContent = 'AI status: Unavailable (use npm start)';
+    aiModelLineEl.textContent = "Don't open index.html directly";
     return;
   }
 
   try {
     const status = await AI.getStatus();
     if (status.configured) {
-      aiStatusLineEl.textContent = 'AI 状态：已连接 ✓';
-      aiModelLineEl.textContent = `模型：${status.model} · ${window.location.origin}`;
+      aiStatusLineEl.textContent = 'AI status: Connected ✓';
+      aiModelLineEl.textContent = `Model: ${status.model} · ${window.location.origin}`;
     } else {
-      aiStatusLineEl.textContent = 'AI 状态：未配置（缺少 AI_API_KEY）';
-      aiModelLineEl.textContent = '请复制 .env.example → .env 并填入密钥';
+      aiStatusLineEl.textContent = 'AI status: Not configured (missing AI_API_KEY)';
+      aiModelLineEl.textContent = 'Copy .env.example → .env and add your API key';
     }
   } catch {
-    aiStatusLineEl.textContent = 'AI 状态：无法连接服务器';
-    aiModelLineEl.textContent = `请确认 npm start 已运行，并用 ${window.location.protocol}//${window.location.hostname}:8765 打开`;
+    aiStatusLineEl.textContent = "AI status: Can't reach server";
+    aiModelLineEl.textContent = `Make sure npm start is running, then open ${window.location.protocol}//${window.location.hostname}:8765`;
   }
 }
 
@@ -1420,7 +1420,7 @@ advanceMainlineBtnEl.addEventListener('click', () => {
 toggleSuggestionsBtnEl.addEventListener('click', () => {
   const willShow = suggestionChipsEl.hidden;
   suggestionChipsEl.hidden = !willShow;
-  toggleSuggestionsBtnEl.textContent = willShow ? '收起快捷行动' : '显示快捷行动';
+  toggleSuggestionsBtnEl.textContent = willShow ? 'Hide quick actions' : 'Show quick actions';
   toggleSuggestionsBtnEl.setAttribute('aria-expanded', String(willShow));
 });
 
@@ -1432,9 +1432,9 @@ loadGameData()
     const serverCheck = await verifyGameServer();
     if (!serverCheck.ok) {
       displayDialogue(
-        '系统',
+        'System',
         serverCheck.reason === 'file-protocol'
-          ? '请用 npm start 启动后，在浏览器打开 http://localhost:8765 。直接打开 index.html 无法使用 AI。'
+          ? "Run npm start, then open http://localhost:8765 in your browser. Opening index.html directly won't work with AI."
           : formatAIError(new Error('Failed to fetch'))
       );
       return;
@@ -1445,7 +1445,7 @@ loadGameData()
   .catch((error) => {
     console.error(error);
     displayDialogue(
-      '系统',
-      '无法加载剧情数据（需要本地服务器打开，不能直接 file://）。请用 npx serve 运行后刷新。'
+      'System',
+      "Couldn't load story data (needs a local server—don't use file://). Run npx serve and refresh."
     );
   });

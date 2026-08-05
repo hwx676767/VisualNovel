@@ -1,7 +1,7 @@
 {
   "id": "chapter03_tower",
-  "title": "第三章：广播塔与空无一物",
-  "summary": "抵达电波塔下，众人登顶却发现发射台空无一物——电波与光柱都是骗局。塔顶篝火旁，老师的声音在杂音中响起。林檎与闲在星空下袒露心结，第一层旅程迎来分水岭。",
+  "title": "Chapter 3: The Tower and Nothing",
+  "summary": "You reach the radio tower and climb to the top—only to find the transmitter empty. The signal and the light beam were a lie. By a rooftop campfire, Teacher's voice cuts through the static. Under the stars, Ringo and Xian open up about their guilt. Act one of the journey hits its turning point.",
   "dayRange": [4, 5],
   "scenes": [
     {
@@ -9,8 +9,8 @@
       "background": "radio_tower",
       "speaker": "narrator",
       "speakerName": "",
-      "bgm": { "id": "tower", "label": "BGM · 广播塔" },
-      "text": "第四天黄昏，房车停在广播塔下。塔身锈红，警示灯规律闪烁，把一圈圈影子投在荒原上。追了一路的电波，在这里反而听不见了——像喊到嗓子哑了，才发现对面从来没有人。",
+      "bgm": { "id": "tower", "label": "BGM · Broadcast Tower" },
+      "text": "Fourth day, dusk. The RV stops beneath the broadcast tower. Rust-red steel, warning lights blinking steady, throwing rings of shadow on the wasteland. You chased that signal all this way—and here, you can't hear it. Like yelling until your throat's raw and realizing nobody was ever on the other side.",
       "onEnterFlags": { "reachedRadioTower": true }
     },
     {
@@ -18,7 +18,7 @@
       "background": "radio_tower",
       "speaker": "narrator",
       "speakerName": "",
-      "text": "风从塔骨间的缝隙灌下来，带着铁锈和旧日雨水的气味。你们下车时，车门关上的声音显得格外响，像某种不请自来的宣告。"
+      "text": "Wind pours through the tower frame, smelling of rust and old rain. When you step out, the door slam sounds too loud—like an announcement nobody asked for."
     },
     {
       "id": "ch3_miles_tower",
@@ -27,21 +27,21 @@
       "speakerName": "Miles",
       "character": "miles",
       "expression": "tired",
-      "text": "……好高。相机里看见的光，就是从这里发出来的吗？"
+      "text": "...It's tall. Is this where the light in the camera was coming from?"
     },
     {
       "id": "ch3_miles_check",
       "background": "radio_tower",
       "speaker": "narrator",
       "speakerName": "",
-      "text": "Miles 绕着塔基走了一圈，脚踢了踢混凝土上的裂缝，又抬头数了数消防梯的层级。他的声音很轻，像怕惊动这座沉默的金属骨架。"
+      "text": "Miles walks the base once, toeing cracks in the concrete, then looks up and counts fire-escape rungs. He keeps his voice low, like he's afraid to wake the silent metal skeleton."
     },
     {
       "id": "ch3_xian_weak",
       "background": "rv_interior",
       "speaker": "xian",
-      "speakerName": "闲",
-      "text": "……到了。相机里，塔比眼睛看见的……更亮。",
+      "speakerName": "Xian",
+      "text": "...We're here. In the camera, the tower's... brighter than it looks.",
       "character": "xian",
       "expression": "hopeful"
     },
@@ -50,14 +50,14 @@
       "background": "rv_interior",
       "speaker": "narrator",
       "speakerName": "",
-      "text": "闲躺在后座上，相机举得很稳。镜头里的塔身泛着一层不真实的白，像曝光过度，又像某种尚未兑现的许诺。"
+      "text": "Xian lies in the back, camera held steady. Through the lens the tower glows an unreal white—overexposed, or a promise that hasn't cashed yet."
     },
     {
       "id": "ch3_ringo_steady",
       "background": "radio_tower",
       "speaker": "ringo",
-      "speakerName": "林檎",
-      "text": "我去看看塔顶。你们……在这里等我。不，这次我不一个人去。",
+      "speakerName": "Ringo",
+      "text": "I'm going up to check the roof. You... wait here. No—I'm not doing this alone this time.",
       "character": "ringo",
       "expression": "resolute"
     },
@@ -68,32 +68,32 @@
       "speakerName": "Miles",
       "character": "miles",
       "expression": "gentle",
-      "text": "我留下陪闲。她需要人换药——还有，万一下面也需要人守着车。"
+      "text": "I'll stay with Xian. She needs her dressing changed—and someone should guard the RV down here."
     },
     {
       "id": "ch3_climb_prep",
       "background": "radio_tower",
       "speaker": "narrator",
       "speakerName": "",
-      "text": "Miles 把急救包和一只保温壶递给林檎，又检查了一遍对讲机的频道。塔门半掩，里面黑得像一口井。没有人说「小心」，因为这个词在这几天里已经说得太多了。"
+      "text": "Miles hands Ringo the first-aid kit and a thermos, then double-checks the walkie channel. The tower door hangs half-open, black as a well. Nobody says \"be careful\"—you've said it too many times already."
     },
     {
       "id": "ch3_interactive_climb",
       "background": "radio_tower",
       "speaker": "narrator",
       "speakerName": "",
-      "text": "电梯停摆，只剩消防梯。闲无法行动，塔内漆黑，风从缝隙灌进来。你必须分配谁守车、谁登塔。",
+      "text": "Elevator's dead. Only the fire escape left. Xian can't move. Inside it's pitch black, wind whistling through the gaps. You need to decide who stays with the RV and who climbs.",
       "playerTurn": true,
       "interactive": {
-        "objective": "【当前目标】登塔决策：谁留守，谁上去找电波源？",
-        "playerPrompt": "你如何安排？",
+        "objective": "[Objective] Climb decision: who stays, who goes up for the signal?",
+        "playerPrompt": "How do you split up?",
         "suggestions": [
-          "林檎和我上去，闲留在车里——Miles 给她换药。",
-          "我一个人去塔顶，你们两个都在下面等我。",
-          "林檎守车，我带相机上去——让闲告诉我镜头里看见什么。"
+          "Ringo and I go up. Xian stays in the RV—Miles changes her dressing.",
+          "I'll hit the roof alone. You two wait down here.",
+          "Ringo guards the RV. I'll take the camera up—Xian tells me what the lens sees."
         ],
         "maxFreeReplies": 2,
-        "aiGoal": "登塔前决策。林檎应不再独自硬扛（呼应坚定值成长），Miles 留守陪闲。但最终必须有人抵达塔顶。闲可通过相机远程提示。不要描写塔顶内容，本轮只完成分工并开始攀登。",
+        "aiGoal": "Pre-climb decision. Ringo shouldn't shoulder it alone anymore (resolve growth). Miles stays with Xian. But someone has to reach the roof. Xian can guide through the camera remotely. Don't describe the rooftop yet—just assign roles and start the climb.",
         "advanceSceneIds": [
           "ch3_stairwell",
           "ch3_rooftop_door"
@@ -106,14 +106,14 @@
       "background": "radio_tower",
       "speaker": "narrator",
       "speakerName": "",
-      "text": "铁梯在风里咯吱作响，每一声都像在提醒你们它的年龄。越往上，城市废墟越远，像被撒落一盘的棋子。林檎的呼吸在窄井里回响，手心的汗把扶杆浸得发滑。"
+      "text": "The metal ladder groans in the wind—every creak a reminder of how old this thing is. Higher up, the ruined city spreads out like scattered chess pieces. Ringo's breath echoes in the narrow shaft, sweat making the rail slick."
     },
     {
       "id": "ch3_climb_mid",
       "background": "radio_tower",
       "speaker": "narrator",
       "speakerName": "",
-      "text": "爬到一半，你们歇了一次。对讲机里传来 Miles 压低的嗓音：「闲说镜头里塔顶有光。……你们到了告诉我。」信号夹杂着电流，像从很远的地方捞上来的只言片语。"
+      "text": "Halfway up you rest once. Over the walkie, Miles's voice, kept low: \"Xian says there's light on the roof in the viewfinder. ...Tell me when you're there.\" Static cuts through, like words fished up from far away."
     },
     {
       "id": "ch3_miles_below",
@@ -122,21 +122,21 @@
       "speakerName": "Miles",
       "character": "miles",
       "expression": "gentle",
-      "text": "别动。我换好了。……他们快上去了，你再看一眼镜头？"
+      "text": "Don't move. I'm done. ...They're almost at the top—can you check the lens again?"
     },
     {
       "id": "ch3_rooftop_door",
       "background": "radio_tower",
       "speaker": "narrator",
       "speakerName": "",
-      "text": "天台的门被锈粘住，你们合力撞开。金属呻吟着让步，风灌进来——然后，是令人窒息的安静。那种安静不是空无一人的静，而是「本应有东西、却没有」的静。"
+      "text": "The roof door is rust-stuck. You shoulder it open together. Metal screams and gives; wind rushes in—and then a silence that's hard to breathe in. Not empty because nobody's here. Empty because something should be."
     },
     {
       "id": "ch3_rooftop_empty",
       "background": "rooftop_campfire",
       "speaker": "narrator",
       "speakerName": "",
-      "text": "塔顶空无一物。发射机倾覆在角落，指示灯全灭。没有大人，没有答案，没有等待你们的「主持者」。电波，从头到尾都是死机的回音。",
+      "text": "Nothing on the roof. The transmitter lies tipped in a corner, every indicator dark. No adults. No answers. No host waiting for you. The signal was a dead machine echoing all along.",
       "onEnterFlags": { "towerEmpty": true }
     },
     {
@@ -144,14 +144,14 @@
       "background": "rooftop_campfire",
       "speaker": "narrator",
       "speakerName": "",
-      "text": "风从塔顶毫无遮挡地刮过，把你们的衣角吹得猎猎作响。远处荒原在夕照里像一片被烤干的海洋——你们追了那么久，只游到了一个没有岸的中央。"
+      "text": "Wind tears across the open roof, whipping your clothes. The wasteland below glows in sunset like a dried-out sea—you swam so long just to reach the middle, with no shore."
     },
     {
       "id": "ch3_ringo_break",
       "background": "rooftop_campfire",
       "speaker": "ringo",
-      "speakerName": "林檎",
-      "text": "……我们追了一个……不存在的信号？",
+      "speakerName": "Ringo",
+      "text": "...We chased a signal... that wasn't even there?",
       "character": "ringo",
       "expression": "guilty"
     },
@@ -159,8 +159,8 @@
       "id": "ch3_xian_radio",
       "background": "rv_interior",
       "speaker": "xian",
-      "speakerName": "闲",
-      "text": "……不。镜头里，塔顶刚才……有人站过。现在走了。",
+      "speakerName": "Xian",
+      "text": "...No. In the lens, someone was on the roof just now. They're gone.",
       "character": "xian",
       "expression": "neutral"
     },
@@ -169,18 +169,18 @@
       "background": "rooftop_campfire",
       "speaker": "narrator",
       "speakerName": "",
-      "text": "空塔、死机、一路的枪伤与抗生素——所有代价指向这里，而这里什么都没有。林檎蹲在发射机旁，肩膀开始发抖。",
+      "text": "Empty tower, dead transmitter, gunshot wounds and antibiotics spent—all of it led here, and here's nothing. Ringo crouches by the transmitter, shoulders starting to shake.",
       "playerTurn": true,
       "interactive": {
-        "objective": "【当前目标】面对空塔：稳住林檎，或承认这场旅程可能没有答案",
-        "playerPrompt": "你对林檎说什么？",
+        "objective": "[Objective] Facing the empty tower: steady Ringo, or admit this trip might have no answer",
+        "playerPrompt": "What do you tell Ringo?",
         "suggestions": [
-          "没有答案不代表白走。闲还在等我们把药带回去。",
-          "林檎，站起来——空塔也是答案，说明大人们真的不在了。",
-          "先别崩溃。我们下去和闲汇合，三个人一起想。"
+          "No answer doesn't mean it was for nothing. Xian's still waiting for us to bring the meds back.",
+          "Ringo, get up—an empty tower is an answer too. The adults really are gone.",
+          "Don't fall apart yet. Let's go back to Xian. We'll figure it out together."
         ],
         "maxFreeReplies": 2,
-        "aiGoal": "空塔情感爆发点。林檎短暂绝望但不彻底崩溃。玩家发言后，应决定在天台暂留——点起篝火，等夜。Miles 可通过对讲机提议上来或送物资。不要触发结局或切到露营/现实层。",
+        "aiGoal": "Empty tower emotional beat. Ringo dips into despair but doesn't fully break. After the player speaks, decide to stay on the roof for now—light a fire, wait for night. Miles can offer over the walkie to come up or bring supplies. Don't trigger any ending or cut to camp/reality layer.",
         "advanceSceneIds": [
           "ch3_campfire_lit",
           "ch3_teacher_static"
@@ -195,45 +195,45 @@
       "speakerName": "Miles",
       "character": "miles",
       "expression": "stubborn",
-      "text": "我带些废木上去。……别在塔顶吹一整夜的风。闲也要听你们说话。"
+      "text": "I'll bring some scrap wood up. ...Don't spend the whole night in this wind. Xian needs to hear you too."
     },
     {
       "id": "ch3_miles_climb",
       "background": "radio_tower",
       "speaker": "narrator",
       "speakerName": "",
-      "text": "Miles 背着一捆从塔基捡来的旧木和一块防水布，爬梯爬得比你们想象里快。他在塔顶出现时，脸被风吹得发红，却把木柴稳稳放在一边——像在完成一件早就该有人做的事。"
+      "text": "Miles hauls a bundle of old wood and a tarp from the base, climbing faster than you'd expect. When he tops out, wind has his face flushed red, but he sets the wood down steady—like something someone should've done a long time ago."
     },
     {
       "id": "ch3_campfire_lit",
       "background": "rooftop_campfire",
       "speaker": "narrator",
       "speakerName": "",
-      "bgm": { "id": "rooftop", "label": "BGM · 塔顶夜风" },
-      "text": "你们用塔顶的废木点了堆篝火。火光在夜风里摇晃，把四个人的影子投在空无一物的发射台上——像毕业露营那夜的缩小版。Miles 把防水布拉起来挡风，动作笨拙，却足够认真。"
+      "bgm": { "id": "rooftop", "label": "BGM · Rooftop Night Wind" },
+      "text": "You build a fire from scrap on the roof. Flames sway in the night wind, throwing four shadows across the empty transmitter platform—a miniature of graduation camp night. Miles rigs the tarp against the wind, clumsy but serious about it."
     },
     {
       "id": "ch3_teacher_static",
       "background": "rooftop_campfire",
       "speaker": "narrator",
       "speakerName": "",
-      "sfx": { "id": "radio_static", "label": "SFX · 收音机杂音" },
-      "text": "收音机忽然自己亮了。杂音里，有一个声音在说话——不年轻，不苍老，像从很远的地方借来的：「……你们来了。」"
+      "sfx": { "id": "radio_static", "label": "SFX · Radio Static" },
+      "text": "The radio lights up on its own. In the static, a voice—not young, not old, borrowed from far away: \"...You're here.\""
     },
     {
       "id": "ch3_teacher_voice",
       "background": "rooftop_campfire",
       "speaker": "teacher",
-      "speakerName": "老师",
-      "text": "……我羡慕你们。拥有犯错的权利，和不必完美的自由。",
+      "speakerName": "Teacher",
+      "text": "...I'm jealous of you. You get to mess up. You don't have to be perfect.",
       "onEnterFlags": { "teacherVoiceHeard": true }
     },
     {
       "id": "ch3_ringo_listen",
       "background": "rooftop_campfire",
       "speaker": "ringo",
-      "speakerName": "林檎",
-      "text": "老师……？你在哪里？我们找了你好久——",
+      "speakerName": "Ringo",
+      "text": "Teacher...? Where are you? We've been looking for you so long—",
       "character": "ringo",
       "expression": "calm"
     },
@@ -241,8 +241,8 @@
       "id": "ch3_xian_reach",
       "background": "rv_interior",
       "speaker": "xian",
-      "speakerName": "闲",
-      "text": "……声音不是从塔顶来的。是从……我们来的那条路上。",
+      "speakerName": "Xian",
+      "text": "...The voice isn't from the roof. It's from... the road we came on.",
       "character": "xian",
       "expression": "hopeful"
     },
@@ -253,32 +253,32 @@
       "speakerName": "Miles",
       "character": "miles",
       "expression": "gentle",
-      "text": "……老师，你还在听吗？我们……没有做得很好。但还在。"
+      "text": "...Teacher, are you still listening? We... didn't do great. But we're still here."
     },
     {
       "id": "ch3_campfire_quiet",
       "background": "rooftop_campfire",
       "speaker": "narrator",
       "speakerName": "",
-      "text": "Miles 说完，把对讲机往火堆近处挪了挪，好让下面的闲也能听见。火焰噼啪，星斗压在头顶。这是第一层旅程里，第一次所有人都在「听」——包括你。"
+      "text": "When Miles finishes, he nudges the walkie closer to the fire so Xian down below can hear. Wood pops; stars press down. For the first time in act one, everyone's listening—including you."
     },
     {
       "id": "ch3_interactive_campfire",
       "background": "rooftop_campfire",
       "speaker": "narrator",
       "speakerName": "",
-      "text": "林檎盯着火焰，闲在无线电里呼吸，Miles 把木柴轻轻拨进火心。这是塔顶上，第一次所有人都在等同一句话。",
+      "text": "Ringo stares into the fire. Xian breathes over the radio. Miles feeds another log into the heart of it. On the roof, everyone's waiting for the same sentence.",
       "playerTurn": true,
       "interactive": {
-        "objective": "【当前目标】塔顶长谈：回应老师的话，或打开林檎/闲的心结",
-        "playerPrompt": "你想说什么？",
+        "objective": "[Objective] Rooftop talk: answer Teacher, or open up Ringo/Xian's guilt",
+        "playerPrompt": "What do you want to say?",
         "suggestions": [
-          "老师，我们不需要完美——我们只需要还在一起。",
-          "林檎，中枪不是你的错。闲选择扑过来，是因为她在乎。",
-          "闲，痛觉回来了也没关系。活着本身就有意义。"
+          "Teacher, we don't need perfect—we just need to still be together.",
+          "Ringo, getting shot wasn't your fault. Xian jumped in because she cares.",
+          "Xian, it's okay that pain came back. Being alive is enough."
         ],
         "maxFreeReplies": 2,
-        "aiGoal": "塔顶篝火长谈（Figma 好结局前奏）。老师声音可再叹一句，但不揭露 Meta/剧本真相。林檎应触及「犹豫与愧疚」心结；闲应触及「自我否定」心结；Miles 可简短表达害怕与坚持。玩家嘴遁后，众人稍许释然，但心结未完全解开（knotResolved 保持 false）。不要切到露营重聚或出租屋结局。",
+        "aiGoal": "Rooftop campfire long talk (Figma good-ending prelude). Teacher's voice can sigh once more but don't reveal meta/script truth. Ringo should touch her hesitation and guilt; Xian her self-doubt; Miles can briefly admit fear and stubbornness. After player comfort, everyone loosens up a little—but knots stay unresolved (knotResolved stays false). Don't cut to camp reunion or apartment ending.",
         "advanceSceneIds": [
           "ch3_ringo_confess",
           "ch3_xian_confess",
@@ -291,8 +291,8 @@
       "id": "ch3_ringo_confess",
       "background": "rooftop_campfire",
       "speaker": "ringo",
-      "speakerName": "林檎",
-      "text": "……我以为当队长就不能怕。可我怕。我怕再犹豫一次，就失去所有人。",
+      "speakerName": "Ringo",
+      "text": "...I thought a captain can't be scared. But I am. I'm scared if I hesitate once more, I'll lose everyone.",
       "character": "ringo",
       "expression": "calm"
     },
@@ -300,8 +300,8 @@
       "id": "ch3_xian_confess",
       "background": "rooftop_campfire",
       "speaker": "xian",
-      "speakerName": "闲",
-      "text": "……我也怕。怕痛，怕长大，怕你们为了我停下来。",
+      "speakerName": "Xian",
+      "text": "...Me too. Scared of pain, of growing up, of you stopping the whole trip for me.",
       "character": "xian",
       "expression": "pained"
     },
@@ -312,21 +312,21 @@
       "speakerName": "Miles",
       "character": "miles",
       "expression": "tired",
-      "text": "……我也怕。怕说错话，怕帮不上忙。可除了继续走，我也不知道还能做什么。"
+      "text": "...Me too. Scared of saying the wrong thing, of being useless. But besides keeping going, I don't know what else to do."
     },
     {
       "id": "ch3_stars",
       "background": "rooftop_campfire",
       "speaker": "narrator",
       "speakerName": "",
-      "text": "风停了片刻。塔下是废土，塔上是星空。没有大人，没有广播，只有四个少年和一堆火——也许这就够了。"
+      "text": "The wind pauses. Wasteland below, stars above. No adults, no broadcast—just four kids and a fire. Maybe that's enough."
     },
     {
       "id": "ch3_teacher_fade",
       "background": "rooftop_campfire",
       "speaker": "teacher",
-      "speakerName": "老师",
-      "text": "……回去吧。路还在你们脚下。",
+      "speakerName": "Teacher",
+      "text": "...Go back down. The road's still under your feet.",
       "character": "teacher",
       "expression": "silhouette"
     },
@@ -335,25 +335,25 @@
       "background": "rooftop_campfire",
       "speaker": "narrator",
       "speakerName": "",
-      "text": "老师的声音散进杂音里，像一粒盐溶进夜。Miles 默默添了最后一根柴，林檎把脸埋进膝间又抬起来——没有哭出声，但肩膀的起伏骗不了人。"
+      "text": "Teacher's voice dissolves into static, like salt in night. Miles adds one last log without a word. Ringo buries her face in her knees, then lifts it—no audible sob, but her shoulders give her away."
     },
     {
       "id": "ch3_interactive_descent",
       "background": "radio_tower",
       "speaker": "narrator",
       "speakerName": "",
-      "text": "篝火将尽。抗生素只剩最后一剂，闲的烧似乎退了又起。塔下还有路，结局尚未写定——但你们必须做出今夜最后一个决定。",
+      "text": "The fire's almost out. One antibiotic dose left. Xian's fever dips, then climbs again. There's still road below; the ending isn't written—but you need one last call for tonight.",
       "playerTurn": true,
       "interactive": {
-        "objective": "【当前目标】第三章收束：带闲离开塔，还是留到天明再搜塔基？",
-        "playerPrompt": "你下达什么指令？",
+        "objective": "[Objective] Chapter 3 finale: leave with Xian, or stay till dawn and search the tower base?",
+        "playerPrompt": "What's your order?",
         "suggestions": [
-          "下山，回房车。路还长，闲不能继续在塔上吹风。",
-          "天亮前再搜一遍塔基——也许空塔下面还有东西。",
-          "林檎，我们四个都活到了这里。这就够了，回家。"
+          "Head down, back to the RV. Road's long—Xian can't keep freezing up here.",
+          "Search the tower base before dawn—maybe there's something under the empty top.",
+          "Ringo, all four of us made it this far. That's enough. Let's go home."
         ],
         "maxFreeReplies": 2,
-        "aiGoal": "第三章收束。无论玩家如何选择，最终应决定下山回到房车，承认旅程进入「塔后」阶段——结局分支即将开启。Miles 可协助收拾。不要播放任何具体结局（坏/普通/好/真/隐藏）。",
+        "aiGoal": "Chapter 3 wrap-up. Whatever the player picks, they decide to climb down and return to the RV—journey enters post-tower phase, ending branches about to open. Miles can help pack up. Don't play any specific ending (bad/normal/good/true/hidden).",
         "advanceSceneIds": [
           "ch3_closing"
         ],
@@ -366,11 +366,11 @@
       "background": "highway_wasteland",
       "speaker": "narrator",
       "speakerName": "",
-      "bgm": { "id": "highway", "label": "BGM · 塔后公路" },
-      "text": "你们走下广播塔，房车灯再次划破荒原。Miles 最后回头看了一眼塔顶——火已经灭了，只剩星星。塔顶的空与星留在背后，前方的分岔路在黎明里显现——不同的选择，将把你们带向不同的结局。第三章到此结束。",
+      "bgm": { "id": "highway", "label": "BGM · Post-Tower Highway" },
+      "text": "You climb down from the broadcast tower. RV headlights cut the wasteland again. Miles looks back once—the fire's out, only stars left. The empty roof and the stars stay behind; at dawn, forked roads appear ahead—different choices, different endings. Chapter 3 ends here.",
       "chapterEnd": true
     }
   ],
   "nextChapter": "endings",
-  "notes": "对应 Figma：抵达塔→塔顶空无一物→老师叹息→篝火长谈→第一层分水岭。Miles 留守陪闲后登塔参与篝火。不触发具体结局，留 endings 章节。老师为声音/剪影，不揭露 Meta。"
+  "notes": "Matches Figma: reach tower → empty rooftop → Teacher's sigh → campfire talk → act-one turning point. Miles stays with Xian then climbs for the fire. No specific ending triggered; routes live in endings chapter. Teacher is voice/silhouette only—no meta reveal."
 }

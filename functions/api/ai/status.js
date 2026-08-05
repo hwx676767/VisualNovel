@@ -12,5 +12,5 @@ export async function onRequestGet(context) {
 }
 
 export async function onRequest(context) {
-  return jsonResponse({ error: '请使用 GET' }, 405);
+  return jsonResponse({ error: 'Use GET' }, 405);
 }
