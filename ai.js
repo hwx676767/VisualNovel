@@ -103,6 +103,7 @@ const AI = (() => {
 
     return [
       'You are the AI narrative director for this visual novel.',
+      'CRITICAL LANGUAGE LOCK: Write every dialogue text in natural colloquial English only. Never use Chinese characters in the text field. Never answer in Chinese.',
       '',
       '## World',
       director.world,

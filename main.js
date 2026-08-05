@@ -131,11 +131,11 @@ let onTypewriterComplete = null;
 /** True when a scripted line has finished and waits for a click to continue. */
 let awaitingSceneAdvance = false;
 
-/** Milliseconds per character for the typewriter effect. */
-const TYPEWRITER_MS_PER_CHAR = 55;
+/** Milliseconds per character for the typewriter effect (faster for English). */
+const TYPEWRITER_MS_PER_CHAR = 22;
 
 /** Minimum pause after a line finishes, before "click to continue" is accepted. */
-const MIN_READ_MS = 600;
+const MIN_READ_MS = 350;
 
 // ---------------------------------------------------------------------------
 // Data loading
@@ -1303,36 +1303,31 @@ settingsPanelEl.innerHTML = `
     <h3 class="settings-subtitle">What API do you need?</h3>
     <p class="settings-hint">
       <strong>Cursor membership can't power the game.</strong> Cursor Pro is editor AI—it doesn't plug into this project.<br>
-      Sign up with a model provider separately and get an <code>API Key</code> (pay-as-you-go; usually very cheap).
+      This game is in English. Prefer <strong>DeepSeek</strong> (or OpenAI). Zhipu glm-4-flash often answers in Chinese even with English prompts.
     </p>
 
     <table class="settings-table">
       <thead><tr><th>Platform</th><th>Best for</th><th>Sign up</th></tr></thead>
       <tbody>
         <tr>
-          <td><strong>智谱 AI</strong></td>
-          <td>glm-4-flash free tier</td>
-          <td>open.bigmodel.cn</td>
-        </tr>
-        <tr>
           <td><strong>DeepSeek</strong></td>
-          <td>Recommended for trying; cheap</td>
+          <td>Best pick for English VN; cheap</td>
           <td>platform.deepseek.com</td>
         </tr>
         <tr>
-          <td>OpenAI</td>
-          <td>Stable quality; foreign payment needed</td>
-          <td>platform.openai.com</td>
-        </tr>
-        <tr>
-          <td>Moonshot</td>
-          <td>Available in China</td>
+          <td><strong>Kimi / Moonshot</strong></td>
+          <td>OK bilingual; fine if you already use it</td>
           <td>platform.moonshot.cn</td>
         </tr>
         <tr>
-          <td>通义千问</td>
-          <td>Available in China</td>
-          <td>dashscope.aliyuncs.com</td>
+          <td>OpenAI</td>
+          <td>Stable English; needs foreign payment</td>
+          <td>platform.openai.com</td>
+        </tr>
+        <tr>
+          <td>Zhipu AI</td>
+          <td>Free glm-4-flash; tends toward Chinese</td>
+          <td>open.bigmodel.cn</td>
         </tr>
       </tbody>
     </table>
@@ -1341,8 +1336,8 @@ settingsPanelEl.innerHTML = `
     <ol class="settings-steps">
       <li>Open the <code>.env</code> file in the project root</li>
       <li>Paste your key after <code>AI_API_KEY=</code></li>
-      <li>For DeepSeek: comment out the OpenAI lines and uncomment the DeepSeek lines</li>
-      <li>Run <code>npm start</code> in your terminal to restart the server</li>
+      <li>Set <code>AI_BASE_URL</code> + <code>AI_MODEL</code> (DeepSeek example is in <code>.env.example</code>)</li>
+      <li>Run <code>npm start</code> to restart (or update Cloudflare secrets + redeploy)</li>
       <li>Click "Check again" below to confirm you're connected</li>
     </ol>
 
