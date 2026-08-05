@@ -6,8 +6,16 @@
       "id": "prologue_campsite",
       "background": "campsite_night",
       "speaker": "narrator",
-      "speakerName": "旁白",
-      "text": "毕业露营的最后一夜。林檎在弹一把旧吉他，火堆噼啪作响。你望向帐篷外——老师的睡袋是空的，只有风。"
+      "speakerName": "",
+      "bgm": { "id": "campsite", "label": "BGM · 露营夜" },
+      "text": "毕业露营的最后一夜。火堆把四个人的影子拉得很长。林檎在弹一把旧吉他，Miles 往铁锅里添柴；你望向帐篷外——老师的睡袋是空的，只有风。"
+    },
+    {
+      "id": "prologue_empty_bag",
+      "background": "campsite_night",
+      "speaker": "narrator",
+      "speakerName": "",
+      "text": "水壶还靠在石头边，瓶盖没拧紧。取水不需要一个小时。松针被踩乱的方向通向林更深的地方，却没有回来的脚印叠上去。"
     },
     {
       "id": "prologue_teacher_missing",
@@ -17,6 +25,15 @@
       "text": "……不对劲。老师说去取水，已经一个小时了。",
       "character": "ringo",
       "expression": "guilty"
+    },
+    {
+      "id": "prologue_miles_worry",
+      "background": "campsite_night",
+      "speaker": "miles",
+      "speakerName": "Miles",
+      "character": "miles",
+      "expression": "tired",
+      "text": "我去林子边上喊过两声。……没人应。风太大了？"
     },
     {
       "id": "prologue_xian_camera",
@@ -31,20 +48,21 @@
       "id": "prologue_decision",
       "background": "campsite_night",
       "speaker": "narrator",
-      "speakerName": "旁白",
-      "text": "三个人同时看向你。夜风灌进营地，火堆几乎要灭了。现在，必须由你开口。",
+      "speakerName": "",
+      "text": "四个人同时看向你。夜风灌进营地，火堆几乎要灭了。吉他弦还在余震，像一根绷紧的神经。现在，必须由你开口。",
       "playerTurn": true,
       "interactive": {
         "objective": "【当前目标】说服同伴：立刻开车回城找老师",
-        "playerPrompt": "你会对林檎和闲说什么？",
+        "playerPrompt": "你会对林檎、闲和 Miles 说什么？",
         "suggestions": [
           "不能再等了，我们现在就开车回城。",
           "闲，你相机里到底拍到了什么？",
-          "林檎，你最后一次看见老师是什么时候？"
+          "Miles，把东西收上车。林檎，你最后一次看见老师是什么时候？"
         ],
         "maxFreeReplies": 2,
-        "aiGoal": "这是序章第一个决策点。无论玩家怎么说，同伴最终应同意开车回城。回复要回应玩家的具体内容，1～3句，然后推动「发动房车离开营地」。不要跳到大人消失、枪伤等后续剧情。若对话已充分，设置 advanceMainline 为 true。",
+        "aiGoal": "序章第一个决策点。无论玩家怎么说，同伴最终应同意开车回城。可让林檎/闲/Miles 之一回应。不要跳到大人消失、枪伤。充分后 advanceMainline true。",
         "advanceSceneIds": [
+          "prologue_pack",
           "prologue_rv_departure",
           "prologue_empty_city",
           "prologue_ringo_react",
@@ -53,18 +71,34 @@
       }
     },
     {
+      "id": "prologue_pack",
+      "background": "campsite_night",
+      "speaker": "narrator",
+      "speakerName": "",
+      "sfx": { "id": "engine", "label": "SFX · 发动房车" },
+      "text": "Miles 把没吃完的罐头塞进纸箱，林檎踢灭余烬。闲坐进后排，相机镜头对着仍旧空着的那只睡袋，快门没按下去。"
+    },
+    {
       "id": "prologue_rv_departure",
       "background": "rv_interior",
       "speaker": "narrator",
-      "speakerName": "旁白",
-      "text": "房车轮毂碾过碎石，露营地缩成后视镜里一点昏黄的火。林檎握着方向盘，闲蜷在后排，相机垂在胸前。"
+      "speakerName": "",
+      "bgm": { "id": "highway", "label": "BGM · 驶离营地" },
+      "text": "房车轮毂碾过碎石，露营地缩成后视镜里一点昏黄的火。林檎握着方向盘，Miles 盯着窗外树影，闲蜷在后排，相机垂在胸前。"
     },
     {
       "id": "prologue_empty_city",
       "background": "empty_city",
       "speaker": "narrator",
-      "speakerName": "旁白",
-      "text": "城市到了。路灯亮着，店铺的门敞开着——街上没有任何人。没有大人。一个人都没有。"
+      "speakerName": "",
+      "text": "城市到了。路灯亮着，店铺的门敞开着，红绿灯仍按节奏切换——街上没有任何人。没有大人。一个人都没有。像整座城被按下了静音。"
+    },
+    {
+      "id": "prologue_city_detail",
+      "background": "empty_city",
+      "speaker": "narrator",
+      "speakerName": "",
+      "text": "便利店玻璃门里，冰柜还在嗡嗡响。一份没吃完的便当搁在收银台上，筷子斜插着，像主人只是去了后巷。Miles 下意识放轻脚步，生怕惊动这份过分完整的空。"
     },
     {
       "id": "prologue_ringo_react",
@@ -79,8 +113,8 @@
       "id": "prologue_interactive_city",
       "background": "empty_city",
       "speaker": "narrator",
-      "speakerName": "旁白",
-      "text": "空城的寂静压下来。林檎在强撑，闲盯着窗外。接下来怎么做，又需要你决定。",
+      "speakerName": "",
+      "text": "空城的寂静压下来。林檎在强撑，Miles 握紧背包带，闲盯着窗外。接下来怎么做，又需要你决定。",
       "playerTurn": true,
       "interactive": {
         "objective": "【当前目标】在空城中做出下一步决定：找医院，还是先搜刮物资？",
@@ -91,7 +125,7 @@
           "让闲用相机看看有没有异常信号。"
         ],
         "maxFreeReplies": 2,
-        "aiGoal": "玩家正在空城决策。引导讨论去医院或搜刮物资，保持紧张但不绝望。不要跳到枪伤或广播塔。对话充分后 advanceMainline 为 true，由旁白过渡到「听见远处电波」作为序章收束。",
+        "aiGoal": "空城决策。引导讨论医院或搜刮，保持紧张。可让 Miles 提醒物资。不要跳到枪伤或广播塔。充分后 advanceMainline true。",
         "advanceSceneIds": [
           "prologue_closing"
         ]
@@ -101,7 +135,8 @@
       "id": "prologue_closing",
       "background": "highway_wasteland",
       "speaker": "narrator",
-      "speakerName": "旁白",
+      "speakerName": "",
+      "sfx": { "id": "radio_static", "label": "SFX · 收音机杂音" },
       "text": "你们驶离空城，汇入通往郊区的公路。夜幕低垂，收音机里的杂音时断时续——像有人在很远的地方说话。"
     }
   ],

@@ -8,9 +8,33 @@
       "id": "ch3_tower_base",
       "background": "radio_tower",
       "speaker": "narrator",
-      "speakerName": "旁白",
-      "text": "第四天黄昏，房车停在广播塔下。塔身锈红，警示灯规律闪烁。追了一路的电波，在这里反而听不见了。",
+      "speakerName": "",
+      "bgm": { "id": "tower", "label": "BGM · 广播塔" },
+      "text": "第四天黄昏，房车停在广播塔下。塔身锈红，警示灯规律闪烁，把一圈圈影子投在荒原上。追了一路的电波，在这里反而听不见了——像喊到嗓子哑了，才发现对面从来没有人。",
       "onEnterFlags": { "reachedRadioTower": true }
+    },
+    {
+      "id": "ch3_tower_wind",
+      "background": "radio_tower",
+      "speaker": "narrator",
+      "speakerName": "",
+      "text": "风从塔骨间的缝隙灌下来，带着铁锈和旧日雨水的气味。你们下车时，车门关上的声音显得格外响，像某种不请自来的宣告。"
+    },
+    {
+      "id": "ch3_miles_tower",
+      "background": "radio_tower",
+      "speaker": "miles",
+      "speakerName": "Miles",
+      "character": "miles",
+      "expression": "tired",
+      "text": "……好高。相机里看见的光，就是从这里发出来的吗？"
+    },
+    {
+      "id": "ch3_miles_check",
+      "background": "radio_tower",
+      "speaker": "narrator",
+      "speakerName": "",
+      "text": "Miles 绕着塔基走了一圈，脚踢了踢混凝土上的裂缝，又抬头数了数消防梯的层级。他的声音很轻，像怕惊动这座沉默的金属骨架。"
     },
     {
       "id": "ch3_xian_weak",
@@ -22,6 +46,13 @@
       "expression": "hopeful"
     },
     {
+      "id": "ch3_xian_rv",
+      "background": "rv_interior",
+      "speaker": "narrator",
+      "speakerName": "",
+      "text": "闲躺在后座上，相机举得很稳。镜头里的塔身泛着一层不真实的白，像曝光过度，又像某种尚未兑现的许诺。"
+    },
+    {
       "id": "ch3_ringo_steady",
       "background": "radio_tower",
       "speaker": "ringo",
@@ -31,22 +62,38 @@
       "expression": "resolute"
     },
     {
+      "id": "ch3_miles_stay",
+      "background": "radio_tower",
+      "speaker": "miles",
+      "speakerName": "Miles",
+      "character": "miles",
+      "expression": "gentle",
+      "text": "我留下陪闲。她需要人换药——还有，万一下面也需要人守着车。"
+    },
+    {
+      "id": "ch3_climb_prep",
+      "background": "radio_tower",
+      "speaker": "narrator",
+      "speakerName": "",
+      "text": "Miles 把急救包和一只保温壶递给林檎，又检查了一遍对讲机的频道。塔门半掩，里面黑得像一口井。没有人说「小心」，因为这个词在这几天里已经说得太多了。"
+    },
+    {
       "id": "ch3_interactive_climb",
       "background": "radio_tower",
       "speaker": "narrator",
-      "speakerName": "旁白",
+      "speakerName": "",
       "text": "电梯停摆，只剩消防梯。闲无法行动，塔内漆黑，风从缝隙灌进来。你必须分配谁守车、谁登塔。",
       "playerTurn": true,
       "interactive": {
         "objective": "【当前目标】登塔决策：谁留守，谁上去找电波源？",
         "playerPrompt": "你如何安排？",
         "suggestions": [
-          "林檎和我上去，闲留在车里——需要人给她换药。",
+          "林檎和我上去，闲留在车里——Miles 给她换药。",
           "我一个人去塔顶，你们两个都在下面等我。",
           "林檎守车，我带相机上去——让闲告诉我镜头里看见什么。"
         ],
         "maxFreeReplies": 2,
-        "aiGoal": "登塔前决策。林檎应不再独自硬扛（呼应坚定值成长），但最终必须有人抵达塔顶。闲可通过相机远程提示。不要描写塔顶内容，本轮只完成分工并开始攀登。",
+        "aiGoal": "登塔前决策。林檎应不再独自硬扛（呼应坚定值成长），Miles 留守陪闲。但最终必须有人抵达塔顶。闲可通过相机远程提示。不要描写塔顶内容，本轮只完成分工并开始攀登。",
         "advanceSceneIds": [
           "ch3_stairwell",
           "ch3_rooftop_door"
@@ -58,23 +105,46 @@
       "id": "ch3_stairwell",
       "background": "radio_tower",
       "speaker": "narrator",
-      "speakerName": "旁白",
-      "text": "铁梯在风里咯吱作响。越往上，城市废墟越远，像被撒落一盘的棋子。林檎的呼吸在窄井里回响。"
+      "speakerName": "",
+      "text": "铁梯在风里咯吱作响，每一声都像在提醒你们它的年龄。越往上，城市废墟越远，像被撒落一盘的棋子。林檎的呼吸在窄井里回响，手心的汗把扶杆浸得发滑。"
+    },
+    {
+      "id": "ch3_climb_mid",
+      "background": "radio_tower",
+      "speaker": "narrator",
+      "speakerName": "",
+      "text": "爬到一半，你们歇了一次。对讲机里传来 Miles 压低的嗓音：「闲说镜头里塔顶有光。……你们到了告诉我。」信号夹杂着电流，像从很远的地方捞上来的只言片语。"
+    },
+    {
+      "id": "ch3_miles_below",
+      "background": "rv_interior",
+      "speaker": "miles",
+      "speakerName": "Miles",
+      "character": "miles",
+      "expression": "gentle",
+      "text": "别动。我换好了。……他们快上去了，你再看一眼镜头？"
     },
     {
       "id": "ch3_rooftop_door",
       "background": "radio_tower",
       "speaker": "narrator",
-      "speakerName": "旁白",
-      "text": "天台的门被锈粘住，你们合力撞开。风灌进来——然后，是令人窒息的安静。"
+      "speakerName": "",
+      "text": "天台的门被锈粘住，你们合力撞开。金属呻吟着让步，风灌进来——然后，是令人窒息的安静。那种安静不是空无一人的静，而是「本应有东西、却没有」的静。"
     },
     {
       "id": "ch3_rooftop_empty",
       "background": "rooftop_campfire",
       "speaker": "narrator",
-      "speakerName": "旁白",
+      "speakerName": "",
       "text": "塔顶空无一物。发射机倾覆在角落，指示灯全灭。没有大人，没有答案，没有等待你们的「主持者」。电波，从头到尾都是死机的回音。",
       "onEnterFlags": { "towerEmpty": true }
+    },
+    {
+      "id": "ch3_empty_wind",
+      "background": "rooftop_campfire",
+      "speaker": "narrator",
+      "speakerName": "",
+      "text": "风从塔顶毫无遮挡地刮过，把你们的衣角吹得猎猎作响。远处荒原在夕照里像一片被烤干的海洋——你们追了那么久，只游到了一个没有岸的中央。"
     },
     {
       "id": "ch3_ringo_break",
@@ -98,7 +168,7 @@
       "id": "ch3_interactive_empty",
       "background": "rooftop_campfire",
       "speaker": "narrator",
-      "speakerName": "旁白",
+      "speakerName": "",
       "text": "空塔、死机、一路的枪伤与抗生素——所有代价指向这里，而这里什么都没有。林檎蹲在发射机旁，肩膀开始发抖。",
       "playerTurn": true,
       "interactive": {
@@ -110,7 +180,7 @@
           "先别崩溃。我们下去和闲汇合，三个人一起想。"
         ],
         "maxFreeReplies": 2,
-        "aiGoal": "空塔情感爆发点。林檎短暂绝望但不彻底崩溃。玩家发言后，应决定在天台暂留——点起篝火，等夜。不要触发结局或切到露营/现实层。",
+        "aiGoal": "空塔情感爆发点。林檎短暂绝望但不彻底崩溃。玩家发言后，应决定在天台暂留——点起篝火，等夜。Miles 可通过对讲机提议上来或送物资。不要触发结局或切到露营/现实层。",
         "advanceSceneIds": [
           "ch3_campfire_lit",
           "ch3_teacher_static"
@@ -119,17 +189,35 @@
       }
     },
     {
+      "id": "ch3_miles_summons",
+      "background": "radio_tower",
+      "speaker": "miles",
+      "speakerName": "Miles",
+      "character": "miles",
+      "expression": "stubborn",
+      "text": "我带些废木上去。……别在塔顶吹一整夜的风。闲也要听你们说话。"
+    },
+    {
+      "id": "ch3_miles_climb",
+      "background": "radio_tower",
+      "speaker": "narrator",
+      "speakerName": "",
+      "text": "Miles 背着一捆从塔基捡来的旧木和一块防水布，爬梯爬得比你们想象里快。他在塔顶出现时，脸被风吹得发红，却把木柴稳稳放在一边——像在完成一件早就该有人做的事。"
+    },
+    {
       "id": "ch3_campfire_lit",
       "background": "rooftop_campfire",
       "speaker": "narrator",
-      "speakerName": "旁白",
-      "text": "你们用塔顶的废木点了堆篝火。火光在夜风里摇晃，把三个人的影子投在空无一物的发射台上——像毕业露营那夜的缩小版。"
+      "speakerName": "",
+      "bgm": { "id": "rooftop", "label": "BGM · 塔顶夜风" },
+      "text": "你们用塔顶的废木点了堆篝火。火光在夜风里摇晃，把四个人的影子投在空无一物的发射台上——像毕业露营那夜的缩小版。Miles 把防水布拉起来挡风，动作笨拙，却足够认真。"
     },
     {
       "id": "ch3_teacher_static",
       "background": "rooftop_campfire",
       "speaker": "narrator",
-      "speakerName": "旁白",
+      "speakerName": "",
+      "sfx": { "id": "radio_static", "label": "SFX · 收音机杂音" },
       "text": "收音机忽然自己亮了。杂音里，有一个声音在说话——不年轻，不苍老，像从很远的地方借来的：「……你们来了。」"
     },
     {
@@ -159,11 +247,27 @@
       "expression": "hopeful"
     },
     {
+      "id": "ch3_miles_campfire",
+      "background": "rooftop_campfire",
+      "speaker": "miles",
+      "speakerName": "Miles",
+      "character": "miles",
+      "expression": "gentle",
+      "text": "……老师，你还在听吗？我们……没有做得很好。但还在。"
+    },
+    {
+      "id": "ch3_campfire_quiet",
+      "background": "rooftop_campfire",
+      "speaker": "narrator",
+      "speakerName": "",
+      "text": "Miles 说完，把对讲机往火堆近处挪了挪，好让下面的闲也能听见。火焰噼啪，星斗压在头顶。这是第一层旅程里，第一次所有人都在「听」——包括你。"
+    },
+    {
       "id": "ch3_interactive_campfire",
       "background": "rooftop_campfire",
       "speaker": "narrator",
-      "speakerName": "旁白",
-      "text": "篝火噼啪，星空压在头顶。林檎盯着火焰，闲在无线电里呼吸。这是第一层旅程里，第一次所有人都在「听」——包括你。",
+      "speakerName": "",
+      "text": "林檎盯着火焰，闲在无线电里呼吸，Miles 把木柴轻轻拨进火心。这是塔顶上，第一次所有人都在等同一句话。",
       "playerTurn": true,
       "interactive": {
         "objective": "【当前目标】塔顶长谈：回应老师的话，或打开林檎/闲的心结",
@@ -174,7 +278,7 @@
           "闲，痛觉回来了也没关系。活着本身就有意义。"
         ],
         "maxFreeReplies": 2,
-        "aiGoal": "塔顶篝火长谈（Figma 好结局前奏）。老师声音可再叹一句，但不揭露 Meta/剧本真相。林檎应触及「犹豫与愧疚」心结；闲应触及「自我否定」心结。玩家嘴遁后，众人稍许释然，但心结未完全解开（knotResolved 保持 false）。不要切到露营重聚或出租屋结局。",
+        "aiGoal": "塔顶篝火长谈（Figma 好结局前奏）。老师声音可再叹一句，但不揭露 Meta/剧本真相。林檎应触及「犹豫与愧疚」心结；闲应触及「自我否定」心结；Miles 可简短表达害怕与坚持。玩家嘴遁后，众人稍许释然，但心结未完全解开（knotResolved 保持 false）。不要切到露营重聚或出租屋结局。",
         "advanceSceneIds": [
           "ch3_ringo_confess",
           "ch3_xian_confess",
@@ -202,11 +306,20 @@
       "expression": "pained"
     },
     {
+      "id": "ch3_miles_confess",
+      "background": "rooftop_campfire",
+      "speaker": "miles",
+      "speakerName": "Miles",
+      "character": "miles",
+      "expression": "tired",
+      "text": "……我也怕。怕说错话，怕帮不上忙。可除了继续走，我也不知道还能做什么。"
+    },
+    {
       "id": "ch3_stars",
       "background": "rooftop_campfire",
       "speaker": "narrator",
-      "speakerName": "旁白",
-      "text": "风停了片刻。塔下是废土，塔上是星空。没有大人，没有广播，只有三个少年和一堆火——也许这就够了。"
+      "speakerName": "",
+      "text": "风停了片刻。塔下是废土，塔上是星空。没有大人，没有广播，只有四个少年和一堆火——也许这就够了。"
     },
     {
       "id": "ch3_teacher_fade",
@@ -218,10 +331,17 @@
       "expression": "silhouette"
     },
     {
+      "id": "ch3_fire_dying",
+      "background": "rooftop_campfire",
+      "speaker": "narrator",
+      "speakerName": "",
+      "text": "老师的声音散进杂音里，像一粒盐溶进夜。Miles 默默添了最后一根柴，林檎把脸埋进膝间又抬起来——没有哭出声，但肩膀的起伏骗不了人。"
+    },
+    {
       "id": "ch3_interactive_descent",
       "background": "radio_tower",
       "speaker": "narrator",
-      "speakerName": "旁白",
+      "speakerName": "",
       "text": "篝火将尽。抗生素只剩最后一剂，闲的烧似乎退了又起。塔下还有路，结局尚未写定——但你们必须做出今夜最后一个决定。",
       "playerTurn": true,
       "interactive": {
@@ -230,10 +350,10 @@
         "suggestions": [
           "下山，回房车。路还长，闲不能继续在塔上吹风。",
           "天亮前再搜一遍塔基——也许空塔下面还有东西。",
-          "林檎，我们三个都活到了这里。这就够了，回家。"
+          "林檎，我们四个都活到了这里。这就够了，回家。"
         ],
         "maxFreeReplies": 2,
-        "aiGoal": "第三章收束。无论玩家如何选择，最终应决定下山回到房车，承认旅程进入「塔后」阶段——结局分支即将开启。不要播放任何具体结局（坏/普通/好/真/隐藏）。",
+        "aiGoal": "第三章收束。无论玩家如何选择，最终应决定下山回到房车，承认旅程进入「塔后」阶段——结局分支即将开启。Miles 可协助收拾。不要播放任何具体结局（坏/普通/好/真/隐藏）。",
         "advanceSceneIds": [
           "ch3_closing"
         ],
@@ -245,11 +365,12 @@
       "id": "ch3_closing",
       "background": "highway_wasteland",
       "speaker": "narrator",
-      "speakerName": "旁白",
-      "text": "你们走下广播塔，房车灯再次划破荒原。塔顶的空与星留在背后，前方的分岔路在黎明里显现——不同的选择，将把你们带向不同的结局。第三章到此结束。",
+      "speakerName": "",
+      "bgm": { "id": "highway", "label": "BGM · 塔后公路" },
+      "text": "你们走下广播塔，房车灯再次划破荒原。Miles 最后回头看了一眼塔顶——火已经灭了，只剩星星。塔顶的空与星留在背后，前方的分岔路在黎明里显现——不同的选择，将把你们带向不同的结局。第三章到此结束。",
       "chapterEnd": true
     }
   ],
   "nextChapter": "endings",
-  "notes": "对应 Figma：抵达塔→塔顶空无一物→老师叹息→篝火长谈→第一层分水岭。不触发具体结局，留 endings 章节。老师为声音/剪影，不揭露 Meta。"
+  "notes": "对应 Figma：抵达塔→塔顶空无一物→老师叹息→篝火长谈→第一层分水岭。Miles 留守陪闲后登塔参与篝火。不触发具体结局，留 endings 章节。老师为声音/剪影，不揭露 Meta。"
 }

@@ -290,6 +290,11 @@ body {
   margin-bottom: 10px;
 }
 
+#character-name.is-narration,
+#character-name[hidden] {
+  display: none;
+}
+
 /* Dialogue text */
 #dialogue-text {
   color: var(--color-dialogue-text);

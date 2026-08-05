@@ -90,6 +90,11 @@ const sendBtnEl = document.getElementById('send-btn');
 
 let soundCueTimer = null;
 function showSoundCue(cue) {
+  if (window.VNAudio) {
+    if (typeof cue === 'string') window.VNAudio.showCue(cue);
+    else if (cue?.label) window.VNAudio.showCue(cue.label);
+    return;
+  }
   if (!cue) return;
   const existing = document.getElementById('sound-cue');
   const cueEl = existing || document.createElement('div');
@@ -99,6 +104,19 @@ function showSoundCue(cue) {
   cueEl.hidden = false;
   clearTimeout(soundCueTimer);
   soundCueTimer = setTimeout(() => { cueEl.hidden = true; }, 2600);
+}
+
+/**
+ * Narration lines show a blank nameplate (no「旁白」label).
+ */
+function resolveSpeakerDisplayName(scene) {
+  if (!scene) return '';
+  if (scene.speaker === 'narrator') return '';
+  const name = scene.speakerName;
+  if (name === '旁白' || name === undefined || name === null) {
+    return scene.speaker === 'narrator' ? '' : name || '';
+  }
+  return name;
 }
 
 /** Full text of the dialogue currently being typewritten (for click-to-skip). */
@@ -578,12 +596,20 @@ function playScene(scene, options = {}) {
   gameState.currentScene = scene.id;
   applySceneEnterEffects(scene);
   updateBackground(scene.background);
-  showSoundCue(scene.soundCue);
+  if (window.VNAudio) {
+    window.VNAudio.applySceneAudio(scene);
+  } else {
+    showSoundCue(scene.soundCue);
+  }
 
   if (scene.character) {
     updateCharacterSprite(scene.character, scene.expression || 'neutral', {
       variant: scene.variant ?? null
     });
+  } else if (scene.speaker === 'narrator') {
+    characterSpriteEl.classList.remove('has-image');
+    characterSpriteEl.style.backgroundImage = '';
+    characterSpriteLabelEl.textContent = '';
   }
 
   if (scene.endingTitle) {
@@ -591,7 +617,7 @@ function playScene(scene, options = {}) {
     storyObjectiveEl.textContent = scene.endingTitle;
   }
 
-  const speakerName = scene.speakerName || '[NAME]';
+  const speakerName = resolveSpeakerDisplayName(scene);
 
   if (scene.playerTurn) {
     onTypewriterComplete = null;
@@ -905,10 +931,12 @@ function displayDialogue(characterName, text, skipHistory = false) {
     modeHintEl.hidden = true;
   }
 
-  characterNameEl.textContent = characterName;
+  characterNameEl.textContent = characterName || '';
+  characterNameEl.hidden = !characterName;
+  characterNameEl.classList.toggle('is-narration', !characterName);
   dialogueTextEl.textContent = '';
   currentTypewriterText = text;
-  pendingDialogue = skipHistory ? null : { name: characterName, text };
+  pendingDialogue = skipHistory ? null : { name: characterName || '', text };
 
   gameState.isTyping = true;
   gameState.turn = 'npc';
@@ -998,7 +1026,11 @@ function processPlayerInput(text, options = {}) {
         onTypewriterComplete = null;
       }
 
-      displayDialogue(reply.speakerName, reply.text);
+      const replyName =
+        reply.speakerId === 'narrator' || reply.speakerName === '旁白'
+          ? ''
+          : reply.speakerName;
+      displayDialogue(replyName, reply.text);
     })
     .catch((error) => {
       console.error('[AI]', error);
@@ -1257,8 +1289,14 @@ settingsPanelEl.id = 'settings-panel';
 settingsPanelEl.hidden = true;
 settingsPanelEl.innerHTML = `
   <button type="button" id="settings-panel-close">[X]</button>
-  <h2 id="settings-title">设置 · AI 配置</h2>
+  <h2 id="settings-title">设置</h2>
   <div id="settings-content">
+    <h3 class="settings-subtitle">音频</h3>
+    <p class="settings-hint">BGM / 音效与表情同机制：把文件放入 <code>audio/bgm/</code>、<code>audio/sfx/</code>，场景 JSON 写 <code>bgm</code>/<code>sfx</code> id 即可。暂无文件时显示占位提示。</p>
+    <label class="settings-hint" for="audio-volume">音量</label>
+    <input type="range" id="audio-volume" min="0" max="100" value="55" style="width:100%;margin:8px 0;" />
+    <label class="settings-hint"><input type="checkbox" id="audio-mute" /> 静音</label>
+
     <p id="ai-status-line">AI 状态：检测中…</p>
     <p id="ai-model-line"></p>
 
@@ -1356,6 +1394,19 @@ document.getElementById('settings-panel-close').addEventListener('click', () => 
 });
 
 document.getElementById('ai-recheck-btn').addEventListener('click', refreshAIStatus);
+
+const audioVolumeEl = document.getElementById('audio-volume');
+const audioMuteEl = document.getElementById('audio-mute');
+if (audioVolumeEl && window.VNAudio) {
+  audioVolumeEl.addEventListener('input', () => {
+    window.VNAudio.setVolume(Number(audioVolumeEl.value) / 100);
+  });
+}
+if (audioMuteEl && window.VNAudio) {
+  audioMuteEl.addEventListener('change', () => {
+    window.VNAudio.setMuted(audioMuteEl.checked);
+  });
+}
 
 // ---------------------------------------------------------------------------
 // Page load — load data and start prologue

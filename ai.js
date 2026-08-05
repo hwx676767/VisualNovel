@@ -3,6 +3,7 @@
  */
 const AI = (() => {
   let directorPrompt = null;
+  let actingExamples = null;
 
   async function loadDirectorPrompt() {
     if (directorPrompt) return directorPrompt;
@@ -10,6 +11,18 @@ const AI = (() => {
     if (!response.ok) throw new Error('无法加载 director.json');
     directorPrompt = await response.json();
     return directorPrompt;
+  }
+
+  async function loadActingExamples() {
+    if (actingExamples) return actingExamples;
+    try {
+      const response = await fetch('data/prompts/acting_examples.json');
+      if (!response.ok) return null;
+      actingExamples = await response.json();
+      return actingExamples;
+    } catch {
+      return null;
+    }
   }
 
   /**
@@ -25,7 +38,16 @@ const AI = (() => {
    * Builds the system prompt from director rules + character profiles + game state.
    */
   function buildSystemPrompt(context) {
-    const { director, characters, gameState, scene, background, interactive, isDecisive = false } = context;
+    const {
+      director,
+      characters,
+      gameState,
+      scene,
+      background,
+      interactive,
+      isDecisive = false,
+      acting
+    } = context;
 
     const npcLines = characters
       .filter((c) => c.role === 'npc' && c.aiProfile)
@@ -36,19 +58,32 @@ const AI = (() => {
         const sampleBlock = samples.length
           ? `语气参考（模仿口吻与节奏，勿整句照抄）：\n${samples.map((s) => `- 「${s}」`).join('\n')}`
           : '';
+        const actingNote = c.aiProfile.actingNotes
+          ? `演技要点：${c.aiProfile.actingNotes}`
+          : '';
+        const styleExamples = acting?.byCharacter?.[c.id];
+        const exampleBlock = Array.isArray(styleExamples) && styleExamples.length
+          ? `写法示范（模仿气质，禁止照抄）：\n${styleExamples.map((s) => `- 「${s}」`).join('\n')}`
+          : '';
         return [
           `【${c.displayName} / id:${c.id}】`,
           `性格：${c.aiProfile.personality}`,
           `说话风格：${c.aiProfile.speechStyle}`,
+          actingNote,
           `心结：${c.knot || '无'}`,
           `当前坚定值：${conviction}（${stage}）`,
           `可用表情：${c.expressions.join(', ')}`,
-          sampleBlock
+          sampleBlock,
+          exampleBlock
         ]
           .filter(Boolean)
           .join('\n');
       })
       .join('\n\n');
+
+    const craftBlock = Array.isArray(acting?.globalCraft) && acting.globalCraft.length
+      ? ['', '## 对白写法（小说/游戏味）', ...acting.globalCraft.map((r, i) => `${i + 1}. ${r}`)].join('\n')
+      : '';
 
     const beatSection = interactive
       ? [
@@ -80,6 +115,7 @@ const AI = (() => {
       '',
       '## 规则',
       ...director.rules.map((r, i) => `${i + 1}. ${r}`),
+      craftBlock,
       '',
       '## 当前游戏状态',
       `场景：${scene?.id || 'unknown'} — ${scene?.speakerName || ''}`,
@@ -223,6 +259,7 @@ const AI = (() => {
    */
   async function sendPlayerMessage(playerText, context) {
     const director = await loadDirectorPrompt();
+    const acting = await loadActingExamples();
     const { charactersData, gameState, storyScenes, storySceneIndex, backgroundsData, dialogueHistory, isDecisive = false } =
       context;
 
@@ -239,7 +276,16 @@ const AI = (() => {
     const messages = [
       {
         role: 'system',
-        content: buildSystemPrompt({ director, characters, gameState, scene, background, interactive, isDecisive })
+        content: buildSystemPrompt({
+          director,
+          characters,
+          gameState,
+          scene,
+          background,
+          interactive,
+          isDecisive,
+          acting
+        })
       },
       ...buildHistoryMessages(dialogueHistory, playerText),
       { role: 'user', content: playerText }

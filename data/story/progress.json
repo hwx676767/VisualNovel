@@ -59,9 +59,11 @@
         { "id": "c1_2", "title": "加油站搜刮", "status": "implemented", "sceneId": "ch1_gas_station" },
         { "id": "c1_3", "title": "紧张对峙", "status": "implemented", "sceneId": "ch1_ringo_tense" },
         { "id": "c1_4", "title": "互动：化解对峙", "status": "implemented", "sceneId": "ch1_interactive_tension" },
-        { "id": "c1_5", "title": "误会升级", "status": "implemented", "sceneId": "ch1_misread" },
+        { "id": "c1_5", "title": "持枪学生现身", "status": "implemented", "sceneId": "ch1_student_warning" },
+        { "id": "c1_5b", "title": "互动：对峙交涉", "status": "implemented", "sceneId": "ch1_interactive_standoff" },
         { "id": "c1_6", "title": "闲中枪（救同伴）", "status": "implemented", "sceneId": "ch1_shot" },
-        { "id": "c1_7", "title": "闲逞强 / 林檎自责", "status": "implemented", "sceneId": "ch1_xian_down" },
+        { "id": "c1_7", "title": "抵抗与逃车", "status": "implemented", "sceneId": "ch1_resistance" },
+        { "id": "c1_7b", "title": "公路沉默之后", "status": "implemented", "sceneId": "ch1_drive_silence" },
         { "id": "c1_8", "title": "互动：驱车去医院", "status": "implemented", "sceneId": "ch1_interactive_after_shot" },
         { "id": "c1_9", "title": "废弃医院", "status": "implemented", "sceneId": "ch1_hospital_arrival" },
         { "id": "c1_10", "title": "伤口感染 · 闲无法行动", "status": "implemented", "sceneId": "ch1_infection" },
@@ -136,6 +138,7 @@
     { "id": "xian", "name": "闲", "sheet": "完整", "inGame": "yes" },
     { "id": "ringo", "name": "林檎", "sheet": "完整", "inGame": "yes" },
     { "id": "miles", "name": "Miles", "sheet": "完整（含语料）", "inGame": "yes" },
-    { "id": "teacher", "name": "老师", "sheet": "象征性", "inGame": "no" }
+    { "id": "teacher", "name": "老师", "sheet": "象征性", "inGame": "partial" },
+    { "id": "student", "name": "持枪学生", "sheet": "第一章对峙", "inGame": "yes" }
   ]
 }

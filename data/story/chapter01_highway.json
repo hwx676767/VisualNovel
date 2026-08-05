@@ -1,22 +1,40 @@
 {
   "id": "chapter01_highway",
   "title": "第一章：公路与枪声",
-  "summary": "驶离空城后，物资紧缺与恐慌引发误会。闲为救同伴中枪，众人送医后发现感染恶化。闲用相机捕捉到远方光柱与电波，公路片正式启程。",
+  "summary": "驶离空城后，物资紧缺与恐慌引发误会。与持枪学生的对峙失控，闲为救同伴中枪。众人逃上车，情绪在公路上才慢慢溃堤。",
   "dayRange": [1, 2],
   "scenes": [
     {
       "id": "ch1_highway_open",
       "background": "highway_wasteland",
       "speaker": "narrator",
-      "speakerName": "旁白",
+      "speakerName": "",
+      "bgm": { "id": "highway", "label": "BGM · 废土公路" },
       "text": "驶离空城之后，公路在车头灯下像一条没有尽头的伤口。收音机里的杂音还在——沙沙，又像是有人在呼吸。"
+    },
+    {
+      "id": "ch1_miles_nav",
+      "background": "rv_interior",
+      "speaker": "miles",
+      "speakerName": "Miles",
+      "character": "miles",
+      "expression": "tired",
+      "text": "地图上最近的补给点……是城郊那个旧加油站。油表已经快贴红了。"
     },
     {
       "id": "ch1_gas_station",
       "background": "gas_station",
       "speaker": "narrator",
-      "speakerName": "旁白",
-      "text": "你们在城郊加油站停下。货架翻倒，地上有拖拽的痕迹。林檎让你和闲留在车里，自己去搬汽油。"
+      "speakerName": "",
+      "bgm": { "id": "tension", "label": "BGM · 紧张低频" },
+      "text": "你们在城郊加油站停下。货架翻倒，地上有拖拽的痕迹。风穿过破碎的霓虹，把塑料袋吹得像呼吸。"
+    },
+    {
+      "id": "ch1_gas_plan",
+      "background": "gas_station",
+      "speaker": "narrator",
+      "speakerName": "",
+      "text": "林檎让闲留在车里。Miles 去搬油桶。你跟林檎一起靠近便利店门口——门半敞着，里面黑得像一张合不上的嘴。"
     },
     {
       "id": "ch1_ringo_tense",
@@ -40,19 +58,19 @@
       "id": "ch1_interactive_tension",
       "background": "gas_station",
       "speaker": "narrator",
-      "speakerName": "旁白",
-      "text": "林檎握着撬棍僵在门口，闲举着相机。你必须立刻拿主意。",
+      "speakerName": "",
+      "text": "林檎握着撬棍僵在门口，闲从车窗举起相机。Miles 在油泵旁停住了手。你必须立刻拿主意。",
       "playerTurn": true,
       "interactive": {
         "objective": "【当前目标】化解加油站的对峙：稳住林檎，或让闲说明她看见了什么",
         "playerPrompt": "你打算怎么做？",
         "suggestions": [
-          "林檎，先退回来。我们三个人一起进去。",
+          "林檎，先退回来。我们一起进去。",
           "闲，把相机给我看看——你拍到了什么？",
           "别进去了，拿了油就走，这里不对劲。"
         ],
         "maxFreeReplies": 2,
-        "aiGoal": "加油站紧张氛围。玩家选择后，林檎应短暂犹豫（呼应她的心结），但最终局势仍要恶化——为下一幕枪声做铺垫。不要直接描写中枪，本轮只制造误判与恐慌。",
+        "aiGoal": "加油站紧张氛围。玩家选择后，林檎应短暂犹豫（呼应心结），Miles 可简短附和。最终局势仍要恶化——为下一幕对峙做铺垫。不要直接描写中枪。",
         "advanceSceneIds": [
           "ch1_misread"
         ],
@@ -63,9 +81,16 @@
       "id": "ch1_misread",
       "background": "gas_station",
       "speaker": "narrator",
-      "speakerName": "旁白",
-      "text": "货架后先响起的是塑料袋摩擦声，接着是一只鞋踩碎玻璃的脆响。林檎的撬棍垂下去半寸；闲的相机镜头里，便利店深处有个和你们差不多大的影子，正一步步退向冷柜。",
-      "soundCue": { "label": "紧张氛围 · 低频杂音" }
+      "speakerName": "",
+      "sfx": { "id": "glass_crunch", "label": "SFX · 玻璃碎响" },
+      "text": "货架后先响起的是塑料袋摩擦声，接着是一只鞋踩碎玻璃的脆响。林檎的撬棍垂下去半寸。"
+    },
+    {
+      "id": "ch1_shadow",
+      "background": "gas_station",
+      "speaker": "narrator",
+      "speakerName": "",
+      "text": "闲的相机镜头里，便利店深处有个和你们差不多大的影子，正一步步退向冷柜。那不是怪物——是人。手在抖，抖得像握不住自己的呼吸。"
     },
     {
       "id": "ch1_student_warning",
@@ -73,6 +98,13 @@
       "speaker": "student",
       "speakerName": "持枪学生",
       "text": "别过来。油、药，还有那辆车，都留下。再往前一步，我就开枪。"
+    },
+    {
+      "id": "ch1_surprise",
+      "background": "gas_station",
+      "speaker": "narrator",
+      "speakerName": "",
+      "text": "枪口抬起来的瞬间，你的耳朵里只剩下自己的心跳。Miles 在油泵旁举起双手；林檎的喉结滚动了一下，却没有立刻后退。"
     },
     {
       "id": "ch1_student_fear",
@@ -91,6 +123,15 @@
       "expression": "guilty"
     },
     {
+      "id": "ch1_miles_calm",
+      "background": "gas_station",
+      "speaker": "miles",
+      "speakerName": "Miles",
+      "character": "miles",
+      "expression": "gentle",
+      "text": "……我们有水。也有一点吃的。你先把枪放下，好不好？"
+    },
+    {
       "id": "ch1_student_panics",
       "background": "gas_station",
       "speaker": "student",
@@ -98,14 +139,53 @@
       "text": "别骗我！每个人都这么说——等我把枪放下，你们就会跑。"
     },
     {
+      "id": "ch1_interactive_standoff",
+      "background": "gas_station",
+      "speaker": "narrator",
+      "speakerName": "",
+      "text": "枪口在灯光里晃。那孩子的眼睛又红又干，像随时会哭出来，又像随时会扣下扳机。你只有几秒可以开口。",
+      "playerTurn": true,
+      "interactive": {
+        "objective": "【当前目标】对峙交涉：尝试稳住持枪学生（无论怎么说，局势仍将失控）",
+        "playerPrompt": "你对持枪学生说什么？",
+        "suggestions": [
+          "我们不会丢下你。把枪放下，一起走。",
+          "林檎，别靠近。他在害怕。",
+          "你先看着我。深呼吸。枪可以晚点再谈。"
+        ],
+        "maxFreeReplies": 1,
+        "aiGoal": "学生对峙短互动。可让林檎/Miles/闲之一短暂回应玩家。学生恐惧未消，对话后必须推进到走火——不要和平解决，不要跳过中枪。",
+        "advanceSceneIds": [
+          "ch1_misstep",
+          "ch1_shot"
+        ],
+        "onCompleteFlags": { "standoffAttempted": true }
+      }
+    },
+    {
+      "id": "ch1_misstep",
+      "background": "gas_station",
+      "speaker": "narrator",
+      "speakerName": "",
+      "text": "有人动了——也许是林檎往前半步，也许是闲从车门探出身子。枪口猛地一偏。时间像被拉长的胶片，每一帧都黏在视网膜上。"
+    },
+    {
       "id": "ch1_shot",
       "background": "gas_station",
       "speaker": "narrator",
-      "speakerName": "旁白",
-      "text": "枪响不是威胁，而是被恐惧扣下的扳机。闲在你身侧猛地一震，仍本能地把你扑倒。温热的血迅速浸透你的衣领；持枪学生盯着自己的手，脸色比墙上的灰还白。",
-      "soundCue": { "label": "枪响 · 短促耳鸣" },
+      "speakerName": "",
+      "sfx": { "id": "gunshot", "label": "SFX · 枪响 · 短促耳鸣" },
+      "text": "枪响不是威胁，而是被恐惧扣下的扳机。闲在你身侧猛地一震，仍本能地把你扑倒。温热的血迅速浸透你的衣领。",
       "onEnterFlags": { "xianInjured": true },
       "onEnterResources": { "gasoline": 1 }
+    },
+    {
+      "id": "ch1_shot_aftermath",
+      "background": "gas_station",
+      "speaker": "narrator",
+      "speakerName": "",
+      "sfx": { "id": "heartbeat", "label": "SFX · 耳鸣 · 心跳" },
+      "text": "持枪学生盯着自己的手，脸色比墙上的灰还白。世界忽然很远：霓虹在闪，油味很冲，你听见自己的呼吸碎成一片一片。"
     },
     {
       "id": "ch1_student_breaks",
@@ -118,9 +198,17 @@
       "id": "ch1_resistance",
       "background": "gas_station",
       "speaker": "narrator",
-      "speakerName": "旁白",
-      "text": "林檎没有给任何人崩溃的时间。她用撬棍拨开枪口，把人逼回货架后；你跪在地上按住闲的伤处，闲咬着牙，指节死死抓住你的袖口。远处又有铁门被风撞响，像有什么正被枪声叫醒。",
-      "soundCue": { "label": "警报感 · 脚步逼近" }
+      "speakerName": "",
+      "text": "林檎没有给任何人崩溃的时间。她用撬棍拨开枪口，把人逼回货架后；你跪在地上按住闲的伤处，闲咬着牙，指节死死抓住你的袖口。"
+    },
+    {
+      "id": "ch1_miles_carry",
+      "background": "gas_station",
+      "speaker": "miles",
+      "speakerName": "Miles",
+      "character": "miles",
+      "expression": "stubborn",
+      "text": "油桶我扛得动——先别管了！车门开着，快！"
     },
     {
       "id": "ch1_ringo_evacuate",
@@ -135,9 +223,17 @@
       "id": "ch1_escape",
       "background": "rv_interior",
       "speaker": "narrator",
-      "speakerName": "旁白",
-      "text": "车门砰地合上，房车几乎是撞着路沿冲出去的。后视镜里，加油站的白灯越来越小；那名学生没有追来，只是站在门口，像被自己的一声枪响钉在原地。",
-      "soundCue": { "label": "房车急驶 · 引擎轰鸣" }
+      "speakerName": "",
+      "bgm": { "id": "highway", "label": "BGM · 急驶公路" },
+      "sfx": { "id": "engine", "label": "SFX · 房车急驶" },
+      "text": "车门砰地合上，房车几乎是撞着路沿冲出去的。后视镜里，加油站的白灯越来越小；那名学生没有追来，只是站在门口，像被自己的一声枪响钉在原地。"
+    },
+    {
+      "id": "ch1_drive_silence",
+      "background": "rv_interior",
+      "speaker": "narrator",
+      "speakerName": "",
+      "text": "很长一段时间，车厢里只有引擎声和你按压伤口的手。谁也没哭。谁也还没资格哭。公路灯一盏盏掠过，像在数你们逃出来的秒数。"
     },
     {
       "id": "ch1_xian_down",
@@ -146,7 +242,8 @@
       "speakerName": "闲",
       "text": "……别看我。只是擦伤。你别把手松开，松开了才会真的痛。",
       "character": "xian",
-      "expression": "pained"
+      "expression": "pained",
+      "variant": "injured"
     },
     {
       "id": "ch1_ringo_guilt",
@@ -158,18 +255,27 @@
       "expression": "guilty"
     },
     {
+      "id": "ch1_miles_quiet",
+      "background": "rv_interior",
+      "speaker": "miles",
+      "speakerName": "Miles",
+      "character": "miles",
+      "expression": "tired",
+      "text": "……先找医院。其他的，等她不流血了再说。"
+    },
+    {
       "id": "ch1_steady_xian",
       "background": "rv_interior",
       "speaker": "narrator",
-      "speakerName": "旁白",
-      "text": "车厢被发动机震得发颤。你用外套压住伤口，数着闲每一次越来越浅的呼吸；林檎的车开得很快，却没有再一次急刹。她把恐惧压进方向盘里，只留下一个方向：最近的医院。",
-      "soundCue": { "label": "心跳 · 压迫感" }
+      "speakerName": "",
+      "sfx": { "id": "heartbeat", "label": "SFX · 压迫心跳" },
+      "text": "车厢被发动机震得发颤。你用外套压住伤口，数着闲每一次越来越浅的呼吸；林檎的车开得很快，却没有再一次急刹。她把恐惧压进方向盘里，只留下一个方向：最近的医院。"
     },
     {
       "id": "ch1_interactive_after_shot",
       "background": "rv_interior",
       "speaker": "narrator",
-      "speakerName": "旁白",
+      "speakerName": "",
       "text": "闲的意识在清醒与昏沉之间来回滑落，林檎等着你的声音，像等一个能把她从自责里拽出来的命令。现在的每一句话都很轻，却能让车继续向前。",
       "playerTurn": true,
       "interactive": {
@@ -178,10 +284,10 @@
         "suggestions": [
           "林檎，现在不是自责的时候——开车，去最近的医院。",
           "闲，撑住，我们不会丢下你。",
-          "把伤口按住，我来指路。"
+          "Miles，帮我看着后座。我来指路。"
         ],
         "maxFreeReplies": 2,
-        "aiGoal": "闲中枪后的房车内情绪爆发。先回应玩家，再让林檎从自责转为执行救援，闲在疼痛中逞强却接受陪伴。持枪学生是恐惧失控的同龄人，不把他写成纯粹恶人。回复保持连续对白，不插入旁白。玩家发言后，众人明确驱车前往附近城市医院；不要跳到已经治好或公路片后期。",
+        "aiGoal": "闲中枪后的房车内情绪。先回应玩家，再让林檎从自责转为执行救援；Miles 可协助；闲在疼痛中逞强却接受陪伴。持枪学生是恐惧失控的同龄人。回复保持角色对白。众人明确驱车前往医院。",
         "advanceSceneIds": [
           "ch1_hospital_drive",
           "ch1_hospital_arrival",
@@ -194,21 +300,31 @@
       "id": "ch1_hospital_drive",
       "background": "highway_wasteland",
       "speaker": "narrator",
-      "speakerName": "旁白",
-      "text": "林檎把油门踩到底。你一边给闲加压，一边盯着导航上最近的一家医院——那座空城里的医院。"
+      "speakerName": "",
+      "text": "林檎把油门踩到底。窗外的空城像一张没冲洗完的底片。你一边给闲加压，一边盯着导航上最近的一家医院——灯还亮着，却不知道里面还有没有人。"
     },
     {
       "id": "ch1_hospital_arrival",
       "background": "hospital",
       "speaker": "narrator",
-      "speakerName": "旁白",
-      "text": "急诊大厅灯火通明，却没有医生。你们从废弃的药柜里翻出绷带和半盒抗生素，勉强稳住了血。"
+      "speakerName": "",
+      "bgm": { "id": "hospital", "label": "BGM · 废弃医院" },
+      "text": "急诊大厅灯火通明，却没有医生。推车东倒西歪，药柜半敞。你们从废弃货架里翻出绷带和半盒抗生素，气味刺鼻，却像救命的绳。"
+    },
+    {
+      "id": "ch1_miles_bandage",
+      "background": "hospital",
+      "speaker": "miles",
+      "speakerName": "Miles",
+      "character": "miles",
+      "expression": "gentle",
+      "text": "我来按。你帮她把袖子卷上去。……对，这样。"
     },
     {
       "id": "ch1_infection",
       "background": "hospital",
       "speaker": "narrator",
-      "speakerName": "旁白",
+      "speakerName": "",
       "text": "但几个小时后，闲开始发烧。伤口发红肿胀——感染在扩散。她再也站不起来，只能躺在房车后座上。",
       "onEnterFlags": { "xianImmobile": true },
       "onEnterResources": { "antibiotics": -1 }
@@ -226,8 +342,8 @@
       "id": "ch1_interactive_medicine",
       "background": "hospital",
       "speaker": "narrator",
-      "speakerName": "旁白",
-      "text": "药品在减少，汽油也是。下一步，关系到闲能不能活到下一站。",
+      "speakerName": "",
+      "text": "药品在减少，汽油也是。窗外夜色像墨。下一步，关系到闲能不能活到下一站。",
       "playerTurn": true,
       "interactive": {
         "objective": "【当前目标】制定搜刮计划：继续找药，还是先去追收音机里的电波？",
@@ -235,10 +351,10 @@
         "suggestions": [
           "先搜刮药店和便利店，抗生素优先。",
           "让闲用相机看看电波方向——她说过镜头里能看见东西。",
-          "分头行动：你去找药，林檎守车。"
+          "Miles 去找药，林檎守车，我跟着闲的镜头走。"
         ],
         "maxFreeReplies": 2,
-        "aiGoal": "医院决策点。强调抗生素和汽油都关键。玩家表态后，闲应尝试用相机对准窗外/远方，隐约看见异常光柱或信号方向，为公路片指路。",
+        "aiGoal": "医院决策点。强调抗生素和汽油都关键。玩家表态后，闲应尝试用相机对准窗外/远方，隐约看见异常光柱或信号方向。",
         "advanceSceneIds": [
           "ch1_xian_camera",
           "ch1_signal",
@@ -254,21 +370,23 @@
       "speakerName": "闲",
       "text": "……相机里，那条路在发光。不是路灯。是……有人在等我们过去。",
       "character": "xian",
-      "expression": "hopeful"
+      "expression": "hopeful",
+      "variant": "injured"
     },
     {
       "id": "ch1_signal",
       "background": "highway_wasteland",
       "speaker": "narrator",
-      "speakerName": "旁白",
+      "speakerName": "",
+      "sfx": { "id": "radio_static", "label": "SFX · 收音机电波" },
       "text": "收音机忽然清晰了一瞬。一个陌生的频率里，有人用平淡的语调念着什么——像新闻，又像祈祷。林檎看向你：要跟上那个声音吗？"
     },
     {
       "id": "ch1_interactive_departure",
       "background": "highway_wasteland",
       "speaker": "narrator",
-      "speakerName": "旁白",
-      "text": "房车停在公路岔口。一条路通向城区废墟，另一条追着电波和光柱延伸向地平线。",
+      "speakerName": "",
+      "text": "房车停在公路岔口。一条路通向城区废墟，另一条追着电波和光柱延伸向地平线。风把尘土掀起来，像一张未写完的地图。",
       "playerTurn": true,
       "interactive": {
         "objective": "【当前目标】正式启程：选择沿电波方向前进（进入公路片）",
@@ -279,7 +397,7 @@
           "林檎，你来开车。我相信闲看见的东西。"
         ],
         "maxFreeReplies": 2,
-        "aiGoal": "第一章收束。无论玩家怎么犹豫，最终应决定沿电波/光柱方向驶上公路（公路片开始）。林檎重新握紧方向盘，闲躺在后座。不要跳到广播塔或结局。",
+        "aiGoal": "第一章收束。无论玩家怎么犹豫，最终应决定沿电波/光柱方向驶上公路。林檎握方向盘，Miles 整理后座，闲躺着。不要跳到广播塔或结局。",
         "advanceSceneIds": [
           "ch1_closing"
         ],
@@ -290,11 +408,12 @@
       "id": "ch1_closing",
       "background": "highway_wasteland",
       "speaker": "narrator",
-      "speakerName": "旁白",
+      "speakerName": "",
+      "bgm": { "id": "highway", "label": "BGM · 公路片启程" },
       "text": "房车驶入废土公路的深处。闲躺在后座，相机仍对着窗外那道看不见的光。第一章到此结束——前方的城镇与电波，等待着你。",
       "chapterEnd": true
     }
   ],
   "nextChapter": "chapter02_towns",
-  "notes": "对应 Figma：误会→闲中枪→医院→感染→电波/光柱→公路片。林檎不受伤，伤的是闲。"
+  "notes": "描写加厚：惊讶→对峙→短互动→走火→抵抗→逃车→沉默→情绪。Miles 辅助撤离与包扎。学生对峙有台词。"
 }

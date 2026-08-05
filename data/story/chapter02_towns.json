@@ -8,22 +8,88 @@
       "id": "ch2_highway_dawn",
       "background": "highway_wasteland",
       "speaker": "narrator",
-      "speakerName": "旁白",
-      "text": "第二天黎明，房车仍追着收音机里断断续续的杂音。后座上传来闲压抑的喘息——抗生素在减少，路却越来越长。"
+      "speakerName": "",
+      "bgm": { "id": "highway", "label": "BGM · 废土公路" },
+      "text": "第二天黎明，天光像一层洗旧了的灰布，从地平线后面慢慢揭起来。房车仍追着收音机里断断续续的杂音——沙沙，又像是有人在远处换气。"
+    },
+    {
+      "id": "ch2_dawn_interior",
+      "background": "rv_interior",
+      "speaker": "narrator",
+      "speakerName": "",
+      "text": "后座上，闲把脸侧向窗，呼吸又浅又急。抗生素在减少，路却越来越长。仪表盘上的油针低得刺眼，像一根随时会折断的刺。"
+    },
+    {
+      "id": "ch2_miles_supplies",
+      "background": "rv_interior",
+      "speaker": "miles",
+      "speakerName": "Miles",
+      "character": "miles",
+      "expression": "tired",
+      "text": "……我清点过了。罐头还剩六听，水两箱半。抗生素——算上昨晚用的，只剩四剂。"
+    },
+    {
+      "id": "ch2_miles_map",
+      "background": "rv_interior",
+      "speaker": "narrator",
+      "speakerName": "",
+      "text": "Miles 把皱巴巴的地图摊在膝上，铅笔在几个小镇名旁边打了叉。每一个叉，都是他们路过或放弃的地方。他写数字时手很稳，像在做一件还能控制的小事。"
     },
     {
       "id": "ch2_first_town",
       "background": "empty_city",
       "speaker": "narrator",
-      "speakerName": "旁白",
-      "text": "公路旁出现第一座小镇。招牌褪色，橱窗完好，像被按了暂停键。林檎减了速：「先补给，别在夜里赶路。」"
+      "speakerName": "",
+      "text": "公路旁出现第一座小镇。招牌褪色，橱窗完好，像被按了暂停键。风从空荡的街道穿过去，把一张旧报纸吹到路中央，又慢慢停住。"
+    },
+    {
+      "id": "ch2_ringo_slow",
+      "background": "empty_city",
+      "speaker": "ringo",
+      "speakerName": "林檎",
+      "text": "先补给，别在夜里赶路。",
+      "character": "ringo",
+      "expression": "guilty"
+    },
+    {
+      "id": "ch2_town_stillness",
+      "background": "empty_city",
+      "speaker": "narrator",
+      "speakerName": "",
+      "text": "林檎减了速。房车轮毂碾过碎石子，声音在死寂里显得过分响。后视镜里，公路像一条被抛在身后的细线——他们已经没有多少可以后退的地方。"
     },
     {
       "id": "ch2_pharmacy",
       "background": "pharmacy_ruins",
       "speaker": "narrator",
-      "speakerName": "旁白",
-      "text": "街角药店玻璃碎了一地。货架上还剩零星药盒，地上却有新鲜的脚印——有人比你们先来过。"
+      "speakerName": "",
+      "text": "街角药店玻璃碎了一地，阳光从豁口斜照进来，在粉末状的玻璃渣上打出细碎的光斑。货架上还剩零星药盒，标签被潮气泡卷了边。"
+    },
+    {
+      "id": "ch2_pharmacy_tracks",
+      "background": "pharmacy_ruins",
+      "speaker": "narrator",
+      "speakerName": "",
+      "sfx": { "id": "glass_crunch", "label": "SFX · 玻璃碎响" },
+      "text": "地上却有新鲜的脚印——从门口延伸到里屋，在散落的药盒旁停住，又折返出来。有人比你们先来过，而且走的时间不太久。"
+    },
+    {
+      "id": "ch2_miles_footprints",
+      "background": "pharmacy_ruins",
+      "speaker": "miles",
+      "speakerName": "Miles",
+      "character": "miles",
+      "expression": "neutral",
+      "text": "……脚印是往里的，没有拖行的痕迹。应该只有一个人，或者——至少还能自己走。"
+    },
+    {
+      "id": "ch2_miles_scavenge",
+      "background": "pharmacy_ruins",
+      "speaker": "miles",
+      "speakerName": "Miles",
+      "character": "miles",
+      "expression": "stubborn",
+      "text": "给我一只袋子。里屋我来搜，你们别散太开。"
     },
     {
       "id": "ch2_ringo_watch",
@@ -35,10 +101,17 @@
       "expression": "guilty"
     },
     {
+      "id": "ch2_scavenge_tension",
+      "background": "pharmacy_ruins",
+      "speaker": "narrator",
+      "speakerName": "",
+      "text": "林檎背靠门框，撬棍横在胸前。她的目光扫过街对面——那里有一截加油站的旧招牌，红漆剥落得厉害，像一道愈合不良的疤。她没往那边看太久。"
+    },
+    {
       "id": "ch2_interactive_town1",
       "background": "pharmacy_ruins",
       "speaker": "narrator",
-      "speakerName": "旁白",
+      "speakerName": "",
       "text": "时间不多，汽油在怠速里一滴一滴掉。你必须决定怎么搜刮这座小镇。",
       "playerTurn": true,
       "interactive": {
@@ -50,7 +123,7 @@
           "先绕一圈看看脚印，确认没有别人再动手。"
         ],
         "maxFreeReplies": 2,
-        "aiGoal": "城镇1搜刮决策。林檎会因加油站阴影而短暂犹豫（呼应心结），但最终应完成搜刮、获得少量抗生素。不要引入枪战或新角色登场。搜刮后众人回到房车。",
+        "aiGoal": "城镇1搜刮决策。林檎会因加油站阴影而短暂犹豫（呼应心结），Miles 可协助搬运、清点药品。最终应完成搜刮、获得少量抗生素。不要引入枪战或新角色登场。搜刮后众人回到房车。",
         "advanceSceneIds": [
           "ch2_loot",
           "ch2_rv_night"
@@ -63,16 +136,56 @@
       "id": "ch2_loot",
       "background": "pharmacy_ruins",
       "speaker": "narrator",
-      "speakerName": "旁白",
-      "text": "你们从废墟里翻出半箱未过期的抗生素和几瓶消毒水。林檎把药扔回车上时，手还在微微发抖——她什么也没说。"
+      "speakerName": "",
+      "text": "Miles 从里屋搬出来半箱未过期的抗生素和几瓶消毒水，袋口系得仔细，像怕漏掉最后一粒希望。里屋的抽屉被翻过，却没有人。"
+    },
+    {
+      "id": "ch2_miles_loot",
+      "background": "pharmacy_ruins",
+      "speaker": "miles",
+      "speakerName": "Miles",
+      "character": "miles",
+      "expression": "gentle",
+      "text": "够撑一阵了。……我先把消毒水分装到小瓶里，路上用起来方便。"
+    },
+    {
+      "id": "ch2_ringo_tremble",
+      "background": "pharmacy_ruins",
+      "speaker": "narrator",
+      "speakerName": "",
+      "text": "林檎把药扔回车上时，手还在微微发抖——她什么也没说。Miles 接过去放好，顺势用肩膀挡了一下车门，像是不经意，又像是有意让她少吹一点风。"
     },
     {
       "id": "ch2_rv_night",
       "background": "rv_interior",
       "speaker": "narrator",
-      "speakerName": "旁白",
+      "speakerName": "",
       "text": "搜刮结束，你们没有逗留。房车驶离小镇，在公路边停下——这是新的规矩：找完就走，不在空城里过夜。",
       "onEnterResources": { "gasoline": -1 }
+    },
+    {
+      "id": "ch2_rv_park",
+      "background": "highway_wasteland",
+      "speaker": "narrator",
+      "speakerName": "",
+      "bgm": { "id": "campsite", "label": "BGM · 公路夜停" },
+      "text": "公路边的野地里有半圈被压平的草，像是别的旅人也曾在这里歇脚。林檎熄火，世界忽然只剩下风掠过车顶的轻响和远处偶尔传来的虫鸣——在这年头，虫鸣已经算是奢侈。"
+    },
+    {
+      "id": "ch2_miles_night",
+      "background": "rv_interior",
+      "speaker": "miles",
+      "speakerName": "Miles",
+      "character": "miles",
+      "expression": "tired",
+      "text": "我去给闲换药。你们……谁先睡？"
+    },
+    {
+      "id": "ch2_miles_care",
+      "background": "rv_interior",
+      "speaker": "narrator",
+      "speakerName": "",
+      "text": "Miles 拧开消毒水，动作比说话轻。他先把闲额前的汗拨开，试了试温度，才慢慢揭起旧纱布。闲的眉心皱了一下，却没有躲——这本身就已经是一种信任。"
     },
     {
       "id": "ch2_xian_fever",
@@ -93,11 +206,28 @@
       "expression": "forced_smile"
     },
     {
+      "id": "ch2_miles_quiet_care",
+      "background": "rv_interior",
+      "speaker": "miles",
+      "speakerName": "Miles",
+      "character": "miles",
+      "expression": "gentle",
+      "text": "没事。我动作轻一点。……痛就捏我的袖子，别咬嘴唇。"
+    },
+    {
+      "id": "ch2_night_heat",
+      "background": "rv_interior",
+      "speaker": "narrator",
+      "speakerName": "",
+      "sfx": { "id": "heartbeat", "label": "SFX · 闷热心跳" },
+      "text": "夜里房车厢闷热，像一只扣住的铁盒。闲的额头烫得吓人，林檎坐在驾驶座上假装看路——其实路在眼前，心却沉在后座。Miles 把换下来的纱布叠好，指节因为用力而泛白。"
+    },
+    {
       "id": "ch2_interactive_night",
       "background": "rv_interior",
       "speaker": "narrator",
-      "speakerName": "旁白",
-      "text": "夜里房车厢闷热。闲的额头烫得吓人，林檎坐在驾驶座上假装看路。她需要听见一句能撑到天亮的话。",
+      "speakerName": "",
+      "text": "她需要听见一句能撑到天亮的话。",
       "playerTurn": true,
       "interactive": {
         "objective": "【当前目标】房车内夜话：稳住林檎，让闲愿意接受换药",
@@ -108,7 +238,7 @@
           "今晚我守夜。你们两个都休息一下。"
         ],
         "maxFreeReplies": 2,
-        "aiGoal": "房车夜话。闲痛觉回归、抗拒治疗（坚定值0→30阶段）。林檎自责但强撑。玩家安抚后，闲勉强同意换药，林檎稍微放松。不要跳到广播塔或结局。",
+        "aiGoal": "房车夜话。闲痛觉回归、抗拒治疗（坚定值0→30阶段）。林檎自责但强撑。Miles 可协助换药、简短安慰。玩家安抚后，闲勉强同意换药，林檎稍微放松。不要跳到广播塔或结局。",
         "advanceSceneIds": [
           "ch2_dawn_depart",
           "ch2_gas_low"
@@ -120,8 +250,24 @@
       "id": "ch2_dawn_depart",
       "background": "highway_wasteland",
       "speaker": "narrator",
-      "speakerName": "旁白",
-      "text": "第三天清晨，你们再次上路。闲的脸色比昨夜好了一点点——只是一点点。"
+      "speakerName": "",
+      "text": "第三天清晨，薄雾贴着地面流走。你们再次上路。闲的脸色比昨夜好了一点点——只是一点点，像灰天里偶然透出的一条光缝。"
+    },
+    {
+      "id": "ch2_miles_dawn",
+      "background": "rv_interior",
+      "speaker": "miles",
+      "speakerName": "Miles",
+      "character": "miles",
+      "expression": "hopeful",
+      "text": "烧退了一点。我摸的。……今天能找到更多药吗？"
+    },
+    {
+      "id": "ch2_dawn_road",
+      "background": "highway_wasteland",
+      "speaker": "narrator",
+      "speakerName": "",
+      "text": "没人回答他。林檎只是换了个挡，把油门稳着。公路在前方分叉又合拢，像某种犹豫的标点。"
     },
     {
       "id": "ch2_gas_low",
@@ -136,14 +282,31 @@
       "id": "ch2_second_stop",
       "background": "gas_station",
       "speaker": "narrator",
-      "speakerName": "旁白",
-      "text": "前方路口有一座更大的加油站综合体，旁边连着便利店和修车铺。收音机里的杂音在这里突然变强——像有人在近处说话。"
+      "speakerName": "",
+      "sfx": { "id": "radio_static", "label": "SFX · 收音机电波" },
+      "text": "前方路口有一座更大的加油站综合体，旁边连着便利店和修车铺。招牌还在，颜色却已经褪成同一种疲惫。收音机里的杂音在这里突然变强——像有人在近处说话，又像是塔在呼吸。"
+    },
+    {
+      "id": "ch2_gas_approach",
+      "background": "gas_station",
+      "speaker": "narrator",
+      "speakerName": "",
+      "text": "你们放慢车速。便利店的自动门半开着，被风一下一下拍着。修车铺里吊着一只落满灰的轮胎，像某种被遗弃的钟摆。"
+    },
+    {
+      "id": "ch2_miles_gas",
+      "background": "gas_station",
+      "speaker": "miles",
+      "speakerName": "Miles",
+      "character": "miles",
+      "expression": "neutral",
+      "text": "我先去看地下油罐。你们别靠太近——这地方……让我有点不自在。"
     },
     {
       "id": "ch2_interactive_gas",
       "background": "gas_station",
       "speaker": "narrator",
-      "speakerName": "旁白",
+      "speakerName": "",
       "text": "汽油见底，抗生素也只剩最后几剂。你必须在「搜油」和「追电波」之间做出取舍。",
       "playerTurn": true,
       "interactive": {
@@ -155,7 +318,7 @@
           "分头：林檎搬油，我去便利店找补给。"
         ],
         "maxFreeReplies": 2,
-        "aiGoal": "汽油危机决策。无论玩家选什么，最终应勉强补足汽油（+1或+2），但消耗时间、闲的状态仍危险。可提及远处有塔状剪影，不要进入塔顶或结局。",
+        "aiGoal": "汽油危机决策。无论玩家选什么，最终应勉强补足汽油（+1或+2），Miles 可协助抽油或搜便利店。消耗时间、闲的状态仍危险。可提及远处有塔状剪影，不要进入塔顶或结局。",
         "advanceSceneIds": [
           "ch2_gas_found",
           "ch2_bb_find"
@@ -167,21 +330,53 @@
       "id": "ch2_gas_found",
       "background": "gas_station",
       "speaker": "narrator",
-      "speakerName": "旁白",
-      "text": "地下油罐里居然还剩一些沉淀汽油。你们用虹吸管一点点抽上来——够撑到下一个小镇，但不会再多了。"
+      "speakerName": "",
+      "text": "地下油罐里居然还剩一些沉淀汽油。Miles 把虹吸管插进去，手背上沾了油渍，却一声不吭地吸上来——第一口差点呛到，他偏过头咳了两声，又继续。"
+    },
+    {
+      "id": "ch2_miles_siphon",
+      "background": "gas_station",
+      "speaker": "miles",
+      "speakerName": "Miles",
+      "character": "miles",
+      "expression": "stubborn",
+      "text": "够撑到下一个小镇。……不会再多了。我量过。"
+    },
+    {
+      "id": "ch2_gas_sunset",
+      "background": "gas_station",
+      "speaker": "narrator",
+      "speakerName": "",
+      "text": "油桶灌满时，太阳已经斜了。远处地平线上，有一个细长的剪影在暮光里若隐若现——像塔，又像一根戳进天空的刺。"
     },
     {
       "id": "ch2_bb_find",
       "background": "gas_station",
       "speaker": "narrator",
-      "speakerName": "旁白",
-      "text": "便利店收银台后，一台老式 BB 机在黑暗中闪了一下。屏幕亮起，跳出一行字：「你们也在找老师吗？」"
+      "speakerName": "",
+      "text": "便利店收银台后，一台老式 BB 机在黑暗中闪了一下。屏幕亮起，绿光映在积灰的玻璃上，跳出一行字：「你们也在找老师吗？」"
+    },
+    {
+      "id": "ch2_miles_bb",
+      "background": "gas_station",
+      "speaker": "miles",
+      "speakerName": "Miles",
+      "character": "miles",
+      "expression": "neutral",
+      "text": "……别是陷阱。也可能是真的。老师……会留这种讯息吗？"
+    },
+    {
+      "id": "ch2_bb_glow",
+      "background": "gas_station",
+      "speaker": "narrator",
+      "speakerName": "",
+      "text": "Miles 没有碰那台机器，只是站在一步之外。BB 机的指示灯一闪一闪，把四个人的脸轮流照亮——像某种古老而固执的问答。"
     },
     {
       "id": "ch2_interactive_bb",
       "background": "gas_station",
       "speaker": "narrator",
-      "speakerName": "旁白",
+      "speakerName": "",
       "text": "讯号没有署名。BB 机的指示灯一闪一闪，像在等你的回复。",
       "playerTurn": true,
       "interactive": {
@@ -193,7 +388,7 @@
           "别卖关子——要合作就发坐标。"
         ],
         "maxFreeReplies": 2,
-        "aiGoal": "BB机互动。对方是神秘幸存者（尚未露面，不要用男成员名字发言）。回复应含糊、友善或警惕，给出「往电波塔方向」的暗示。可提及对方也在找老师。不要揭露身份，不要跳到塔顶。",
+        "aiGoal": "BB机互动。对方是神秘幸存者（尚未露面，不要用男成员名字发言）。Miles 可在旁表达 cautious hope。回复应含糊、友善或警惕，给出「往电波塔方向」的暗示。可提及对方也在找老师。不要揭露身份，不要跳到塔顶。",
         "advanceSceneIds": [
           "ch2_bb_reply",
           "ch2_radio_clear"
@@ -205,15 +400,42 @@
       "id": "ch2_bb_reply",
       "background": "gas_station",
       "speaker": "narrator",
-      "speakerName": "旁白",
-      "text": "几秒后，BB 机吐出第二行字：「往北。塔在发光。……别放弃那个拿相机的人。」然后屏幕熄了。"
+      "speakerName": "",
+      "text": "几秒后，BB 机吐出第二行字：「往北。塔在发光。……别放弃那个拿相机的人。」然后屏幕熄了，像一句说完就收回的安慰。"
+    },
+    {
+      "id": "ch2_miles_bb_after",
+      "background": "gas_station",
+      "speaker": "miles",
+      "speakerName": "Miles",
+      "character": "miles",
+      "expression": "hopeful",
+      "text": "……它知道闲。至少，知道相机。也许真的有人在前面。"
     },
     {
       "id": "ch2_radio_clear",
       "background": "highway_wasteland",
       "speaker": "narrator",
-      "speakerName": "旁白",
-      "text": "驶离加油站后，收音机杂音突然清晰了一瞬。一个平淡的声音重复着坐标般的数字，随后又被风沙吞没。"
+      "speakerName": "",
+      "bgm": { "id": "highway", "label": "BGM · 夜行公路" },
+      "sfx": { "id": "radio_static", "label": "SFX · 收音机电波" },
+      "text": "驶离加油站后，收音机杂音突然清晰了一瞬。一个平淡的声音重复着坐标般的数字，随后又被风沙吞没。公路在车头灯下延伸，像一条被反复碾压的旧磁带。"
+    },
+    {
+      "id": "ch2_miles_radio",
+      "background": "rv_interior",
+      "speaker": "miles",
+      "speakerName": "Miles",
+      "character": "miles",
+      "expression": "gentle",
+      "text": "我把频率记下来了。万一后面还能收到……"
+    },
+    {
+      "id": "ch2_night_drive",
+      "background": "rv_interior",
+      "speaker": "narrator",
+      "speakerName": "",
+      "text": "他撕下地图边角，用铅笔写下一串数字，折好塞进仪表板夹缝。林檎从后视镜里看了他一眼，没有说话。后座传来闲均匀的呼吸——或者只是他们愿意相信的均匀。"
     },
     {
       "id": "ch2_ringo_moment",
@@ -234,10 +456,26 @@
       "expression": "hopeful"
     },
     {
+      "id": "ch2_miles_tower",
+      "background": "highway_wasteland",
+      "speaker": "miles",
+      "speakerName": "Miles",
+      "character": "miles",
+      "expression": "hopeful",
+      "text": "那就去。……反正，我们也没有别的路更对了。"
+    },
+    {
+      "id": "ch2_tower_dusk",
+      "background": "highway_wasteland",
+      "speaker": "narrator",
+      "speakerName": "",
+      "text": "暮色把荒原染成一种旧铜色。风从敞开的车窗灌进来，带着尘土和远处若有若无的金属味——像铁锈，又像血。"
+    },
+    {
       "id": "ch2_interactive_tower",
       "background": "highway_wasteland",
       "speaker": "narrator",
-      "speakerName": "旁白",
+      "speakerName": "",
       "text": "地平线上，一座电波塔的剪影刺进暮色。BB 机的方向、收音机的杂音、闲相机里的光——全都指向那里。",
       "playerTurn": true,
       "interactive": {
@@ -249,7 +487,7 @@
           "林檎，按电波方向开。我相信闲看见的光。"
         ],
         "maxFreeReplies": 2,
-        "aiGoal": "第二章收束。无论玩家怎么犹豫，最终应决定驶向广播塔。林檎握紧方向盘，闲在后座握紧相机。不要进入塔顶、篝火或任何结局。",
+        "aiGoal": "第二章收束。无论玩家怎么犹豫，最终应决定驶向广播塔。林檎握紧方向盘，Miles 整理后座，闲在后座握紧相机。不要进入塔顶、篝火或任何结局。",
         "advanceSceneIds": [
           "ch2_closing"
         ],
@@ -260,11 +498,12 @@
       "id": "ch2_closing",
       "background": "radio_tower",
       "speaker": "narrator",
-      "speakerName": "旁白",
+      "speakerName": "",
+      "bgm": { "id": "tower", "label": "BGM · 广播塔逼近" },
       "text": "房车冲入最后一道弯。广播塔矗立在荒原尽头，红光一闪一闪，像一颗缓慢跳动的心脏。第二章到此结束——塔下有什么，没有人说得准。",
       "chapterEnd": true
     }
   ],
   "nextChapter": "chapter03_tower",
-  "notes": "对应 Figma：搜刮→回房车→持续向前；BB机异步联系；汽油/抗生素危机；坚定值成长铺垫。男成员仅通过BB机暗示，尚未露面。中间城镇节点为作者留白，本章用两座功能节点（药店镇+加油站综合体）填充。"
+  "notes": "对应 Figma：搜刮→回房车→持续向前；BB机异步联系；汽油/抗生素危机；坚定值成长铺垫。Miles 参与搜刮、夜护与 BB 机反应。中间城镇节点为作者留白，本章用两座功能节点（药店镇+加油站综合体）填充。"
 }
