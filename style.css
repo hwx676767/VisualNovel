@@ -385,6 +385,29 @@ body {
   letter-spacing: 0.5px;
 }
 
+#sound-cue.is-playing {
+  border-color: rgba(120, 220, 160, 0.75);
+}
+
+#sound-cue.is-missing {
+  border-color: rgba(239, 93, 168, 0.7);
+  opacity: 0.92;
+}
+
+#audio-library-status {
+  margin: 8px 0 0;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 12px;
+}
+
+.audio-found {
+  color: #7ad99a;
+}
+
+.audio-missing {
+  color: rgba(255, 255, 255, 0.38);
+}
+
 .suggestion-label {
   font-family: var(--font-mono);
   font-size: 11px;

@@ -1,0 +1,149 @@
+{
+  "version": 1,
+  "formats": [".mp3", ".ogg", ".wav"],
+  "preferredFormat": ".mp3",
+  "paths": {
+    "bgm": "audio/bgm/{id}.{ext}",
+    "sfx": "audio/sfx/{id}.{ext}"
+  },
+  "bgm": [
+    {
+      "id": "campsite",
+      "file": "audio/bgm/campsite.mp3",
+      "label": "Campfire Night",
+      "loop": true,
+      "priority": "required",
+      "usedIn": ["prologue", "chapter02_towns"]
+    },
+    {
+      "id": "highway",
+      "file": "audio/bgm/highway.mp3",
+      "label": "Wasteland Highway",
+      "loop": true,
+      "priority": "required",
+      "usedIn": ["prologue", "chapter01_highway", "chapter02_towns", "chapter03_tower", "endings"]
+    },
+    {
+      "id": "tension",
+      "file": "audio/bgm/tension.mp3",
+      "label": "Low Tension",
+      "loop": true,
+      "priority": "required",
+      "usedIn": ["chapter01_highway"]
+    },
+    {
+      "id": "hospital",
+      "file": "audio/bgm/hospital.mp3",
+      "label": "Abandoned Hospital",
+      "loop": true,
+      "priority": "required",
+      "usedIn": ["chapter01_highway"]
+    },
+    {
+      "id": "tower",
+      "file": "audio/bgm/tower.mp3",
+      "label": "Broadcast Tower",
+      "loop": true,
+      "priority": "required",
+      "usedIn": ["chapter02_towns", "chapter03_tower"]
+    },
+    {
+      "id": "rooftop",
+      "file": "audio/bgm/rooftop.mp3",
+      "label": "Rooftop Night Wind",
+      "loop": true,
+      "priority": "required",
+      "usedIn": ["chapter03_tower"]
+    },
+    {
+      "id": "ending_hidden",
+      "file": "audio/bgm/ending_hidden.mp3",
+      "label": "Hidden Ending",
+      "loop": true,
+      "priority": "required",
+      "usedIn": ["endings"]
+    },
+    {
+      "id": "ending_bad",
+      "file": "audio/bgm/ending_bad.mp3",
+      "label": "Bad Ending",
+      "loop": true,
+      "priority": "required",
+      "usedIn": ["endings"]
+    },
+    {
+      "id": "ending_normal",
+      "file": "audio/bgm/ending_normal.mp3",
+      "label": "Normal Ending",
+      "loop": true,
+      "priority": "required",
+      "usedIn": ["endings"]
+    },
+    {
+      "id": "ending_good",
+      "file": "audio/bgm/ending_good.mp3",
+      "label": "Good Ending",
+      "loop": true,
+      "priority": "required",
+      "usedIn": ["endings"]
+    },
+    {
+      "id": "ending_true",
+      "file": "audio/bgm/ending_true.mp3",
+      "label": "True Ending",
+      "loop": true,
+      "priority": "required",
+      "usedIn": ["endings"]
+    }
+  ],
+  "sfx": [
+    {
+      "id": "engine",
+      "file": "audio/sfx/engine.mp3",
+      "label": "RV Engine",
+      "loop": false,
+      "priority": "required",
+      "usedIn": ["prologue", "chapter01_highway"]
+    },
+    {
+      "id": "radio_static",
+      "file": "audio/sfx/radio_static.mp3",
+      "label": "Radio Static",
+      "loop": false,
+      "priority": "required",
+      "usedIn": ["prologue", "chapter01_highway", "chapter02_towns", "chapter03_tower"]
+    },
+    {
+      "id": "glass_crunch",
+      "file": "audio/sfx/glass_crunch.mp3",
+      "label": "Glass Crunch",
+      "loop": false,
+      "priority": "required",
+      "usedIn": ["chapter01_highway", "chapter02_towns"]
+    },
+    {
+      "id": "gunshot",
+      "file": "audio/sfx/gunshot.mp3",
+      "label": "Gunshot",
+      "loop": false,
+      "priority": "required",
+      "usedIn": ["chapter01_highway"]
+    },
+    {
+      "id": "heartbeat",
+      "file": "audio/sfx/heartbeat.mp3",
+      "label": "Heartbeat",
+      "loop": false,
+      "priority": "required",
+      "usedIn": ["chapter01_highway", "chapter02_towns"]
+    },
+    {
+      "id": "camera_shutter",
+      "file": "audio/sfx/camera_shutter.mp3",
+      "label": "Camera Shutter",
+      "loop": false,
+      "priority": "required",
+      "usedIn": ["endings"]
+    }
+  ]
+}

@@ -1,14 +1,12 @@
-# Audio assets
+# Audio
 
-Drop final audio files under `audio/bgm/` and `audio/sfx/`. Prefer `.mp3` or `.ogg`.
+Full spec (Chinese): [`音频需求.md`](./音频需求.md)
 
-Match scene JSON ids, for example:
+Drop files here. The engine plays them by **id** — no JSON/code change needed.
 
-- `audio/bgm/highway.mp3`
-- `audio/bgm/tension.mp3`
-- `audio/sfx/gunshot.mp3`
-- `audio/sfx/radio_static.mp3`
-- `audio/sfx/heartbeat.mp3`
-- `audio/sfx/engine.mp3`
+```
+audio/bgm/{id}.mp3
+audio/sfx/{id}.mp3
+```
 
-If a file is missing, the game shows a short `♪` placeholder cue. No story JSON changes needed when you add files later.
+Also accepts `.ogg` / `.wav`. SETTINGS → Audio library shows FOUND / MISSING.

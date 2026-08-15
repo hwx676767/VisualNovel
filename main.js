@@ -1292,10 +1292,15 @@ settingsPanelEl.innerHTML = `
   <h2 id="settings-title">Settings</h2>
   <div id="settings-content">
     <h3 class="settings-subtitle">Audio</h3>
-    <p class="settings-hint">BGM / SFX work like sprites: drop files in <code>audio/bgm/</code> and <code>audio/sfx/</code>, then reference <code>bgm</code>/<code>sfx</code> ids in scene JSON. A placeholder shows when no file is found.</p>
+    <p class="settings-hint">Drop files into <code>audio/bgm/</code> and <code>audio/sfx/</code> using the exact id as the filename. Spec: <code>audio/音频需求.md</code>.</p>
     <label class="settings-hint" for="audio-volume">Volume</label>
     <input type="range" id="audio-volume" min="0" max="100" value="55" style="width:100%;margin:8px 0;" />
     <label class="settings-hint"><input type="checkbox" id="audio-mute" /> Mute</label>
+    <p id="audio-library-status">Audio library: Checking…</p>
+    <table class="settings-table" id="audio-library">
+      <thead><tr><th></th><th>id</th><th>status</th></tr></thead>
+      <tbody id="audio-library-body"></tbody>
+    </table>
 
     <p id="ai-status-line">AI status: Checking…</p>
     <p id="ai-model-line"></p>
@@ -1375,10 +1380,40 @@ async function refreshAIStatus() {
   }
 }
 
+async function refreshAudioLibrary() {
+  const statusEl = document.getElementById('audio-library-status');
+  const bodyEl = document.getElementById('audio-library-body');
+  if (!statusEl || !bodyEl || !window.VNAudio?.refreshInventory) return;
+
+  statusEl.textContent = 'Audio library: Checking…';
+  try {
+    await window.VNAudio.refreshInventory();
+    const { catalog: liveCatalog, inventory: liveInventory } = window.VNAudio.getInventory();
+    const rows = [];
+    let found = 0;
+    let total = 0;
+    for (const kind of ['bgm', 'sfx']) {
+      for (const entry of liveCatalog[kind] || []) {
+        const item = liveInventory[kind]?.[entry.id] || { id: entry.id, found: false };
+        total += 1;
+        if (item.found) found += 1;
+        const statusClass = item.found ? 'audio-found' : 'audio-missing';
+        const statusText = item.found ? 'FOUND' : 'MISSING';
+        rows.push(`<tr><td>${kind.toUpperCase()}</td><td><code>${item.id}</code></td><td class="${statusClass}">${statusText}</td></tr>`);
+      }
+    }
+    bodyEl.innerHTML = rows.join('') || '<tr><td colspan="3">No audio catalog</td></tr>';
+    statusEl.textContent = `Audio library: ${found} / ${total} files found. Drop mp3s into audio/bgm or audio/sfx, then reopen Settings.`;
+  } catch {
+    statusEl.textContent = 'Audio library: Could not scan files';
+  }
+}
+
 function toggleSettingsPanel() {
   if (settingsPanelEl.hidden) {
     settingsPanelEl.hidden = false;
     refreshAIStatus();
+    refreshAudioLibrary();
   } else {
     settingsPanelEl.hidden = true;
   }

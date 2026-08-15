@@ -9,7 +9,8 @@
       "background": "highway_wasteland",
       "speaker": "narrator",
       "speakerName": "",
-      "text": "The broadcast tower shrinks to a red dot behind you. Up ahead the highway splits into several roads that almost look the same—except you know better. There aren't that many choices left."
+      "text": "The broadcast tower shrinks to a red dot behind you. Up ahead the highway splits into several roads that almost look the same—except you know better. There aren't that many choices left.",
+      "bgm": { "id": "highway", "label": "BGM · Roads That Almost Look the Same" }
     }
   ],
   "routes": {
@@ -22,7 +23,8 @@
         "text": "...Wait. Have you... been saying random stuff this whole time?",
         "character": "xian",
         "expression": "neutral",
-        "endingTitle": "Hidden Ending · Green Screen Skewers"
+        "endingTitle": "Hidden Ending · Green Screen Skewers",
+        "bgm": { "id": "ending_hidden", "label": "BGM · Green Screen Skewers" }
       },
       {
         "id": "hidden_ringo",
@@ -67,7 +69,8 @@
         "speaker": "narrator",
         "speakerName": "",
         "text": "The antibiotics run out. Xian's fever never breaks.",
-        "endingTitle": "Bad Ending · Headstone"
+        "endingTitle": "Bad Ending · Headstone",
+        "bgm": { "id": "ending_bad", "label": "BGM · Headstone" }
       },
       {
         "id": "bad_xian",
@@ -127,7 +130,8 @@
         "speaker": "narrator",
         "speakerName": "",
         "text": "The tower was empty; the signal was dead. You sat under the stars a long time. Nobody said it was worth it.",
-        "endingTitle": "Normal Ending · Apartment Call"
+        "endingTitle": "Normal Ending · Apartment Call",
+        "bgm": { "id": "ending_normal", "label": "BGM · Apartment Call" }
       },
       {
         "id": "normal_talk",
@@ -193,7 +197,8 @@
         "speaker": "narrator",
         "speakerName": "",
         "text": "You heard Teacher calling—and then realized you're still at the campsite where you never found Teacher. Time never really left this night.",
-        "endingTitle": "Good Ending · Reunion Grown Up"
+        "endingTitle": "Good Ending · Reunion Grown Up",
+        "bgm": { "id": "ending_good", "label": "BGM · Reunion Grown Up" }
       },
       {
         "id": "good_city",
@@ -269,7 +274,8 @@
         "speaker": "teacher",
         "speakerName": "Teacher",
         "text": "...You made it. There's nothing on the roof, right?",
-        "endingTitle": "True Ending · Meta Curtain Call"
+        "endingTitle": "True Ending · Meta Curtain Call",
+        "bgm": { "id": "ending_true", "label": "BGM · Meta Curtain Call" }
       },
       {
         "id": "true_sigh",
@@ -334,7 +340,8 @@
         "background": "meta_white",
         "speaker": "narrator",
         "speakerName": "",
-        "text": "Xian walks to the edge of the light, raises her old camera, and looks straight at you on the other side of the screen. Shutter click."
+        "text": "Xian walks to the edge of the light, raises her old camera, and looks straight at you on the other side of the screen. Shutter click.",
+        "sfx": { "id": "camera_shutter", "label": "SFX · Camera Shutter" }
       },
       {
         "id": "true_end",

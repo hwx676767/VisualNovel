@@ -36,7 +36,7 @@ Secrets:
 
 ```
 index.html / main.js / style.css   # game client
-audio.js + audio/bgm|sfx/          # BGM/SFX (drop files by id)
+audio.js + audio/bgm|sfx/          # BGM/SFX — see audio/音频需求.md
 functions/                         # Cloudflare Pages API proxy
 server.js                          # local Express (not used on Pages)
 data/story/                        # chapter JSON (English)

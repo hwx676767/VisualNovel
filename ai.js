@@ -130,7 +130,9 @@ const AI = (() => {
       beatSection,
       '',
       '## Output format',
-      'Output only one JSON object. No markdown. No code fences. Fields:',
+      'Return one json object only. No markdown. No code fences.',
+      'Fill real character dialogue. Do not copy schema field descriptions.',
+      'Fields:',
       JSON.stringify(director.responseSchema, null, 2)
     ].join('\n');
   }
@@ -179,7 +181,7 @@ const AI = (() => {
 
     return slice.map((entry) => {
       if (entry.role === 'player') {
-        return { role: 'user', content: entry.text };
+        return { role: 'user', content: `Player said: ${entry.text}` };
       }
       const name = entry.text?.name || 'NPC';
       const text = entry.text?.text || '';
@@ -188,28 +190,78 @@ const AI = (() => {
   }
 
   function normalizeForCompare(text) {
-    return (text || '').trim().replace(/\s+/g, '');
+    return (text || '')
+      .toLowerCase()
+      .replace(/[^a-z0-9\u4e00-\u9fff]+/g, '');
+  }
+
+  function isPlaceholderText(text) {
+    const normalized = normalizeForCompare(text);
+    const banned = [
+      'dialoguebodyinenglishonly',
+      'writeanewincharacterenglishlineforthisplayerinput',
+      'iheardyou',
+      'okaywelldoitunyaurway',
+      'iheardyouletmethink'
+    ];
+    return banned.includes(normalized);
   }
 
   function isEchoOfPlayer(npcText, playerText) {
     const a = normalizeForCompare(npcText);
     const b = normalizeForCompare(playerText);
     if (!a || !b) return false;
-    return a === b || (a.length >= 8 && b.includes(a)) || (b.length >= 8 && a.includes(b));
+    return a === b;
   }
 
-  function buildFallbackReply(fallbackSpeaker, playerText, isDecisive) {
-    const snippets = [
-      `...I heard you.${isDecisive ? " Okay. We'll do it your way." : ' Let me think.'}`,
-      "Ringo looks at you and doesn't answer right away.",
-      "Xian doesn't say anything. She just grips her camera a little tighter."
-    ];
-    const hash = normalizeForCompare(playerText).length % snippets.length;
+  function extractJsonObject(rawContent) {
+    let source = String(rawContent || '').trim();
+    const fence = source.match(/```(?:json)?\s*([\s\S]*?)```/i);
+    if (fence) source = fence[1].trim();
+
+    try {
+      return JSON.parse(source);
+    } catch {
+      /* continue */
+    }
+
+    const start = source.indexOf('{');
+    const end = source.lastIndexOf('}');
+    if (start >= 0 && end > start) {
+      const slice = source.slice(start, end + 1);
+      try {
+        return JSON.parse(slice);
+      } catch {
+        try {
+          return JSON.parse(slice.replace(/,\s*([}\]])/g, '$1'));
+        } catch {
+          return null;
+        }
+      }
+    }
+    return null;
+  }
+
+  function extractDialogueText(parsed) {
+    if (!parsed || typeof parsed !== 'object') return '';
+    if (typeof parsed.text === 'string') return parsed.text.trim();
+    if (parsed.text && typeof parsed.text.content === 'string') return parsed.text.content.trim();
+    if (typeof parsed.dialogue === 'string') return parsed.dialogue.trim();
+    if (typeof parsed.message === 'string') return parsed.message.trim();
+    return '';
+  }
+
+  function buildContextualFallback(fallbackSpeaker, playerText, isDecisive) {
+    const snippet = playerText.replace(/\s+/g, ' ').trim().slice(0, 42);
+    const name = fallbackSpeaker.displayName || 'Ringo';
+    const text = isDecisive
+      ? `${name === 'Xian' ? '...' : 'Okay.'} I get what you mean. We'll do that.`
+      : `${name === 'Xian' ? '...Yeah.' : "Yeah, I hear you."} About "${snippet}${playerText.length > 42 ? '…' : ''}" — I'm with you.`;
     return {
       speakerId: fallbackSpeaker.id,
       speakerName: fallbackSpeaker.displayName,
       expression: fallbackSpeaker.expressions?.[0] || 'neutral',
-      text: snippets[hash],
+      text,
       convictionDelta: {},
       seriousnessDelta: 0,
       advanceMainline: Boolean(isDecisive)
@@ -217,41 +269,59 @@ const AI = (() => {
   }
 
   function parseResponse(rawContent, fallbackSpeaker, playerText, isDecisive = false) {
-    let parsed = null;
+    const parsed = extractJsonObject(rawContent);
+    const replyText = extractDialogueText(parsed);
 
-    try {
-      parsed = JSON.parse(rawContent);
-    } catch {
-      const jsonMatch = rawContent.match(/\{[\s\S]*\}/);
-      if (jsonMatch) {
-        try {
-          parsed = JSON.parse(jsonMatch[0]);
-        } catch {
-          parsed = null;
-        }
-      }
+    if (!replyText || isPlaceholderText(replyText)) {
+      return null;
     }
-
-    if (!parsed || typeof parsed.text !== 'string' || !parsed.text.trim()) {
-      return buildFallbackReply(fallbackSpeaker, playerText, isDecisive);
-    }
-
-    const replyText = parsed.text.trim();
 
     if (isEchoOfPlayer(replyText, playerText)) {
-      console.warn('[AI] Blocked echo of player input, using fallback');
-      return buildFallbackReply(fallbackSpeaker, playerText, isDecisive);
+      console.warn('[AI] Blocked echo of player input');
+      return null;
     }
+
+    const delta = parsed.convictionDelta;
+    const convictionDelta =
+      delta && typeof delta === 'object' && !Array.isArray(delta) ? delta : {};
 
     return {
       speakerId: parsed.speakerId || fallbackSpeaker.id,
       speakerName: parsed.speakerName || fallbackSpeaker.displayName,
       expression: parsed.expression || 'neutral',
       text: replyText,
-      convictionDelta: parsed.convictionDelta || {},
+      convictionDelta,
       seriousnessDelta: Number(parsed.seriousnessDelta) || 0,
       advanceMainline: Boolean(parsed.advanceMainline)
     };
+  }
+
+  function buildPlayerTurnContent(playerText, isRetry = false) {
+    const retryLine = isRetry
+      ? 'Previous output was invalid. Return a real json object with a unique in-character text field.\n'
+      : '';
+    return [
+      retryLine,
+      'Return one json object for this visual novel turn.',
+      'The player may have typos or broken grammar. Infer the intended meaning and reply in-character.',
+      'Do not lecture about English. Do not copy the player. Do not use filler like "I heard you".',
+      '',
+      `Player says: """${playerText}"""`
+    ].join('\n');
+  }
+
+  async function requestChat(messages) {
+    const response = await VNAuth.apiFetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ messages })
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.error || `AI request failed (${response.status})`);
+    }
+    return data.choices?.[0]?.message?.content || '';
   }
 
   /**
@@ -274,37 +344,39 @@ const AI = (() => {
       charactersData.ringo ||
       charactersData.xian;
 
-    const messages = [
-      {
-        role: 'system',
-        content: buildSystemPrompt({
-          director,
-          characters,
-          gameState,
-          scene,
-          background,
-          interactive,
-          isDecisive,
-          acting
-        })
-      },
-      ...buildHistoryMessages(dialogueHistory, playerText),
-      { role: 'user', content: playerText }
-    ];
-
-    const response = await VNAuth.apiFetch('/api/chat', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ messages })
+    const systemContent = buildSystemPrompt({
+      director,
+      characters,
+      gameState,
+      scene,
+      background,
+      interactive,
+      isDecisive,
+      acting
     });
 
-    const data = await response.json();
-    if (!response.ok) {
-      throw new Error(data.error || `AI request failed (${response.status})`);
+    const messages = [
+      { role: 'system', content: systemContent },
+      ...buildHistoryMessages(dialogueHistory, playerText),
+      { role: 'user', content: buildPlayerTurnContent(playerText) }
+    ];
+
+    const rawContent = await requestChat(messages);
+    let reply = parseResponse(rawContent, fallbackSpeaker, playerText, isDecisive);
+
+    if (!reply) {
+      const retryMessages = [
+        { role: 'system', content: systemContent },
+        {
+          role: 'user',
+          content: buildPlayerTurnContent(playerText, true)
+        }
+      ];
+      const retryRaw = await requestChat(retryMessages);
+      reply = parseResponse(retryRaw, fallbackSpeaker, playerText, isDecisive);
     }
 
-    const rawContent = data.choices?.[0]?.message?.content || '';
-    return parseResponse(rawContent, fallbackSpeaker, playerText, isDecisive);
+    return reply || buildContextualFallback(fallbackSpeaker, playerText, isDecisive);
   }
 
   return { getStatus, sendPlayerMessage };

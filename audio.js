@@ -9,6 +9,9 @@ window.VNAudio = (() => {
   let muted = false;
   let volume = 0.55;
   let cueTimer = null;
+  let catalog = { bgm: [], sfx: [] };
+  let inventory = { bgm: {}, sfx: {} };
+  let catalogReady = null;
 
   const EXT_CANDIDATES = ['.mp3', '.ogg', '.wav'];
 
@@ -35,24 +38,90 @@ window.VNAudio = (() => {
     return { muted, volume, currentBgm };
   }
 
-  function showCue(label) {
+  function showCue(label, { playing = false } = {}) {
     if (!label || typeof document === 'undefined') return;
     const gameContent = document.getElementById('game-content');
     if (!gameContent) return;
     const existing = document.getElementById('sound-cue');
     const cueEl = existing || document.createElement('div');
     cueEl.id = 'sound-cue';
-    cueEl.textContent = `♪ ${label}`;
+    cueEl.textContent = playing ? `♪ Now playing · ${label}` : `♪ ${label}`;
+    cueEl.classList.toggle('is-playing', playing);
+    cueEl.classList.toggle('is-missing', !playing);
     if (!existing) gameContent.appendChild(cueEl);
     cueEl.hidden = false;
     clearTimeout(cueTimer);
     cueTimer = setTimeout(() => {
       cueEl.hidden = true;
-    }, 2600);
+    }, playing ? 2200 : 2600);
   }
 
   function buildPaths(kind, id) {
     return EXT_CANDIDATES.map((ext) => `audio/${kind}/${id}${ext}`);
+  }
+
+  function probeUrl(url) {
+    return fetch(url, { method: 'HEAD' })
+      .then((res) => {
+        if (res.ok) return true;
+        if (res.status !== 405 && res.status !== 501) return false;
+        return fetch(url, { method: 'GET', headers: { Range: 'bytes=0-1' } }).then((getRes) => getRes.ok);
+      })
+      .catch(() => false);
+  }
+
+  async function findExistingPath(kind, id) {
+    const paths = buildPaths(kind, id);
+    for (const path of paths) {
+      if (await probeUrl(path)) return path;
+    }
+    return null;
+  }
+
+  async function loadCatalog() {
+    if (catalogReady) return catalogReady;
+    catalogReady = fetch('audio/manifest.json')
+      .then((res) => (res.ok ? res.json() : { bgm: [], sfx: [] }))
+      .then((data) => {
+        catalog = {
+          bgm: Array.isArray(data.bgm) ? data.bgm : [],
+          sfx: Array.isArray(data.sfx) ? data.sfx : []
+        };
+        return catalog;
+      })
+      .catch(() => {
+        catalog = { bgm: [], sfx: [] };
+        return catalog;
+      });
+    return catalogReady;
+  }
+
+  async function refreshInventory() {
+    await loadCatalog();
+    const next = { bgm: {}, sfx: {} };
+    const jobs = [];
+    for (const kind of ['bgm', 'sfx']) {
+      for (const item of catalog[kind]) {
+        jobs.push(
+          findExistingPath(kind, item.id).then((path) => {
+            next[kind][item.id] = {
+              id: item.id,
+              label: item.label,
+              file: item.file,
+              found: Boolean(path),
+              path
+            };
+          })
+        );
+      }
+    }
+    await Promise.all(jobs);
+    inventory = next;
+    return inventory;
+  }
+
+  function getInventory() {
+    return { catalog, inventory };
   }
 
   function tryPlayFile(paths, { loop = false } = {}) {
@@ -84,8 +153,9 @@ window.VNAudio = (() => {
 
     const paths = buildPaths('bgm', id);
     const result = await tryPlayFile(paths, { loop: true });
+    const display = label || id;
     if (!result) {
-      showCue(label || `BGM · ${id}`);
+      showCue(label || `BGM · ${id}`, { playing: false });
       currentBgm = id;
       return;
     }
@@ -96,6 +166,7 @@ window.VNAudio = (() => {
     bgmEl = result.audio;
     bgmEl.loop = true;
     currentBgm = id;
+    showCue(display.replace(/^BGM\s*·\s*/i, ''), { playing: true });
   }
 
   async function playSfx(id, label) {
@@ -103,7 +174,7 @@ window.VNAudio = (() => {
     const paths = buildPaths('sfx', id);
     const result = await tryPlayFile(paths, { loop: false });
     if (!result) {
-      showCue(label || `SFX · ${id}`);
+      showCue(label || `SFX · ${id}`, { playing: false });
     }
   }
 
@@ -127,6 +198,8 @@ window.VNAudio = (() => {
     }
   }
 
+  loadCatalog();
+
   return {
     playBgm,
     playSfx,
@@ -134,6 +207,9 @@ window.VNAudio = (() => {
     showCue,
     setVolume,
     setMuted,
-    getState
+    getState,
+    loadCatalog,
+    refreshInventory,
+    getInventory
   };
 })();
