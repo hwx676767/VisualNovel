@@ -95,22 +95,44 @@
     {
       "id": "ch1_student_warning",
       "background": "gas_station",
-      "speaker": "student",
-      "speakerName": "Armed Student",
+      "speaker": "shooter",
+      "speakerName": "枪击npc1",
+      "character": "shooter",
+      "expression": "threatening",
       "text": "Don't come closer. The gas, the medicine, and that RV—leave it all. Take one more step and I'll shoot."
+    },
+    {
+      "id": "ch1_bystander_pressure",
+      "background": "gas_station",
+      "speaker": "bystander",
+      "speakerName": "枪击npc2",
+      "character": "bystander",
+      "expression": "neutral",
+      "text": "...Don't look at us like that. She's been like this for two days. Just—don't crowd her."
+    },
+    {
+      "id": "ch1_blank_leader",
+      "background": "gas_station",
+      "speaker": "gunshot_npc3",
+      "speakerName": "枪击npc3",
+      "character": "gunshot_npc3",
+      "expression": "neutral",
+      "text": "......"
     },
     {
       "id": "ch1_surprise",
       "background": "gas_station",
       "speaker": "narrator",
       "speakerName": "",
-      "text": "The moment the gun comes up, all you hear is your own heartbeat. Miles raises his hands by the pump; Ringo's throat bobs but she doesn't step back right away."
+      "text": "The moment the gun comes up, all you hear is your own heartbeat. Miles raises his hands by the pump; Ringo's throat bobs but she doesn't step back right away. Behind the girl, a blank face hasn't moved once."
     },
     {
       "id": "ch1_student_fear",
       "background": "gas_station",
-      "speaker": "student",
-      "speakerName": "Armed Student",
+      "speaker": "shooter",
+      "speakerName": "枪击npc1",
+      "character": "shooter",
+      "expression": "wavering",
       "text": "I'm not trying to rob you... I haven't seen a living person in two days. What were you saying at the door? Are you gonna leave me behind too?"
     },
     {
@@ -120,7 +142,8 @@
       "speakerName": "Ringo",
       "text": "Nobody's leaving you behind. Lower the gun a little—we can talk. Your hands are shaking. Don't make yourself do something you'll regret.",
       "character": "ringo",
-      "expression": "guilty"
+      "expression": "guilty",
+      "pose": "protect"
     },
     {
       "id": "ch1_miles_calm",
@@ -134,9 +157,20 @@
     {
       "id": "ch1_student_panics",
       "background": "gas_station",
-      "speaker": "student",
-      "speakerName": "Armed Student",
+      "speaker": "shooter",
+      "speakerName": "枪击npc1",
+      "character": "shooter",
+      "expression": "breaking",
       "text": "Don't lie to me! Everyone says that—and the second I put the gun down, you run."
+    },
+    {
+      "id": "ch1_blank_push",
+      "background": "gas_station",
+      "speaker": "gunshot_npc3",
+      "speakerName": "枪击npc3",
+      "character": "gunshot_npc3",
+      "expression": "neutral",
+      "text": "Do it."
     },
     {
       "id": "ch1_interactive_standoff",
@@ -146,15 +180,15 @@
       "text": "The gun barrel wavers in the light. The kid's eyes are red and dry, like they might cry any second or pull the trigger any second. You've got seconds to speak.",
       "playerTurn": true,
       "interactive": {
-        "objective": "[Current Objective] Standoff negotiation: try to calm the armed student (no matter what you say, things will still spiral)",
-        "playerPrompt": "What do you say to the armed student?",
+        "objective": "[Current Objective] Standoff negotiation: try to calm 枪击npc1 (no matter what you say, things will still spiral)",
+        "playerPrompt": "What do you say to 枪击npc1?",
         "suggestions": [
           "We're not leaving you behind. Put the gun down—come with us.",
-          "Ringo, don't move closer. He's scared.",
+          "Ringo, don't move closer. She's scared.",
           "Look at me first. Deep breath. We can talk about the gun later."
         ],
         "maxFreeReplies": 1,
-        "aiGoal": "Short interaction during student standoff. Ringo/Miles/Xian can briefly respond to the player. Student's fear doesn't fade—after dialogue, push to accidental discharge. No peaceful resolution, don't skip the shooting.",
+        "aiGoal": "Short free talk during the shooting standoff (does NOT cost interrupt). 枪击npc1 does not want to shoot but is pushed by fear and by 枪击npc3's blank pressure. Player words matter but cannot fully stop the shot—at most who is hit / how bad. After dialogue, push to accidental discharge.",
         "advanceSceneIds": [
           "ch1_misstep",
           "ch1_shot"
@@ -185,14 +219,25 @@
       "speaker": "narrator",
       "speakerName": "",
       "sfx": { "id": "heartbeat", "label": "SFX · Ringing · Heartbeat" },
-      "text": "The armed student stares at their own hands, face whiter than the wall. The world suddenly feels far away: neon flickering, gas smell sharp, your breath breaking into pieces."
+      "text": "枪击npc1 stares at her own hands, face whiter than the wall. The world suddenly feels far away: neon flickering, gas smell sharp, your breath breaking into pieces."
     },
     {
       "id": "ch1_student_breaks",
       "background": "gas_station",
-      "speaker": "student",
-      "speakerName": "Armed Student",
+      "speaker": "shooter",
+      "speakerName": "枪击npc1",
+      "character": "shooter",
+      "expression": "after_shot",
       "text": "I... I didn't mean to shoot. I thought she was going for the gun... It wasn't on purpose."
+    },
+    {
+      "id": "ch1_bystander_failed",
+      "background": "gas_station",
+      "speaker": "bystander",
+      "speakerName": "枪击npc2",
+      "character": "bystander",
+      "expression": "angry",
+      "text": "You moved! You made her— Goddamn it!"
     },
     {
       "id": "ch1_resistance",

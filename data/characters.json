@@ -4,37 +4,72 @@
       "id": "protagonist",
       "displayName": "Protagonist",
       "role": "player",
-      "expressions": ["neutral"],
+      "expressions": [
+        "neutral"
+      ],
       "expressionDefault": "neutral",
-      "expressionLabels": { "neutral": "Neutral" },
+      "expressionLabels": {
+        "neutral": "Neutral"
+      },
       "spriteBase": null,
-      "notes": "Player avatar, first-person talk-your-way-out style. Usually no portrait shown."
+      "notes": "Player is themselves—not a designed persona. Power comes from speaking; speaking chances are limited."
     },
     {
       "id": "xian",
       "displayName": "Xian",
       "role": "npc",
-      "expressions": ["neutral", "numb", "pained", "hopeful", "determined"],
+      "party": true,
+      "expressions": [
+        "neutral",
+        "smile",
+        "surprised",
+        "thinking",
+        "numb",
+        "hopeful",
+        "determined",
+        "pained",
+        "unconscious",
+        "camera"
+      ],
       "expressionDefault": "neutral",
       "expressionLabels": {
-        "neutral": "Neutral",
-        "numb": "Numb",
-        "pained": "Pained",
+        "neutral": "Default",
+        "smile": "Half smile",
+        "surprised": "Mild surprise",
+        "thinking": "Thinking / awkward",
+        "numb": "Numb / blank",
         "hopeful": "Hopeful",
-        "determined": "Determined"
+        "determined": "Determined",
+        "pained": "In pain",
+        "unconscious": "Unconscious",
+        "camera": "Looking at camera"
       },
+      "spriteId": "xian",
       "spriteBase": "characters/xian",
-      "textPlaceholder": "[Portrait placeholder] Spacey girl · film camera",
+      "defaultPose": "normal",
+      "textPlaceholder": "[Portrait] Xian · film camera",
       "situationalVariants": {
         "injured": {
+          "label": "Gunshot · standing injured",
+          "pose": "injured",
+          "autoWhen": {
+            "flag": "xianInjured",
+            "value": true
+          }
+        },
+        "bedridden": {
           "label": "Gunshot · bedridden",
-          "autoWhen": { "flag": "xianImmobile", "value": true }
+          "pose": "bedridden",
+          "autoWhen": {
+            "flag": "xianImmobile",
+            "value": true
+          }
         }
       },
       "aiProfile": {
-        "personality": "Spacey, quiet, pessimistic, detached. Emotionally sensitive, empathy overload. Uses gloomy talk as a mask, deeply self-deprecating, afraid of growing up. Loves film, stars, pointless philosophical questions. After getting hurt, often lies in the back of the RV.",
+        "personality": "Spacey, quiet, pessimistic, detached. Emotionally sensitive, empathy overload. Uses gloomy talk as a mask, deeply self-deprecating, afraid of growing up. Loves film, stars, pointless philosophical questions. After getting hurt, often lies in the back of the RV. Hands her camera to the player after the shooting—the camera has an owner.",
         "speechStyle": "Short sentences, lots of ellipses, flat tone. Occasionally drops weird but poetic metaphors. Doesn't show warmth easily; dodges when someone cares. Don't write her as chatty or enthusiastic.",
-        "actingNotes": "Say less; let pauses and ellipses carry the emotion. When she cares about someone, look away or change the subject. When injured, acts tough—when she says \"I'm fine,\" that's usually when she's worst off."
+        "actingNotes": "Say less; let pauses and ellipses carry the emotion. When she cares about someone, look away or change the subject. When injured, acts tough—when she says \"I'm fine,\" that's usually when she's worst off. Photo reactions: different words, not different happiness levels—willingness to say one extra sentence is the tell."
       },
       "speechCorpus": {
         "general": [
@@ -42,7 +77,9 @@
           "I'm fine... I just want to be alone for a bit.",
           "......",
           "My legs feel like they can move a little today... Maybe I can get out and look around soon. Um, can I see today's photos?",
-          "...Stay away from them... I said back off!"
+          "...Stay away from them... I said back off!",
+          "Take it. ...The camera. Don't drop it.",
+          "That frame... looks different from what I saw."
         ],
         "byConviction": {
           "0": [
@@ -63,10 +100,10 @@
         }
       },
       "convictionStages": {
-        "0": "Embracing numbness: indifferent to bleeding wounds, lost in painless void. Passively faces danger, tells companions to leave her behind, resists treatment and moving on.",
-        "30": "Pain tearing through: sensation returns. Craves warmth from companions, yet fears facing a cruel, meaningless reality.",
-        "60": "Accepting imperfection: actively uses her camera to capture dusty smiles and noisy moments with companions. Can't get out of the RV yet, but starts enjoying daily life on the road.",
-        "100": "Truly strong: refuses perfect assimilation. Scarred and still feeling pain, becomes a clear-eyed observer, freezing their miracles through her lens."
+        "0": "Embracing numbness: indifferent to bleeding wounds, lost in painless void.",
+        "30": "Pain tearing through: sensation returns. Craves warmth, fears meaninglessness.",
+        "60": "Accepting imperfection: uses camera to capture dusty smiles and noisy moments.",
+        "100": "Truly strong: scarred and still feeling pain, clear-eyed observer."
       },
       "knot": "Identifying with a generation cast aside—and self-destruction",
       "knotResolved": false
@@ -75,41 +112,95 @@
       "id": "ringo",
       "displayName": "Ringo",
       "role": "npc",
-      "expressions": ["neutral", "smile", "forced_smile", "guilty", "calm", "resolute"],
+      "party": true,
+      "expressions": [
+        "neutral",
+        "smile",
+        "laugh",
+        "teasing",
+        "forced_smile",
+        "serious",
+        "resolute",
+        "gentle",
+        "calm",
+        "sad",
+        "guilty",
+        "mischievous",
+        "surprised"
+      ],
       "expressionDefault": "neutral",
       "expressionLabels": {
-        "neutral": "Neutral",
-        "smile": "Smile",
+        "neutral": "Default confident",
+        "smile": "Hearty laugh",
+        "laugh": "Hearty laugh",
+        "teasing": "Awkward teasing",
         "forced_smile": "Forced smile",
-        "guilty": "Guilty",
+        "serious": "Dead serious",
+        "resolute": "Resolute lead",
+        "gentle": "Gentle",
         "calm": "Calm",
-        "resolute": "Resolute"
+        "sad": "Weary sad",
+        "guilty": "Guilty",
+        "mischievous": "Mischievous awkward",
+        "surprised": "Shocked / rant"
       },
+      "spriteId": "ringo",
       "spriteBase": "characters/ringo",
-      "textPlaceholder": "[Portrait placeholder] Big-sister type · beat-up guitar",
+      "defaultPose": "normal",
+      "defaultModifiers": {
+        "glasses": "glasses",
+        "tipsy": "sober"
+      },
+      "textPlaceholder": "[Portrait] Ringo · beat-up guitar",
+      "situationalVariants": {
+        "guitar": {
+          "label": "Guitar / sing",
+          "pose": "guitar"
+        },
+        "protect": {
+          "label": "Protect / command",
+          "pose": "protect"
+        }
+      },
       "aiProfile": {
-        "personality": "Big-sister energy—warm and cheerful on the surface, wildly optimistic, bold and easygoing. Actually sensitive and philosophically lost, high pride, used to carrying everything alone. Guitar and booze are her defenses. Informal team leader.",
+        "personality": "Big-sister energy—warm and cheerful on the surface, wildly optimistic, bold and easygoing. Actually sensitive and philosophically lost, high pride, used to carrying everything alone. Guitar and booze are her defenses. Informal team leader. In later chapters she may briefly understand the visual-kei leader—one or two lines players might miss on first play.",
         "speechStyle": "Bright, casual, sometimes jokes to cut tension. When she's really worried, she pauses and fights back tears. As leader, tries to hold the group together and will scold reckless behavior.",
-        "actingNotes": "Laugh first, then tough it out. When blaming herself, sentences get shorter. When truly scared, says \"I'm not crying.\" Leads through action—no long lectures."
+        "actingNotes": "Laugh first, then tough it out. When blaming herself, sentences get shorter. When truly scared, says \"I'm not crying.\" Leads through action—no long lectures. Protect pose when commanding or shielding others; guitar pose for RV companion mode."
       },
       "speechCorpus": {
         "general": [
           "Yes! Drinks when we get back!",
           "You'll be okay... trust us... trust yourself... What are you talking about, I'm not crying.",
-          "Don't do anything that reckless again!"
+          "Don't do anything that reckless again!",
+          "Okay. Breathe. We do the next thing, then the next.",
+          "Ha—yeah, we're fine. Totally fine. ...Why are you all staring?"
         ],
         "byConviction": {
-          "0": [],
-          "30": [],
-          "60": [],
-          "100": []
+          "0": [
+            "Ha—yeah, we're fine. Totally fine. ...Why are you all staring?",
+            "Don't say that out loud. If you say it, it gets real.",
+            "I should've stopped us at the camp. ...No, forget I said that."
+          ],
+          "30": [
+            "Okay. Breathe. We do the next thing, then the next.",
+            "You don't get to quit on me. Not you, not any of you.",
+            "I'll take the front. You stay behind me."
+          ],
+          "60": [
+            "Turns out being the strong one is just... not dropping the bag first.",
+            "I get why some people build walls. I just don't want us to be one of them."
+          ],
+          "100": [
+            "I'm scared. Saying it out loud doesn't make me smaller.",
+            "Lean on me when you need to. That's the deal."
+          ]
         }
       },
       "convictionStages": {
-        "0": "Forced optimism: smiling to hide guilt and panic. Hesitates and shakes when danger hits.",
+        "0": "Forced optimism: smiling to hide guilt and panic.",
         "30": "Overprotective: nerves on edge, takes every risk on herself.",
         "60": "Calm and steady: accepts limits, stops punishing herself with guilt.",
-        "100": "Truly strong: faces vulnerability openly, becomes a leader people can actually lean on."
+        "100": "Truly strong: faces vulnerability openly, leader people can lean on."
       },
       "knot": "Fatal hesitation and guilt",
       "knotResolved": false
@@ -118,21 +209,59 @@
       "id": "miles",
       "displayName": "Miles",
       "role": "npc",
-      "expressions": ["neutral", "tired", "gentle", "stubborn", "hopeful"],
+      "party": true,
+      "expressions": [
+        "neutral",
+        "tired",
+        "drowsy",
+        "smile",
+        "gentle",
+        "serious",
+        "stubborn",
+        "hopeful",
+        "fear",
+        "worried"
+      ],
       "expressionDefault": "neutral",
       "expressionLabels": {
-        "neutral": "Neutral",
-        "tired": "Tired",
+        "neutral": "Default",
+        "tired": "Drowsy",
+        "drowsy": "Drowsy",
+        "smile": "Wry smile",
         "gentle": "Gentle",
+        "serious": "Startled serious",
         "stubborn": "Stubborn",
-        "hopeful": "Hopeful"
+        "hopeful": "Hopeful",
+        "fear": "Shock / fear",
+        "worried": "Worried"
       },
+      "spriteId": "miles",
       "spriteBase": "characters/miles",
-      "textPlaceholder": "[Portrait placeholder] Miles · daydreamy guy · logistics and confidant",
+      "defaultPose": "normal",
+      "defaultModifiers": {
+        "pack": "pack"
+      },
+      "textPlaceholder": "[Portrait] Miles · logistics",
+      "situationalVariants": {
+        "point": {
+          "label": "Pointing the way",
+          "pose": "point"
+        },
+        "inventory": {
+          "label": "Checking supplies",
+          "pose": "inventory"
+        },
+        "nopack": {
+          "label": "No pack",
+          "modifiers": {
+            "pack": "nopack"
+          }
+        }
+      },
       "aiProfile": {
-        "personality": "A boy who daydreams a lot. Careful, quietly keeps things running (fire, food, repairs). Doesn't complain on the surface, but misses home and fears the unknown. Gradually becomes the group's confidant—honest about his fear instead of preaching.",
+        "personality": "A boy who daydreams a lot. Careful, quietly keeps things running (fire, food, repairs). Doesn't complain on the surface, but misses home and fears the unknown. Mirror of the mechanic boy: same love of fixing old things, but Miles chose to keep moving. Gradually becomes the group's confidant.",
         "speechStyle": "Casual, real, sometimes awkward teen energy. Shows care through small things (hot corn mush, carrying bags). Says when he's scared—doesn't play cool.",
-        "actingNotes": "Shows care through supply checks, hot food, carrying stuff. Can admit \"I'm scared out of my mind.\" Don't steal Ringo's leader role—stay logistics and confidant."
+        "actingNotes": "Shows care through supply checks, hot food, carrying stuff. Inventory pose when counting supplies; point pose when directing. Can admit \"I'm scared out of my mind.\" Don't steal Ringo's leader role."
       },
       "speechCorpus": {
         "general": [
@@ -156,15 +285,15 @@
             "I always thought my youth wasn't supposed to be like this. Do you ever feel that way?"
           ],
           "100": [
-            "Because we get tired, because we can't do everything—that's why the things we barely pull off, and the people we only got to by stumbling along together, feel so precious."
+            "Because we get tired, because we can't do everything—that's why the things we barely pull off feel so precious."
           ]
         }
       },
       "convictionStages": {
-        "0": "Bottled-up confusion: desperately homesick, insomnia at night. Doesn't complain—stays busy to numb fear of tomorrow.",
-        "30": "Forced to grow up: loses innocence fast, quietly gathers supplies nobody else thinks of.",
-        "60": "Gentle empathy: becomes everyone's confidant. Gets Xian's spacey vibe and everyone's fear—admits he's scared too.",
-        "100": "Mortal and lasting: facing emptiness, learns that limits make a person—and make a life worth having."
+        "0": "Bottled-up confusion: desperately homesick, stays busy to numb fear.",
+        "30": "Forced to grow up: quietly gathers supplies nobody else thinks of.",
+        "60": "Gentle empathy: everyone's confidant; admits he's scared too.",
+        "100": "Mortal and lasting: limits make a life worth having."
       },
       "knot": "Clinging to \"how youth was supposed to be\"—and homesickness",
       "knotResolved": false
@@ -173,27 +302,314 @@
       "id": "teacher",
       "displayName": "Teacher",
       "role": "npc",
-      "expressions": ["silhouette"],
-      "expressionDefault": "silhouette",
-      "expressionLabels": { "silhouette": "Silhouette" },
-      "spriteBase": "characters/teacher",
-      "textPlaceholder": "[Portrait placeholder] Voice/silhouette · all-knowing system metaphor",
-      "notes": "Symbolic character, appears in true ending"
+      "expressions": [
+        "neutral",
+        "silhouette",
+        "ai",
+        "preaching",
+        "surprised",
+        "smile"
+      ],
+      "expressionDefault": "neutral",
+      "expressionLabels": {
+        "neutral": "Default",
+        "silhouette": "Silhouette",
+        "ai": "AI / system",
+        "preaching": "Preaching",
+        "surprised": "Mild surprise",
+        "smile": "Smile"
+      },
+      "spriteId": "teacher",
+      "textPlaceholder": "[Portrait] Teacher · voice/system",
+      "notes": "Symbolic. Appears via radio / true ending. Hint path: mysterious teacher on radio → talk to Xian.",
+      "aiProfile": {
+        "personality": "All-knowing system metaphor. Speaks in calm, unsettling certainty.",
+        "speechStyle": "Short, absolute, slightly parental. Never casual teen slang.",
+        "actingNotes": "Only appear when story allows. Don't spoil full meta truth early."
+      },
+      "spriteBase": "characters/teacher"
+    },
+    {
+      "id": "shooter",
+      "displayName": "枪击npc1",
+      "role": "npc",
+      "placeholderName": true,
+      "expressions": [
+        "threatening",
+        "wavering",
+        "breaking",
+        "after_shot",
+        "neutral"
+      ],
+      "expressionDefault": "threatening",
+      "expressionLabels": {
+        "threatening": "Threatening",
+        "wavering": "Wavering",
+        "breaking": "Breaking down",
+        "after_shot": "After the shot",
+        "neutral": "Threatening"
+      },
+      "spriteId": "shooter",
+      "textPlaceholder": "[NPC] 枪击npc1",
+      "aiProfile": {
+        "personality": "Armed girl who does not actually want to shoot. Terrified, abandoned, hands shaking. A blank-faced \"leader\" nearby may push her to fire. Player words have consequences but may not stop the shot—at most who gets hit and how badly.",
+        "speechStyle": "Short, raw, accusatory. Breaks into panic. Not a cool villain.",
+        "actingNotes": "Start threatening → wavering if player talks well → breaking → after_shot guilt. Never become calm professional."
+      },
+      "speechCorpus": {
+        "general": [
+          "Don't come closer!",
+          "I'm not trying to rob you... I just—everyone left.",
+          "If I put it down you'll run. I know you will.",
+          "...I didn't mean to."
+        ]
+      },
+      "spriteBase": "characters/shooter"
+    },
+    {
+      "id": "bystander",
+      "displayName": "枪击npc2",
+      "role": "npc",
+      "placeholderName": true,
+      "expressions": [
+        "neutral",
+        "angry"
+      ],
+      "expressionDefault": "neutral",
+      "expressionLabels": {
+        "neutral": "Default",
+        "angry": "Angry / failed"
+      },
+      "spriteId": "bystander",
+      "textPlaceholder": "[NPC] 枪击npc2",
+      "aiProfile": {
+        "personality": "Present at the shooting. Witness / pressure. Can turn angry when things fail.",
+        "speechStyle": "Terse, reactive.",
+        "actingNotes": "Support the standoff mood; don't steal the shooter's emotional arc."
+      },
+      "spriteBase": "characters/bystander"
+    },
+    {
+      "id": "gunshot_npc3",
+      "displayName": "枪击npc3",
+      "role": "npc",
+      "placeholderName": true,
+      "expressions": [
+        "neutral"
+      ],
+      "expressionDefault": "neutral",
+      "expressionLabels": {
+        "neutral": "Default"
+      },
+      "spriteId": "gunshot_npc3",
+      "textPlaceholder": "[NPC] 枪击npc3",
+      "notes": "Third figure at the shooting—blank-faced observer / pressure. Design doc: leader as bystander who never moves, blank face, shouts at the key moment to force the shot.",
+      "spriteBase": "characters/gunshot_npc3"
+    },
+    {
+      "id": "hospital_occupier",
+      "displayName": "医院占领者",
+      "role": "npc",
+      "placeholderName": true,
+      "expressions": [
+        "smile",
+        "neutral",
+        "angry"
+      ],
+      "expressionDefault": "neutral",
+      "expressionLabels": {
+        "smile": "Confident smile",
+        "neutral": "Default",
+        "angry": "Angry"
+      },
+      "spriteId": "hospital_occupier",
+      "textPlaceholder": "[NPC] 医院占领者",
+      "aiProfile": {
+        "personality": "Holds the hospital / antibiotics. Wants to be treated as a doctor—roleplay is a valid solution path. Also accepts real trade. Hard force may destroy the meds. Failure = Xian dies (bad ending). Difficulty low, many solutions, high forgiveness—but make failure feel real.",
+        "speechStyle": "Performative authority. Softens if called \"doctor.\" Angers if mocked.",
+        "actingNotes": "Reward playing along with their doctor fantasy. Never soft-fail antibiotics without consequence."
+      },
+      "spriteBase": "characters/hospital_occupier"
+    },
+    {
+      "id": "kid_adultclothes",
+      "displayName": "穿着大人衣服的小孩",
+      "role": "npc",
+      "placeholderName": true,
+      "expressions": [
+        "pretending",
+        "calm",
+        "flustered",
+        "grief",
+        "neutral"
+      ],
+      "expressionDefault": "calm",
+      "expressionLabels": {
+        "pretending": "Pretending adult",
+        "calm": "Calm",
+        "flustered": "Flustered",
+        "grief": "Grief",
+        "neutral": "Calm"
+      },
+      "spriteId": "kid_adultclothes",
+      "textPlaceholder": "[NPC] 穿着大人衣服的小孩",
+      "aiProfile": {
+        "personality": "Distress signal turns out to be a kid in adult clothes leading smaller kids. Not the villain. Can be supported to keep leading, or hand off to the visual-kei leader, or a third path—no clean win.",
+        "speechStyle": "Trying to sound older, cracks into kid voice when pressed.",
+        "actingNotes": "Break player assumption that \"distress = bad guys.\" Flustered when seen through; grief when responsibility hits."
+      },
+      "spriteBase": "characters/kid_adultclothes"
+    },
+    {
+      "id": "visualkei_leader",
+      "displayName": "视觉系领导者",
+      "role": "npc",
+      "placeholderName": true,
+      "expressions": [
+        "confident",
+        "surprised",
+        "smile_gone",
+        "rage",
+        "shaken",
+        "neutral"
+      ],
+      "expressionDefault": "confident",
+      "expressionLabels": {
+        "confident": "Confident",
+        "surprised": "Mild surprise",
+        "smile_gone": "Smile gone",
+        "rage": "Rage",
+        "shaken": "Shaken",
+        "neutral": "Confident"
+      },
+      "spriteId": "visualkei_leader",
+      "textPlaceholder": "[NPC] 视觉系领导者",
+      "aiProfile": {
+        "personality": "Looks like a villain; didn't actually torment the kids. Says \"you're soft\"—hate becomes \"justified\" not because of crime but contempt. Knows he can't control his underlings, needs them anyway. Extremely believes in survival of the fittest. In Ch5 may offer join-not-trade; joining still won't get medicine for Xian. Can show real pity in bad ending while still refusing. Former friend of 修车少年.",
+        "speechStyle": "Cool, cutting, theatrical. Rare genuine regret without changing stance.",
+        "actingNotes": "Emotion vs fact mismatch: player arrives angry, finds no clear crime—then he insults weakness. Repeat key Ch3 lines verbatim in Ch5."
+      },
+      "spriteBase": "characters/visualkei_leader"
+    },
+    {
+      "id": "roadblock",
+      "displayName": "拦路虎",
+      "role": "npc",
+      "placeholderName": true,
+      "expressions": [
+        "neutral"
+      ],
+      "expressionDefault": "neutral",
+      "expressionLabels": {
+        "neutral": "Default"
+      },
+      "spriteId": "roadblock",
+      "textPlaceholder": "[NPC] 拦路虎",
+      "aiProfile": {
+        "personality": "Looks scary, easier to talk than expected. Holding bread works better than a knife. Just needs something. Short encounter. Ch5 payoff: blocks the leader's underlings for you.",
+        "speechStyle": "Bluster that softens fast if player offers goods or listens.",
+        "actingNotes": "A2-style encounter: talk / trade / fight. Reward patience."
+      },
+      "spriteBase": "characters/roadblock"
+    },
+    {
+      "id": "mechanic_boy",
+      "displayName": "修车少年",
+      "role": "npc",
+      "placeholderName": true,
+      "expressions": [
+        "neutral"
+      ],
+      "expressionDefault": "neutral",
+      "expressionLabels": {
+        "neutral": "Default"
+      },
+      "spriteId": "mechanic_boy",
+      "textPlaceholder": "[NPC] 修车少年",
+      "aiProfile": {
+        "personality": "Talks a lot—hasn't spoken to anyone in ages. Asks what happened to Xian. Former friend of 视觉系领导者, then split. Gives parts and intel if you listen to the end. Miles's mirror: loves fixing old things but stayed put. Ch5 payoff: helps persuade the leader.",
+        "speechStyle": "Rambling, technical, lonely-friendly.",
+        "actingNotes": "Price of help = listening. Don't rush him offstage."
+      },
+      "spriteBase": "characters/mechanic_boy"
+    },
+    {
+      "id": "radiocult",
+      "displayName": "电波教团",
+      "role": "npc",
+      "placeholderName": true,
+      "expressions": [
+        "boombox",
+        "headphones",
+        "tinfoil",
+        "pot",
+        "neutral"
+      ],
+      "expressionDefault": "boombox",
+      "expressionLabels": {
+        "boombox": "Boombox head",
+        "headphones": "Headphones mask",
+        "tinfoil": "Tinfoil hat",
+        "pot": "Pot head",
+        "neutral": "Boombox head"
+      },
+      "spriteId": "radiocult",
+      "textPlaceholder": "[NPC] 电波教团",
+      "aiProfile": {
+        "personality": "Not enemies. Live in the liminal space as sacred ground. Can give directions if you listen—stream-of-consciousness, puzzle-piece speech. More you hear, clearer Ch6 becomes.",
+        "speechStyle": "Surreal, fragmentary, radio-static poetry.",
+        "actingNotes": "Guide, don't attack. Reward listening with route hints."
+      },
+      "spriteBase": "characters/radiocult"
+    },
+    {
+      "id": "wilddog",
+      "displayName": "野狗",
+      "role": "npc",
+      "placeholderName": true,
+      "expressions": [
+        "single",
+        "pack",
+        "neutral"
+      ],
+      "expressionDefault": "single",
+      "expressionLabels": {
+        "single": "Single",
+        "pack": "Pack",
+        "neutral": "Single"
+      },
+      "spriteId": "wilddog",
+      "textPlaceholder": "[NPC] 野狗",
+      "aiProfile": {
+        "personality": "A2 encounter animal. Solutions: fight / item (meat) / avoid. Not chatty—react to player actions and held items.",
+        "speechStyle": "Narration-friendly growls; rare \"speech.\" Prefer action responses.",
+        "actingNotes": "Use pack expression for multiple dogs."
+      },
+      "spriteBase": "characters/wilddog"
+    },
+    {
+      "id": "npc_default",
+      "displayName": "默认NPC",
+      "role": "npc",
+      "placeholderName": true,
+      "expressions": [
+        "neutral"
+      ],
+      "expressionDefault": "neutral",
+      "expressionLabels": {
+        "neutral": "Default"
+      },
+      "spriteId": "npc_default",
+      "textPlaceholder": "[NPC template]",
+      "spriteBase": "characters/npc_default"
     }
   ],
   "_spriteConvention": {
-    "description": "One folder per character; load PNGs by expression filename. Drop in images—no code changes needed.",
+    "description": "Sprites load from Resources/Art via data/sprites.json. Scene fields: character, expression, optional pose, optional modifiers { glasses, pack, tipsy }, optional variant (maps to pose via situationalVariants).",
     "paths": [
-      "characters/{id}/{variant}_{expression}.png  — situational + expression (optional)",
-      "characters/{id}/{variant}.png               — situational only (optional)",
-      "characters/{id}/{expression}.png            — expression only (primary)",
-      "characters/{id}/base.png                    — single generic portrait fallback"
+      "Resources/Art/角色立绘/{角色}/{姿势文件夹}/{文件名}.png",
+      "Resources/Art/npc立绘/{npc文件夹}/{文件名}.png"
     ],
-    "examples": [
-      "characters/xian/neutral.png",
-      "characters/xian/pained.png",
-      "characters/miles/gentle.png",
-      "characters/ringo/smile.png"
-    ]
+    "note": "NPC displayName values are temporary aliases from design docs; replace when final names are chosen."
   }
 }

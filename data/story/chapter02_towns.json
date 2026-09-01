@@ -161,6 +161,7 @@
       "speaker": "narrator",
       "speakerName": "",
       "text": "Scavenge done—you don't linger. The RV pulls out of town and stops at the roadside. New rule: grab what you need and go. No sleeping in empty cities.",
+      "segment": "B",
       "onEnterResources": { "gasoline": -1 }
     },
     {

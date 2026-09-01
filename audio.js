@@ -61,13 +61,22 @@ window.VNAudio = (() => {
   }
 
   function probeUrl(url) {
-    return fetch(url, { method: 'HEAD' })
+    const ctrl = typeof AbortController !== 'undefined' ? new AbortController() : null;
+    const timer = ctrl ? setTimeout(() => ctrl.abort(), 2500) : null;
+    const opts = ctrl ? { method: 'HEAD', signal: ctrl.signal } : { method: 'HEAD' };
+    return fetch(url, opts)
       .then((res) => {
         if (res.ok) return true;
         if (res.status !== 405 && res.status !== 501) return false;
-        return fetch(url, { method: 'GET', headers: { Range: 'bytes=0-1' } }).then((getRes) => getRes.ok);
+        const getOpts = ctrl
+          ? { method: 'GET', headers: { Range: 'bytes=0-1' }, signal: ctrl.signal }
+          : { method: 'GET', headers: { Range: 'bytes=0-1' } };
+        return fetch(url, getOpts).then((getRes) => getRes.ok);
       })
-      .catch(() => false);
+      .catch(() => false)
+      .finally(() => {
+        if (timer) clearTimeout(timer);
+      });
   }
 
   async function findExistingPath(kind, id) {

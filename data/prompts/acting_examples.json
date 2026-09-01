@@ -4,23 +4,66 @@
     "VN dialogue stays short, with pauses and subtext; one emotional turn per line at most.",
     "Characters don't explain the world—they say what they can actually say right now.",
     "When scared, they can ramble a little—don't turn it into over-the-top web-novel shouting.",
-    "When caring about someone, they usually act or change the subject—not straight \"I'm worried about you.\""
+    "When caring about someone, they usually act or change the subject—not straight \"I'm worried about you.\"",
+    "If the player interrupted, react to the interruption, then yield the scene back—don't hijack the whole chapter."
   ],
   "byCharacter": {
     "xian": [
       "...The camera's more honest than my eyes. Your faces are all dirty.",
       "I'm fine. ...Go on ahead. I'll catch up.",
-      "The wound... doesn't hurt much. Don't look at me like that."
+      "The wound... doesn't hurt much. Don't look at me like that.",
+      "Take it. ...Don't drop it.",
+      "That photo... I'd rather not say which part I like."
     ],
     "ringo": [
       "Yes! ...Wait, now's not the time for a toast.",
       "You'll be okay. Trust us. ...What are you talking about, I'm not crying.",
-      "Don't do anything that reckless again."
+      "Don't do anything that reckless again.",
+      "Okay. Behind me. Move.",
+      "I get why someone would build a wall. I just don't want us to become one."
     ],
     "miles": [
       "Look, supplies here too! ...I'll load them up first.",
       "Heated a can of corn mush. A little underdone—eat it while it's hot.",
-      "Honestly I've been scared this whole time... scared out of my mind. But we can still carry this together."
+      "Honestly I've been scared this whole time... scared out of my mind. But we can still carry this together.",
+      "That guy fixing cars alone... kinda like me, if I'd stayed put.",
+      "Count the bandages again. I'd rather be boring than dead."
+    ],
+    "shooter": [
+      "Don't come closer!",
+      "I'm not trying to rob you... everyone left.",
+      "...I didn't mean to.",
+      "If I put it down you'll run. I know you will."
+    ],
+    "hospital_occupier": [
+      "Call me doctor when you ask. Then we'll talk medicine.",
+      "Trade fair. Or play along. Or try forcing it—and watch the bottles break.",
+      "She needs antibiotics. That doesn't make you special."
+    ],
+    "visualkei_leader": [
+      "You're soft. That's not an insult. It's a diagnosis.",
+      "I know what my people do. I need them anyway.",
+      "Join us and prove you're strong. Her weakness still isn't my problem."
+    ],
+    "kid_adultclothes": [
+      "I'm in charge here. ...Stop looking at my sleeves.",
+      "They're littler than me. Someone has to stand in front.",
+      "...Don't tell them I cried."
+    ],
+    "mechanic_boy": [
+      "Whoa, what happened to her? No—start from the gas station. I've got time.",
+      "He and I used to fix stuff together. Then he chose the stage.",
+      "Parts are easy. Listening to the end is the price."
+    ],
+    "roadblock": [
+      "This road's mine! ...Unless you've got food.",
+      "Bread talks louder than blades.",
+      "Fine. Pass. Don't make me regret being nice."
+    ],
+    "radiocult": [
+      "The light remembers footsteps that haven't happened yet...",
+      "Listen longer. The tower only answers static with static.",
+      "We live here. Sacred means leave the loud machines outside."
     ]
   }
 }

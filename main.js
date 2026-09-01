@@ -34,7 +34,15 @@ const gameState = {
   currentChapter: 'prologue',
   storyMode: 'scripted',
   interactiveReplyCount: 0,
-  currentInteractive: null
+  currentInteractive: null,
+  /** Limited freedom: interrupting scripted lines costs these. System-granted interactive beats are free. */
+  chapterSegment: 'A',
+  interruptsLeft: 5,
+  interruptsMaxA: 5,
+  interruptsMaxB: 2,
+  interruptMode: false,
+  currentPose: null,
+  currentModifiers: {}
 };
 
 /** Scene ids queued after interactive beat ends */
@@ -46,6 +54,7 @@ let pendingInputIsDecisive = false;
 /** Loaded content registries */
 let backgroundsData = {};
 let charactersData = {};
+let spritesData = { characters: {} };
 let storyScenes = [];
 let storySceneIndex = 0;
 let currentChapterMeta = null;
@@ -73,6 +82,7 @@ const ENDING_CONFIG = {
 
 const characterSpriteEl = document.getElementById('character-sprite');
 const characterSpriteLabelEl = document.getElementById('character-sprite-label');
+const characterSpriteImgEl = document.getElementById('character-sprite-img');
 const backgroundLayerEl = document.getElementById('background-layer');
 const backgroundLabelEl = document.getElementById('background-label');
 const gameContentEl = document.getElementById('game-content');
@@ -87,6 +97,14 @@ const advanceMainlineBtnEl = document.getElementById('advance-mainline-btn');
 const playerInputEl = document.getElementById('player-input');
 const playerInputAreaEl = document.getElementById('player-input-area');
 const sendBtnEl = document.getElementById('send-btn');
+const interruptBarEl = document.getElementById('interrupt-bar');
+const interruptCountEl = document.getElementById('interrupt-count');
+const interruptBtnEl = document.getElementById('interrupt-btn');
+
+const interruptHudEl = document.createElement('div');
+interruptHudEl.id = 'interrupt-hud';
+interruptHudEl.hidden = true;
+if (gameContentEl) gameContentEl.appendChild(interruptHudEl);
 
 let soundCueTimer = null;
 function showSoundCue(cue) {
@@ -113,10 +131,9 @@ function resolveSpeakerDisplayName(scene) {
   if (!scene) return '';
   if (scene.speaker === 'narrator') return '';
   const name = scene.speakerName;
-  if (name === '旁白' || name === 'Narrator' || name === undefined || name === null) {
-    return scene.speaker === 'narrator' ? '' : name || '';
-  }
-  return name;
+  if (name === '旁白' || name === 'Narrator') return '';
+  if (name) return name;
+  return charactersData[scene.speaker]?.displayName || scene.speaker || '';
 }
 
 /** Full text of the dialogue currently being typewritten (for click-to-skip). */
@@ -157,9 +174,10 @@ async function loadJson(path) {
  * Loads backgrounds, characters, saved state, and opening story.
  */
 async function loadGameData() {
-  const [backgrounds, characters, savedState, prologue, progress] = await Promise.all([
+  const [backgrounds, characters, sprites, savedState, prologue, progress] = await Promise.all([
     loadJson('data/backgrounds.json'),
     loadJson('data/characters.json'),
+    loadJson('data/sprites.json'),
     loadJson('data/gameState.json'),
     loadJson('data/story/prologue.json'),
     loadJson('data/story/progress.json')
@@ -173,11 +191,18 @@ async function loadGameData() {
     charactersData[char.id] = char;
   });
 
+  spritesData = sprites || { characters: {} };
+
   storyProgressData = progress;
   Object.assign(gameState, savedState);
+  // Interrupt counters are runtime — always reset for a fresh session segment
+  if (typeof gameState.interruptsLeft !== 'number') gameState.interruptsLeft = 5;
+  if (!gameState.chapterSegment) gameState.chapterSegment = 'A';
 
   const startChapter = savedState.currentChapter || 'prologue';
   await loadChapter(startChapter, { resetIndex: true });
+  resetInterruptsForChapter();
+  updateInterruptUI();
 }
 
 /**
@@ -249,6 +274,7 @@ async function loadChapter(chapterId, options = {}) {
 
   if (options.resetIndex) storySceneIndex = 0;
 
+  resetInterruptsForChapter();
   updateChapterProgressUI();
 }
 
@@ -257,17 +283,22 @@ async function loadChapter(chapterId, options = {}) {
 // ---------------------------------------------------------------------------
 
 /**
- * Resolves situational variant (injured etc.) from scene or auto rules.
- * @param {string} characterId
- * @param {string|null} sceneVariant
+ * Resolves situational variant → pose / modifiers from character sheet + flags.
  */
-function resolveCharacterVariant(characterId, sceneVariant) {
-  if (sceneVariant) return sceneVariant;
-
+function resolveCharacterVariant(characterId, explicitVariant) {
   const character = charactersData[characterId];
-  if (!character?.situationalVariants) return null;
+  if (!character) return null;
+  if (explicitVariant) return explicitVariant;
+  if (!character.situationalVariants) return null;
 
-  for (const [variantId, rule] of Object.entries(character.situationalVariants)) {
+  // Prefer bedridden over injured when both flags set
+  const order = Object.keys(character.situationalVariants);
+  const preferred = ['bedridden', 'injured', ...order];
+  const seen = new Set();
+  for (const variantId of preferred) {
+    if (seen.has(variantId) || !character.situationalVariants[variantId]) continue;
+    seen.add(variantId);
+    const rule = character.situationalVariants[variantId];
     if (!rule?.autoWhen?.flag) continue;
     const expected = rule.autoWhen.value ?? true;
     if (gameState.flags[rule.autoWhen.flag] === expected) {
@@ -277,20 +308,79 @@ function resolveCharacterVariant(characterId, sceneVariant) {
   return null;
 }
 
+function encodeAssetPath(path) {
+  return String(path || '')
+    .split('/')
+    .map((part) => encodeURIComponent(part))
+    .join('/');
+}
+
+function pickFromModifierTree(node, modifierKeys, modifiers, expression) {
+  if (!node || typeof node !== 'object') return null;
+  if (typeof node[expression] === 'string') return node[expression];
+  if (!modifierKeys?.length) {
+    // leaf map of expression → filename
+    return node[expression] || node.neutral || Object.values(node).find((v) => typeof v === 'string') || null;
+  }
+  const [key, ...rest] = modifierKeys;
+  const choice = modifiers[key] || Object.keys(node)[0];
+  const next = node[choice];
+  if (!next) return null;
+  if (typeof next === 'string') return next;
+  return pickFromModifierTree(next, rest, modifiers, expression);
+}
+
 /**
- * Builds ordered PNG paths for expression + optional situational variant.
+ * Builds ordered PNG paths. Prefer simple ASCII characters/{id}/ files first.
  */
-function buildSpriteCandidates(character, expression, variant) {
+function buildSpriteCandidates(character, expression, variant, options = {}) {
   const candidates = [];
-  const base = character.spriteBase;
+  const spriteId = character.spriteId || character.id;
+  const sheet = spritesData.characters?.[spriteId];
+  const variantRule = variant && character.situationalVariants?.[variant];
+
+  let pose =
+    options.pose ||
+    variantRule?.pose ||
+    character.defaultPose ||
+    sheet?.defaultPose ||
+    'normal';
+
+  const modifiers = {
+    ...(sheet?.defaultModifiers || {}),
+    ...(character.defaultModifiers || {}),
+    ...(variantRule?.modifiers || {}),
+    ...(options.modifiers || {})
+  };
+
   const expr =
     character.expressions?.includes(expression) ? expression : character.expressionDefault || 'neutral';
 
-  if (base) {
-    if (variant) candidates.push(`${base}/${variant}_${expr}.png`);
-    if (variant) candidates.push(`${base}/${variant}.png`);
-    candidates.push(`${base}/${expr}.png`);
-    candidates.push(`${base}/base.png`);
+  // 1) Simple ASCII runtime copies (most reliable on all browsers / deploys)
+  const simpleBase = character.spriteBase || `characters/${spriteId}`;
+  if (variant) {
+    candidates.push(`${simpleBase}/${variant}_${expr}.png`);
+    candidates.push(`${simpleBase}/${variant}.png`);
+  }
+  if (pose && pose !== 'normal') {
+    candidates.push(`${simpleBase}/${pose}_${expr}.png`);
+    candidates.push(`${simpleBase}/${pose}_neutral.png`);
+  }
+  candidates.push(`${simpleBase}/${expr}.png`);
+  candidates.push(`${simpleBase}/neutral.png`);
+  candidates.push(`${simpleBase}/base.png`);
+
+  // 2) Resources/Art via sprites.json (original artist folder names)
+  if (sheet?.poses?.[pose]) {
+    const poseData = sheet.poses[pose];
+    const folder = poseData.folder;
+    const file = pickFromModifierTree(poseData.files, poseData.modifierKeys || [], modifiers, expr);
+    if (folder && file) {
+      candidates.push(`${folder}/${file}`);
+    }
+    if (typeof poseData.files?.[expr] === 'string') {
+      candidates.push(`${folder}/${poseData.files[expr]}`);
+    }
   }
 
   if (character.spritePath) {
@@ -298,6 +388,7 @@ function buildSpriteCandidates(character, expression, variant) {
       character.spritePath
         .replace('{expression}', expr)
         .replace('{variant}', variant || 'default')
+        .replace('{pose}', pose)
     );
   }
 
@@ -327,46 +418,81 @@ function tryLoadSpriteImage(candidates, onSuccess, onFail) {
       onFail();
       return;
     }
+    const raw = candidates[index++];
+    const path = encodeAssetPath(raw);
     const img = new Image();
-    img.onload = () => onSuccess(candidates[index]);
-    img.onerror = () => {
-      index += 1;
-      tryNext();
-    };
-    img.src = candidates[index];
+    img.onload = () => onSuccess(path, raw);
+    img.onerror = () => tryNext();
+    img.src = path;
   }
 
   tryNext();
+}
+
+function clearCharacterSprite() {
+  gameState.currentPose = null;
+  gameState.currentModifiers = {};
+  characterSpriteEl.classList.remove('has-image', 'is-visible', 'is-placeholder');
+  characterSpriteEl.style.backgroundImage = '';
+  if (characterSpriteImgEl) {
+    characterSpriteImgEl.hidden = true;
+    characterSpriteImgEl.removeAttribute('src');
+  }
+  characterSpriteLabelEl.textContent = '';
+  characterSpriteEl.dataset.variant = '';
 }
 
 /**
  * Swaps the character sprite (image or text placeholder).
  * @param {string} characterId
  * @param {string} expression
- * @param {{ variant?: string|null }} [options]
+ * @param {{ variant?: string|null, pose?: string|null, modifiers?: object }} [options]
  */
 function updateCharacterSprite(characterId, expression, options = {}) {
   gameState.currentCharacter = characterId;
   gameState.currentExpression = expression;
 
+  if (options.pose) {
+    gameState.currentPose = options.pose;
+  } else if (options.pose === null) {
+    // explicit null from scene without pose → clear sticky pose
+    gameState.currentPose = null;
+  }
+
+  if (options.modifiers) {
+    gameState.currentModifiers = { ...options.modifiers };
+  } else if (options.modifiers === null) {
+    gameState.currentModifiers = {};
+  }
+
   const character = charactersData[characterId];
   if (!character) {
     console.warn(`[updateCharacterSprite] Unknown character: ${characterId}`);
-    characterSpriteLabelEl.textContent = `[Sprite placeholder] ${characterId}`;
+    characterSpriteEl.classList.add('is-visible', 'is-placeholder');
     characterSpriteEl.classList.remove('has-image');
     characterSpriteEl.style.backgroundImage = '';
+    characterSpriteLabelEl.textContent = `[Sprite placeholder] ${characterId}`;
     characterSpriteEl.dataset.variant = '';
     return;
   }
 
   const variant = resolveCharacterVariant(characterId, options.variant ?? null);
-  const candidates = buildSpriteCandidates(character, expression, variant);
+  const candidates = buildSpriteCandidates(character, expression, variant, {
+    pose: options.pose || null,
+    modifiers: options.modifiers || null
+  });
 
-  console.log(`[updateCharacterSprite] ${character.displayName}, ${expression}${variant ? `, ${variant}` : ''}`);
+  console.log(
+    `[updateCharacterSprite] ${character.displayName}, ${expression}${variant ? `, ${variant}` : ''} →`,
+    candidates[0] || '(none)'
+  );
 
   characterSpriteEl.dataset.variant = variant || '';
+  characterSpriteEl.classList.add('is-visible');
+  characterSpriteEl.classList.remove('is-placeholder');
 
   if (candidates.length === 0) {
+    characterSpriteEl.classList.add('is-placeholder');
     characterSpriteEl.classList.remove('has-image');
     characterSpriteEl.style.backgroundImage = '';
     characterSpriteLabelEl.textContent = formatSpritePlaceholder(character, expression, variant);
@@ -376,12 +502,23 @@ function updateCharacterSprite(characterId, expression, options = {}) {
   tryLoadSpriteImage(
     candidates,
     (loadedPath) => {
-      characterSpriteEl.style.backgroundImage = `url('${loadedPath}')`;
+      if (characterSpriteImgEl) {
+        characterSpriteImgEl.hidden = false;
+        characterSpriteImgEl.src = loadedPath;
+      }
+      characterSpriteEl.style.backgroundImage = '';
+      characterSpriteEl.style.backgroundColor = 'transparent';
       characterSpriteEl.classList.add('has-image');
+      characterSpriteEl.classList.remove('is-placeholder');
       characterSpriteLabelEl.textContent = '';
     },
     () => {
+      if (characterSpriteImgEl) {
+        characterSpriteImgEl.hidden = true;
+        characterSpriteImgEl.removeAttribute('src');
+      }
       characterSpriteEl.classList.remove('has-image');
+      characterSpriteEl.classList.add('is-placeholder');
       characterSpriteEl.style.backgroundImage = '';
       characterSpriteLabelEl.textContent = formatSpritePlaceholder(character, expression, variant);
     }
@@ -454,6 +591,109 @@ function setStoryMode(mode) {
   gameState.storyMode = mode;
   dialogueBoxEl.classList.toggle('mode-scripted', mode === 'scripted');
   dialogueBoxEl.classList.toggle('mode-interactive', mode === 'interactive');
+  updateInterruptUI();
+}
+
+function setChapterSegment(segment) {
+  const next = segment === 'B' ? 'B' : 'A';
+  gameState.chapterSegment = next;
+  gameState.interruptsLeft = next === 'B' ? gameState.interruptsMaxB : gameState.interruptsMaxA;
+  updateInterruptUI();
+}
+
+function resetInterruptsForChapter() {
+  const metaSegment = currentChapterMeta?.segment || 'A';
+  setChapterSegment(metaSegment);
+}
+
+function updateInterruptUI() {
+  const left = Math.max(0, gameState.interruptsLeft | 0);
+  const label = `Interrupt ×${left}`;
+  if (interruptCountEl) interruptCountEl.textContent = label;
+  if (interruptHudEl) {
+    interruptHudEl.textContent = label;
+    interruptHudEl.hidden = false;
+  }
+  const canShow =
+    gameState.storyMode === 'scripted' &&
+    awaitingSceneAdvance &&
+    !gameState.isTyping &&
+    !gameState.isWaitingForAI &&
+    !gameState.interruptMode &&
+    left > 0;
+  if (interruptBarEl) interruptBarEl.hidden = !canShow;
+  if (interruptBtnEl) interruptBtnEl.disabled = !canShow;
+}
+
+/** Saved scripted continuation while the player interrupts. */
+let interruptResumeCallback = null;
+
+function beginInterrupt() {
+  if (gameState.interruptsLeft <= 0) return;
+  if (gameState.storyMode !== 'scripted' || !awaitingSceneAdvance) return;
+  if (gameState.isTyping || gameState.isWaitingForAI || gameState.interruptMode) return;
+
+  // Keep the scripted "go to next scene" callback — interrupt must restore it later.
+  interruptResumeCallback =
+    typeof onTypewriterComplete === 'function' ? onTypewriterComplete : interruptResumeCallback;
+  onTypewriterComplete = null;
+
+  gameState.interruptsLeft -= 1;
+  gameState.interruptMode = true;
+  setAwaitingAdvance(false);
+  setStoryMode('interactive');
+
+  const interactive = {
+    objective: `[Interrupt ×${gameState.interruptsLeft} left] Cut in — talk now`,
+    playerPrompt: 'You interrupted the scene. What do you say?',
+    suggestions: [],
+    maxFreeReplies: 1,
+    aiGoal:
+      'The player interrupted scripted dialogue. Reply in-character to what they say, stay in the current scene, do not skip major plot beats, do not resolve the chapter. One short reply. Set advanceMainline true.',
+    isInterrupt: true,
+    advanceSceneIds: []
+  };
+  gameState.currentInteractive = interactive;
+  gameState.interactiveReplyCount = 0;
+
+  storyObjectiveEl.textContent = interactive.objective;
+  storyObjectiveEl.hidden = false;
+  modeHintEl.textContent = `${interactive.playerPrompt} · Costs 1 interrupt (system talk spots are free)`;
+  modeHintEl.hidden = false;
+  suggestionChipsEl.hidden = true;
+  suggestionChipsEl.innerHTML = '';
+  toggleSuggestionsBtnEl.hidden = true;
+  advanceMainlineBtnEl.hidden = true;
+
+  updateInterruptUI();
+  unlockInput();
+  gameState.turn = 'player';
+  playerInputEl.focus();
+}
+
+function endInterruptAndResumeScript() {
+  gameState.interruptMode = false;
+  gameState.currentInteractive = null;
+  gameState.interactiveReplyCount = 0;
+  setStoryMode('scripted');
+  suggestionChipsEl.hidden = true;
+  toggleSuggestionsBtnEl.hidden = true;
+  advanceMainlineBtnEl.hidden = true;
+  storyObjectiveEl.hidden = true;
+
+  // Restore the scene continuation that beginInterrupt saved.
+  if (typeof interruptResumeCallback === 'function') {
+    onTypewriterComplete = interruptResumeCallback;
+    interruptResumeCallback = null;
+  }
+
+  updateInterruptUI();
+  setAwaitingAdvance(true);
+  modeHintEl.textContent = 'Interrupt done · click the text or press Space to continue';
+  modeHintEl.hidden = false;
+  setDialogueTypingCursor(true);
+  lockInput();
+  gameState.turn = 'npc';
 }
 
 function getSceneById(id) {
@@ -468,7 +708,7 @@ function enterInteractiveMode(interactive) {
   storyObjectiveEl.textContent = interactive.objective;
   storyObjectiveEl.hidden = false;
   modeHintEl.textContent =
-    `${interactive.playerPrompt} · Tap "Quick actions" to decide and advance; type your own reply for up to ${interactive.maxFreeReplies} free turns`;
+    `${interactive.playerPrompt} · System talk is FREE · Tap "Quick actions" to decide; type your own reply for up to ${interactive.maxFreeReplies} free turns`;
   modeHintEl.hidden = false;
 
   renderSuggestionChips(interactive.suggestions || []);
@@ -554,6 +794,11 @@ function endInteractiveAndAdvanceMainline() {
   const interactive = gameState.currentInteractive;
   applyInteractiveCompleteEffects(interactive);
 
+  if (interactive?.isInterrupt || gameState.interruptMode) {
+    endInterruptAndResumeScript();
+    return;
+  }
+
   if (!interactive?.advanceSceneIds?.length) {
     exitInteractiveMode();
     return;
@@ -594,6 +839,9 @@ function playNextQueuedScene() {
  */
 function playScene(scene, options = {}) {
   gameState.currentScene = scene.id;
+  if (scene.segment === 'A' || scene.segment === 'B') {
+    setChapterSegment(scene.segment);
+  }
   applySceneEnterEffects(scene);
   updateBackground(scene.background);
   if (window.VNAudio) {
@@ -604,12 +852,19 @@ function playScene(scene, options = {}) {
 
   if (scene.character) {
     updateCharacterSprite(scene.character, scene.expression || 'neutral', {
-      variant: scene.variant ?? null
+      variant: scene.variant ?? null,
+      pose: scene.pose ?? null,
+      modifiers: scene.modifiers || null
     });
-  } else if (scene.speaker === 'narrator') {
-    characterSpriteEl.classList.remove('has-image');
-    characterSpriteEl.style.backgroundImage = '';
-    characterSpriteLabelEl.textContent = '';
+  } else if (scene.speaker && charactersData[scene.speaker]?.role === 'npc') {
+    // Speaker-only NPCs (no explicit character field) still show art
+    updateCharacterSprite(scene.speaker, scene.expression || 'neutral', {
+      variant: scene.variant ?? null,
+      pose: scene.pose ?? null,
+      modifiers: scene.modifiers || null
+    });
+  } else if (scene.speaker === 'narrator' || !scene.character && !charactersData[scene.speaker]) {
+    clearCharacterSprite();
   }
 
   if (scene.endingTitle) {
@@ -843,6 +1098,7 @@ function setAwaitingAdvance(waiting) {
   if (waiting) {
     setDialogueTypingCursor(true);
   }
+  updateInterruptUI();
 }
 
 /**
@@ -1236,6 +1492,10 @@ progressPanelCloseBtn.addEventListener('click', () => {
 // ---------------------------------------------------------------------------
 
 sendBtnEl.addEventListener('click', handlePlayerInput);
+
+if (interruptBtnEl) {
+  interruptBtnEl.addEventListener('click', () => beginInterrupt());
+}
 
 playerInputEl.addEventListener('keydown', (event) => {
   if (event.key === 'Enter') {

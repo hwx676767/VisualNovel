@@ -134,11 +134,25 @@
     }
   ],
   "characters": [
-    { "id": "protagonist", "name": "Protagonist", "sheet": "To be completed", "inGame": "partial" },
-    { "id": "xian", "name": "Xian", "sheet": "Complete", "inGame": "yes" },
-    { "id": "ringo", "name": "Ringo", "sheet": "Complete", "inGame": "yes" },
-    { "id": "miles", "name": "Miles", "sheet": "Complete (with corpus)", "inGame": "yes" },
-    { "id": "teacher", "name": "Teacher", "sheet": "Symbolic", "inGame": "partial" },
-    { "id": "student", "name": "Armed Student", "sheet": "Chapter 1 standoff", "inGame": "yes" }
-  ]
+    { "id": "protagonist", "name": "Protagonist (player-as-self)", "sheet": "Partial", "inGame": "yes" },
+    { "id": "xian", "name": "Xian", "sheet": "Complete + Art poses", "inGame": "yes" },
+    { "id": "ringo", "name": "Ringo", "sheet": "Complete + Art poses", "inGame": "yes" },
+    { "id": "miles", "name": "Miles", "sheet": "Complete + Art poses", "inGame": "yes" },
+    { "id": "teacher", "name": "Teacher", "sheet": "Art wired", "inGame": "partial" },
+    { "id": "shooter", "name": "枪击npc1 (placeholder)", "sheet": "Art + AI", "inGame": "yes" },
+    { "id": "bystander", "name": "枪击npc2 (placeholder)", "sheet": "Art + AI", "inGame": "yes" },
+    { "id": "gunshot_npc3", "name": "枪击npc3 (placeholder)", "sheet": "Art", "inGame": "yes" },
+    { "id": "hospital_occupier", "name": "医院占领者 (placeholder)", "sheet": "Art + AI", "inGame": "sheet-only" },
+    { "id": "kid_adultclothes", "name": "穿着大人衣服的小孩 (placeholder)", "sheet": "Art + AI", "inGame": "sheet-only" },
+    { "id": "visualkei_leader", "name": "视觉系领导者 (placeholder)", "sheet": "Art + AI", "inGame": "sheet-only" },
+    { "id": "roadblock", "name": "拦路虎 (placeholder)", "sheet": "Art + AI", "inGame": "sheet-only" },
+    { "id": "mechanic_boy", "name": "修车少年 (placeholder)", "sheet": "Art + AI", "inGame": "sheet-only" },
+    { "id": "radiocult", "name": "电波教团 (placeholder)", "sheet": "Art + AI", "inGame": "sheet-only" },
+    { "id": "wilddog", "name": "野狗 (placeholder)", "sheet": "Art + AI", "inGame": "sheet-only" }
+  ],
+  "systems": {
+    "interrupt": "A-segment 5 / B-segment 2; system interactive free; Interrupt button on scripted wait",
+    "sprites": "Resources/Art via data/sprites.json",
+    "trainingTemplate": "data/prompts/NPC投喂培训模板.md"
+  }
 }
