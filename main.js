@@ -203,6 +203,7 @@ async function loadGameData() {
   await loadChapter(startChapter, { resetIndex: true });
   resetInterruptsForChapter();
   updateInterruptUI();
+  preloadCommonSprites();
 }
 
 /**
@@ -330,8 +331,23 @@ function pickFromModifierTree(node, modifierKeys, modifiers, expression) {
   return pickFromModifierTree(next, rest, modifiers, expression);
 }
 
+/** Resolved sprite URL cache: avoids re-probing 404s on every line. */
+const spritePathCache = new Map();
+let spriteLoadToken = 0;
+
+function spriteCacheKey(characterId, expression, variant, pose, modifiers) {
+  return [
+    characterId,
+    expression || '',
+    variant || '',
+    pose || '',
+    modifiers ? JSON.stringify(modifiers) : ''
+  ].join('|');
+}
+
 /**
  * Builds ordered PNG paths. Prefer simple ASCII characters/{id}/ files first.
+ * Most-likely hits first so we rarely wait on sequential 404s.
  */
 function buildSpriteCandidates(character, expression, variant, options = {}) {
   const candidates = [];
@@ -356,10 +372,13 @@ function buildSpriteCandidates(character, expression, variant, options = {}) {
   const expr =
     character.expressions?.includes(expression) ? expression : character.expressionDefault || 'neutral';
 
-  // 1) Simple ASCII runtime copies (most reliable on all browsers / deploys)
   const simpleBase = character.spriteBase || `characters/${spriteId}`;
+  const useAsciiRuntime = String(simpleBase).startsWith('characters/');
+
+  // Likely runtime files first (deployed ASCII copies)
   if (variant) {
     candidates.push(`${simpleBase}/${variant}_${expr}.png`);
+    candidates.push(`${simpleBase}/${variant}_neutral.png`);
     candidates.push(`${simpleBase}/${variant}.png`);
   }
   if (pose && pose !== 'normal') {
@@ -367,17 +386,15 @@ function buildSpriteCandidates(character, expression, variant, options = {}) {
     candidates.push(`${simpleBase}/${pose}_neutral.png`);
   }
   candidates.push(`${simpleBase}/${expr}.png`);
-  candidates.push(`${simpleBase}/neutral.png`);
+  if (expr !== 'neutral') candidates.push(`${simpleBase}/neutral.png`);
   candidates.push(`${simpleBase}/base.png`);
 
-  // 2) Resources/Art via sprites.json (original artist folder names)
-  if (sheet?.poses?.[pose]) {
+  // Local artist folders only as fallback (not on Cloudflare — skip when using characters/)
+  if (!useAsciiRuntime && sheet?.poses?.[pose]) {
     const poseData = sheet.poses[pose];
     const folder = poseData.folder;
     const file = pickFromModifierTree(poseData.files, poseData.modifierKeys || [], modifiers, expr);
-    if (folder && file) {
-      candidates.push(`${folder}/${file}`);
-    }
+    if (folder && file) candidates.push(`${folder}/${file}`);
     if (typeof poseData.files?.[expr] === 'string') {
       candidates.push(`${folder}/${poseData.files[expr]}`);
     }
@@ -408,31 +425,59 @@ function formatSpritePlaceholder(character, expression, variant) {
 }
 
 /**
- * Tries candidate paths until one loads; otherwise shows text placeholder.
+ * Loads first working candidate. Cache hits first; races a small batch so
+ * missing files don't serialize into a long blank/placeholder flash.
  */
 function tryLoadSpriteImage(candidates, onSuccess, onFail) {
-  let index = 0;
-
-  function tryNext() {
-    if (index >= candidates.length) {
-      onFail();
-      return;
-    }
-    const raw = candidates[index++];
-    const path = encodeAssetPath(raw);
-    const img = new Image();
-    img.onload = () => onSuccess(path, raw);
-    img.onerror = () => tryNext();
-    img.src = path;
+  if (!candidates.length) {
+    onFail();
+    return;
   }
 
-  tryNext();
+  const paths = candidates.map((raw) => ({ raw, path: encodeAssetPath(raw) }));
+  let settled = false;
+  let pending = 0;
+  let started = 0;
+  const CONCURRENCY = 3;
+
+  function pump() {
+    while (pending < CONCURRENCY && started < paths.length && !settled) {
+      const entry = paths[started++];
+      pending += 1;
+      const img = new Image();
+      img.decoding = 'async';
+      img.onload = () => {
+        pending -= 1;
+        if (settled) return;
+        settled = true;
+        const done = () => onSuccess(entry.path, entry.raw);
+        if (typeof img.decode === 'function') {
+          img.decode().then(done).catch(done);
+        } else {
+          done();
+        }
+      };
+      img.onerror = () => {
+        pending -= 1;
+        if (settled) return;
+        if (started < paths.length) {
+          pump();
+        } else if (pending === 0) {
+          onFail();
+        }
+      };
+      img.src = entry.path;
+    }
+  }
+
+  pump();
 }
 
 function clearCharacterSprite() {
+  spriteLoadToken += 1;
   gameState.currentPose = null;
   gameState.currentModifiers = {};
-  characterSpriteEl.classList.remove('has-image', 'is-visible', 'is-placeholder');
+  characterSpriteEl.classList.remove('has-image', 'is-visible', 'is-placeholder', 'is-loading');
   characterSpriteEl.style.backgroundImage = '';
   if (characterSpriteImgEl) {
     characterSpriteImgEl.hidden = true;
@@ -442,8 +487,22 @@ function clearCharacterSprite() {
   characterSpriteEl.dataset.variant = '';
 }
 
+function showSpritePlaceholder(character, expression, variant) {
+  characterSpriteEl.classList.add('is-visible', 'is-placeholder');
+  characterSpriteEl.classList.remove('has-image', 'is-loading');
+  characterSpriteEl.style.backgroundImage = '';
+  if (characterSpriteImgEl) {
+    characterSpriteImgEl.hidden = true;
+    characterSpriteImgEl.removeAttribute('src');
+  }
+  characterSpriteLabelEl.textContent = character
+    ? formatSpritePlaceholder(character, expression, variant)
+    : `[Sprite placeholder]`;
+}
+
 /**
  * Swaps the character sprite (image or text placeholder).
+ * Keeps the previous portrait until the next one is ready — no blue flash box.
  * @param {string} characterId
  * @param {string} expression
  * @param {{ variant?: string|null, pose?: string|null, modifiers?: object }} [options]
@@ -455,7 +514,6 @@ function updateCharacterSprite(characterId, expression, options = {}) {
   if (options.pose) {
     gameState.currentPose = options.pose;
   } else if (options.pose === null) {
-    // explicit null from scene without pose → clear sticky pose
     gameState.currentPose = null;
   }
 
@@ -468,61 +526,106 @@ function updateCharacterSprite(characterId, expression, options = {}) {
   const character = charactersData[characterId];
   if (!character) {
     console.warn(`[updateCharacterSprite] Unknown character: ${characterId}`);
-    characterSpriteEl.classList.add('is-visible', 'is-placeholder');
-    characterSpriteEl.classList.remove('has-image');
-    characterSpriteEl.style.backgroundImage = '';
+    showSpritePlaceholder(null, expression, null);
     characterSpriteLabelEl.textContent = `[Sprite placeholder] ${characterId}`;
     characterSpriteEl.dataset.variant = '';
     return;
   }
 
   const variant = resolveCharacterVariant(characterId, options.variant ?? null);
+  const poseForKey = options.pose || character.situationalVariants?.[variant]?.pose || null;
+  const cacheKey = spriteCacheKey(
+    characterId,
+    expression,
+    variant,
+    poseForKey,
+    options.modifiers || null
+  );
+
   const candidates = buildSpriteCandidates(character, expression, variant, {
     pose: options.pose || null,
     modifiers: options.modifiers || null
   });
 
-  console.log(
-    `[updateCharacterSprite] ${character.displayName}, ${expression}${variant ? `, ${variant}` : ''} →`,
-    candidates[0] || '(none)'
-  );
-
   characterSpriteEl.dataset.variant = variant || '';
-  characterSpriteEl.classList.add('is-visible');
-  characterSpriteEl.classList.remove('is-placeholder');
 
   if (candidates.length === 0) {
-    characterSpriteEl.classList.add('is-placeholder');
-    characterSpriteEl.classList.remove('has-image');
-    characterSpriteEl.style.backgroundImage = '';
-    characterSpriteLabelEl.textContent = formatSpritePlaceholder(character, expression, variant);
+    showSpritePlaceholder(character, expression, variant);
     return;
   }
 
+  const loadId = ++spriteLoadToken;
+  const keepPrevious = characterSpriteEl.classList.contains('has-image');
+
+  // Never flash the blue placeholder while loading — hold old art or stay hidden
+  characterSpriteEl.classList.remove('is-placeholder');
+  characterSpriteEl.classList.add('is-loading');
+  if (!keepPrevious) {
+    characterSpriteEl.classList.remove('is-visible');
+  }
+
+  const applyLoaded = (loadedPath, rawPath) => {
+    if (loadId !== spriteLoadToken) return;
+    spritePathCache.set(cacheKey, rawPath || loadedPath);
+    if (characterSpriteImgEl) {
+      characterSpriteImgEl.hidden = false;
+      characterSpriteImgEl.src = loadedPath;
+    }
+    characterSpriteEl.style.backgroundImage = '';
+    characterSpriteEl.style.backgroundColor = 'transparent';
+    characterSpriteEl.classList.add('has-image', 'is-visible');
+    characterSpriteEl.classList.remove('is-placeholder', 'is-loading');
+    characterSpriteLabelEl.textContent = '';
+  };
+
+  const cachedRaw = spritePathCache.get(cacheKey);
+  const ordered = cachedRaw
+    ? [cachedRaw, ...candidates.filter((c) => c !== cachedRaw)]
+    : candidates;
+
   tryLoadSpriteImage(
-    candidates,
-    (loadedPath) => {
-      if (characterSpriteImgEl) {
-        characterSpriteImgEl.hidden = false;
-        characterSpriteImgEl.src = loadedPath;
-      }
-      characterSpriteEl.style.backgroundImage = '';
-      characterSpriteEl.style.backgroundColor = 'transparent';
-      characterSpriteEl.classList.add('has-image');
-      characterSpriteEl.classList.remove('is-placeholder');
-      characterSpriteLabelEl.textContent = '';
-    },
+    ordered,
+    applyLoaded,
     () => {
-      if (characterSpriteImgEl) {
-        characterSpriteImgEl.hidden = true;
-        characterSpriteImgEl.removeAttribute('src');
-      }
-      characterSpriteEl.classList.remove('has-image');
-      characterSpriteEl.classList.add('is-placeholder');
-      characterSpriteEl.style.backgroundImage = '';
-      characterSpriteLabelEl.textContent = formatSpritePlaceholder(character, expression, variant);
+      if (loadId !== spriteLoadToken) return;
+      spritePathCache.delete(cacheKey);
+      showSpritePlaceholder(character, expression, variant);
     }
   );
+}
+
+/**
+ * Warm browser cache for party + early-chapter faces so first lines don't wait on PNG.
+ */
+function preloadSpriteUrls(urls) {
+  const unique = [...new Set(urls.filter(Boolean))];
+  unique.forEach((raw) => {
+    const img = new Image();
+    img.decoding = 'async';
+    img.src = encodeAssetPath(raw);
+  });
+}
+
+function preloadCommonSprites() {
+  const warm = [];
+  const partyIds = ['xian', 'ringo', 'miles', 'teacher', 'shooter', 'bystander', 'gunshot_npc3'];
+  for (const id of partyIds) {
+    const character = charactersData[id];
+    if (!character) continue;
+    const base = character.spriteBase || `characters/${character.spriteId || id}`;
+    const exprs = character.expressions?.slice(0, 6) || ['neutral'];
+    for (const expr of exprs) {
+      warm.push(`${base}/${expr}.png`);
+    }
+    warm.push(`${base}/neutral.png`, `${base}/base.png`);
+    if (id === 'xian') {
+      warm.push(`${base}/injured_neutral.png`, `${base}/injured.png`);
+    }
+    if (id === 'ringo') {
+      warm.push(`${base}/protect_neutral.png`, `${base}/protect_resolute.png`);
+    }
+  }
+  preloadSpriteUrls(warm);
 }
 
 /**
