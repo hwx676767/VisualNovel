@@ -1,0 +1,12 @@
+# Cloudflare Pages — static asset headers
+# Playback still uses blob URLs in audio.js (CF often lacks real 206 range support).
+
+/audio/*
+  Cache-Control: public, max-age=86400
+  Access-Control-Allow-Origin: *
+
+/audio/*.mp3
+  Content-Type: audio/mpeg
+
+/audio/*.wav
+  Content-Type: audio/wav

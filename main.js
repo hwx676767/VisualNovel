@@ -1455,7 +1455,10 @@ async function verifyGameServer() {
     return { ok: false, reason: 'file-protocol' };
   }
   try {
-    const response = await VNAuth.apiFetch('/api/ai/status');
+    const controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
+    const timer = controller ? setTimeout(() => controller.abort(), 4000) : null;
+    const response = await VNAuth.apiFetch('/api/ai/status', controller ? { signal: controller.signal } : undefined);
+    if (timer) clearTimeout(timer);
     if (!response.ok) return { ok: false, reason: 'status-fail' };
     const data = await response.json();
     return { ok: true, data };
@@ -1802,7 +1805,7 @@ if (audioMuteEl && window.VNAudio) {
 }
 
 // ---------------------------------------------------------------------------
-// Page load — load data and start prologue
+// Page load — load data, wait for Start Game (unlocks audio)
 // ---------------------------------------------------------------------------
 
 advanceMainlineBtnEl.addEventListener('click', () => {
@@ -1817,28 +1820,92 @@ toggleSuggestionsBtnEl.addEventListener('click', () => {
   toggleSuggestionsBtnEl.setAttribute('aria-expanded', String(willShow));
 });
 
+const startScreenEl = document.getElementById('start-screen');
+const startGameBtnEl = document.getElementById('start-game-btn');
+let gameReadyToStart = false;
+let startBlockedMessage = null;
+
+async function beginGameFromTitle() {
+  if (!gameReadyToStart || !startGameBtnEl) return;
+  if (startGameBtnEl.dataset.starting === '1') return;
+  startGameBtnEl.dataset.starting = '1';
+  startGameBtnEl.disabled = true;
+  startGameBtnEl.textContent = 'Starting…';
+
+  const firstScene = storyScenes[0];
+  const firstBgm =
+    firstScene?.bgm && typeof firstScene.bgm === 'object'
+      ? firstScene.bgm
+      : firstScene?.bgm
+        ? { id: firstScene.bgm, label: null }
+        : { id: 'campsite', label: 'BGM · Campfire Night' };
+
+  // Hide title first so the player isn't stuck on Loading/Starting.
+  if (startScreenEl) {
+    startScreenEl.classList.add('is-hidden');
+  }
+
+  if (startBlockedMessage) {
+    displayDialogue('System', startBlockedMessage);
+    return;
+  }
+
+  setStoryMode('scripted');
+  updateBackground(gameState.currentBackground);
+  playScene(firstScene);
+
+  // Start audio after the scene is up (blob fetch may take a moment on CF).
+  if (window.VNAudio?.unlockAndPlayBgm && firstBgm?.id) {
+    window.VNAudio.unlockAndPlayBgm(firstBgm.id, firstBgm.label).catch((err) => {
+      console.warn('[Audio] start play failed', err);
+    });
+  }
+}
+
+if (startGameBtnEl) {
+  startGameBtnEl.addEventListener('click', () => {
+    beginGameFromTitle();
+  });
+  startGameBtnEl.disabled = true;
+  startGameBtnEl.textContent = 'Loading…';
+}
+
 loadGameData()
-  .then(async () => {
+  .then(() => {
     setStoryMode('scripted');
     updateBackground(gameState.currentBackground);
 
-    const serverCheck = await verifyGameServer();
-    if (!serverCheck.ok) {
-      displayDialogue(
-        'System',
-        serverCheck.reason === 'file-protocol'
-          ? "Run npm start, then open http://localhost:8765 in your browser. Opening index.html directly won't work with AI."
-          : formatAIError(new Error('Failed to fetch'))
-      );
-      return;
+    // Unlock Start as soon as story JSON is ready.
+    gameReadyToStart = true;
+    if (startGameBtnEl) {
+      startGameBtnEl.disabled = false;
+      startGameBtnEl.textContent = 'Start Game';
     }
 
-    playScene(storyScenes[0]);
+    // AI status / BGM warm-up must not block the title button.
+    verifyGameServer().then((serverCheck) => {
+      if (!serverCheck.ok) {
+        startBlockedMessage =
+          serverCheck.reason === 'file-protocol'
+            ? "Run npm start, then open http://localhost:8765 in your browser. Opening index.html directly won't work with AI."
+            : formatAIError(new Error('Failed to fetch'));
+      }
+    });
+
+    if (window.VNAudio?.preload) {
+      const warmId = storyScenes[0]?.bgm?.id || 'campsite';
+      window.VNAudio.preload([warmId]).catch((err) => {
+        console.warn('[Audio] preload', err);
+      });
+    }
   })
   .catch((error) => {
     console.error(error);
-    displayDialogue(
-      'System',
-      "Couldn't load story data (needs a local server—don't use file://). Run npx serve and refresh."
-    );
+    startBlockedMessage =
+      "Couldn't load story data (needs a local server—don't use file://). Run npx serve and refresh.";
+    gameReadyToStart = true;
+    if (startGameBtnEl) {
+      startGameBtnEl.disabled = false;
+      startGameBtnEl.textContent = 'Start Game';
+    }
   });

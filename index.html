@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Visual Novel</title>
-  <link rel="stylesheet" href="style.css?v=spriteFast1">
+  <link rel="stylesheet" href="style.css?v=start1">
 </head>
 <body>
 
@@ -83,13 +83,24 @@
 
       </div><!-- /#game-content -->
 
+      <!-- Title / start gate — click unlocks browser audio autoplay -->
+      <div id="start-screen" role="dialog" aria-modal="true" aria-labelledby="start-title">
+        <div class="start-screen-inner">
+          <p class="start-kicker">Paul Project</p>
+          <h1 id="start-title">Visual Novel</h1>
+          <p class="start-tagline">A wasteland road trip. Limited speech. Choices that stick.</p>
+          <button type="button" id="start-game-btn">Start Game</button>
+          <p class="start-hint">Click to begin — browsers block sound until you interact.</p>
+        </div>
+      </div>
+
     </div><!-- /#game-canvas -->
 
   </div><!-- /#game-wrapper -->
 
   <script src="auth.js?v=phaseA"></script>
-  <script src="audio.js?v=phaseA"></script>
-  <script src="ai.js?v=phaseA"></script>
-  <script src="main.js?v=spriteFast1"></script>
+  <script src="audio.js?v=blob1"></script>
+  <script src="ai.js?v=slim1"></script>
+  <script src="main.js?v=blob2"></script>
 </body>
 </html>

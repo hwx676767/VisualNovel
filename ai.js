@@ -1,13 +1,19 @@
 /**
  * AI dialogue module — builds prompts and calls /api/chat proxy.
+ * Prompt pack: slim (cost). Full backup: backups/ai-prompt-full/ (see RESTORE.md).
  */
 const AI = (() => {
+  const PROMPT_CACHE = 'slim1';
+  const HISTORY_LIMIT = 6;
+  const SPEECH_SAMPLE_LIMIT = 3;
+  const STYLE_EXAMPLE_LIMIT = 2;
+
   let directorPrompt = null;
   let actingExamples = null;
 
   async function loadDirectorPrompt() {
     if (directorPrompt) return directorPrompt;
-    const response = await fetch('data/prompts/director.json');
+    const response = await fetch(`data/prompts/director.json?v=${PROMPT_CACHE}`);
     if (!response.ok) throw new Error('Failed to load director.json');
     directorPrompt = await response.json();
     return directorPrompt;
@@ -16,7 +22,7 @@ const AI = (() => {
   async function loadActingExamples() {
     if (actingExamples) return actingExamples;
     try {
-      const response = await fetch('data/prompts/acting_examples.json');
+      const response = await fetch(`data/prompts/acting_examples.json?v=${PROMPT_CACHE}`);
       if (!response.ok) return null;
       actingExamples = await response.json();
       return actingExamples;
@@ -35,44 +41,125 @@ const AI = (() => {
   }
 
   /**
+   * Resolves who is physically present for this beat.
+   * Prefer scene.present; otherwise infer from party + scene + history.
+   * @returns {{ id: string, state: string }[]}
+   */
+  function resolvePresent(scene, interactive, charactersData, gameState, dialogueHistory) {
+    if (Array.isArray(scene?.present) && scene.present.length) {
+      return scene.present
+        .map((entry) => {
+          if (typeof entry === 'string') return { id: entry, state: '' };
+          if (entry && entry.id) return { id: entry.id, state: entry.state || '' };
+          return null;
+        })
+        .filter(Boolean);
+    }
+
+    const ids = new Set();
+    for (const id of ['xian', 'ringo', 'miles']) {
+      if (charactersData[id]) ids.add(id);
+    }
+    if (scene?.character && charactersData[scene.character]) ids.add(scene.character);
+    if (scene?.speaker && charactersData[scene.speaker]) ids.add(scene.speaker);
+
+    const hay = [
+      interactive?.aiGoal || '',
+      interactive?.objective || '',
+      scene?.text || '',
+      ...(dialogueHistory || []).slice(-8).map((h) => {
+        if (h.role === 'player') return h.text || '';
+        return `${h.text?.name || ''} ${h.text?.text || ''}`;
+      })
+    ]
+      .join('\n')
+      .toLowerCase();
+
+    for (const [id, c] of Object.entries(charactersData || {})) {
+      if (c.role !== 'npc' || !c.aiProfile) continue;
+      const name = (c.displayName || '').toLowerCase();
+      if (name && hay.includes(name.toLowerCase())) ids.add(id);
+      if (hay.includes(id.toLowerCase())) ids.add(id);
+    }
+
+    return [...ids].map((id) => ({ id, state: '' }));
+  }
+
+  function uniqueStrings(list, limit) {
+    const out = [];
+    const seen = new Set();
+    for (const item of list || []) {
+      const key = String(item || '')
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '');
+      if (!key || seen.has(key)) continue;
+      seen.add(key);
+      out.push(item);
+      if (limit && out.length >= limit) break;
+    }
+    return out;
+  }
+
+  /**
    * Builds the system prompt from director rules + character profiles + game state.
    */
   function buildSystemPrompt(context) {
     const {
       director,
-      characters,
+      charactersData,
       gameState,
       scene,
       background,
       interactive,
       isDecisive = false,
-      acting
+      acting,
+      dialogueHistory = []
     } = context;
 
-    const npcLines = characters
-      .filter((c) => c.role === 'npc' && c.aiProfile)
+    const present = resolvePresent(scene, interactive, charactersData, gameState, dialogueHistory);
+    const allowedMap = interactive?.allowedExpressions || {};
+
+    const npcLines = present
+      .map((p) => charactersData[p.id])
+      .filter((c) => c && c.role === 'npc' && c.aiProfile)
       .map((c) => {
         const conviction = gameState.conviction[c.id] ?? 0;
         const stage = pickConvictionStage(c.convictionStages, conviction);
-        const samples = pickSpeechSamples(c.speechCorpus, conviction);
+        const samples = uniqueStrings(
+          pickSpeechSamples(c.speechCorpus, conviction),
+          SPEECH_SAMPLE_LIMIT
+        );
+        const styleExamples = uniqueStrings(acting?.byCharacter?.[c.id], STYLE_EXAMPLE_LIMIT).filter(
+          (ex) => !samples.some((s) => normalizeForCompare(s) === normalizeForCompare(ex))
+        );
+
+        const allowed =
+          Array.isArray(allowedMap[c.id]) && allowedMap[c.id].length
+            ? allowedMap[c.id]
+            : c.expressions || [];
+
         const sampleBlock = samples.length
-          ? `Voice reference (match tone and rhythm; do NOT copy whole lines):\n${samples.map((s) => `- "${s}"`).join('\n')}`
+          ? `Voice (match rhythm; do NOT copy):\n${samples.map((s) => `- "${s}"`).join('\n')}`
           : '';
         const actingNote = c.aiProfile.actingNotes
-          ? `Acting notes: ${c.aiProfile.actingNotes}`
+          ? `Acting: ${c.aiProfile.actingNotes}`
           : '';
-        const styleExamples = acting?.byCharacter?.[c.id];
-        const exampleBlock = Array.isArray(styleExamples) && styleExamples.length
-          ? `Writing examples (match vibe; do NOT copy):\n${styleExamples.map((s) => `- "${s}"`).join('\n')}`
+        const exampleBlock = styleExamples.length
+          ? `Style:\n${styleExamples.map((s) => `- "${s}"`).join('\n')}`
           : '';
+        const knot = c.knot ? `Knot: ${c.knot}` : '';
+        const personality = String(c.aiProfile.personality || '');
+        const personalityShort =
+          personality.length > 280 ? `${personality.slice(0, 277)}…` : personality;
+
         return [
           `[${c.displayName} / id:${c.id}]`,
-          `Personality: ${c.aiProfile.personality}`,
-          `Speech style: ${c.aiProfile.speechStyle}`,
+          `Tendency: ${personalityShort}`,
+          `Speech: ${c.aiProfile.speechStyle}`,
           actingNote,
-          `Knot: ${c.knot || 'none'}`,
-          `Current conviction: ${conviction} (${stage})`,
-          `Expressions: ${c.expressions.join(', ')}`,
+          knot,
+          `Conviction: ${conviction} (${stage})`,
+          `Expressions: ${allowed.join(', ')}`,
           sampleBlock,
           exampleBlock
         ]
@@ -81,8 +168,30 @@ const AI = (() => {
       })
       .join('\n\n');
 
+    const whoHere = present.length
+      ? [
+          '',
+          '## Who is here right now',
+          ...present.map((p) => {
+            const name = charactersData[p.id]?.displayName || p.id;
+            return p.state
+              ? `- ${name} (id:${p.id}): ${p.state}`
+              : `- ${name} (id:${p.id})`;
+          })
+        ].join('\n')
+      : '';
+
     const craftBlock = Array.isArray(acting?.globalCraft) && acting.globalCraft.length
-      ? ['', '## Dialogue craft (VN / novel feel)', ...acting.globalCraft.map((r, i) => `${i + 1}. ${r}`)].join('\n')
+      ? ['', '## Craft', ...acting.globalCraft.map((r, i) => `${i + 1}. ${r}`)].join('\n')
+      : '';
+
+    const contrast = acting?.contrastPairs?.pairs;
+    const contrastBlock = Array.isArray(contrast) && contrast.length
+      ? [
+          '',
+          '## Bad → good',
+          ...contrast.map((pair, i) => `${i + 1}. ✗ ${pair.bad}\n   ✓ ${pair.good}`)
+        ].join('\n')
       : '';
 
     const beatSection = interactive
@@ -117,23 +226,22 @@ const AI = (() => {
       '## Rules',
       ...director.rules.map((r, i) => `${i + 1}. ${r}`),
       craftBlock,
+      contrastBlock,
       '',
-      '## Current game state',
+      '## State',
       `Scene: ${scene?.id || 'unknown'} — ${scene?.speakerName || ''}`,
-      `Background: ${background?.displayName || gameState.currentBackground} — ${background?.description || ''}`,
-      `Day ${gameState.day}`,
-      `Antibiotics: ${gameState.resources.antibiotics}, gasoline: ${gameState.resources.gasoline}`,
-      `Unserious threshold: ${gameState.seriousnessThreshold}`,
+      `BG: ${background?.displayName || gameState.currentBackground}`,
+      `Day ${gameState.day} | Abx ${gameState.resources.antibiotics} | Gas ${gameState.resources.gasoline} | Unserious ${gameState.seriousnessThreshold}`,
+      whoHere,
       '',
-      '## Character sheets',
-      npcLines || '(character sheets pending)',
+      '## Present sheets',
+      npcLines || '(none)',
       beatSection,
       '',
-      '## Output format',
-      'Return one json object only. No markdown. No code fences.',
-      'Fill real character dialogue. Do not copy schema field descriptions.',
-      'Fields:',
-      JSON.stringify(director.responseSchema, null, 2)
+      '## Output',
+      'One json object only. No markdown/fences. Real dialogue—do not copy schema text.',
+      'speakerId from Who is here (or narrator). expression from that character Expressions list.',
+      JSON.stringify(director.responseSchema)
     ].join('\n');
   }
 
@@ -165,13 +273,13 @@ const AI = (() => {
         break;
       }
     }
-    return [...stageSamples, ...general].filter(Boolean).slice(0, 6);
+    return [...stageSamples, ...general].filter(Boolean).slice(0, SPEECH_SAMPLE_LIMIT);
   }
 
   /**
    * Builds API history, avoiding duplicate trailing player message.
    */
-  function buildHistoryMessages(history, currentPlayerText, limit = 12) {
+  function buildHistoryMessages(history, currentPlayerText, limit = HISTORY_LIMIT) {
     let slice = history.slice(-limit);
 
     const last = slice[slice.length - 1];
@@ -252,11 +360,21 @@ const AI = (() => {
   }
 
   function buildContextualFallback(fallbackSpeaker, playerText, isDecisive) {
-    const snippet = playerText.replace(/\s+/g, ' ').trim().slice(0, 42);
-    const name = fallbackSpeaker.displayName || 'Ringo';
-    const text = isDecisive
-      ? `${name === 'Xian' ? '...' : 'Okay.'} I get what you mean. We'll do that.`
-      : `${name === 'Xian' ? '...Yeah.' : "Yeah, I hear you."} About "${snippet}${playerText.length > 42 ? '…' : ''}" — I'm with you.`;
+    const id = fallbackSpeaker.id;
+    const byId = {
+      xian: isDecisive ? "...Okay. We'll do that." : "...Yeah. Don't look at me like that.",
+      ringo: isDecisive
+        ? "Fine. We do your call—then the next thing."
+        : "Don't spiral. Say it again, shorter.",
+      miles: isDecisive
+        ? "Got it. I'll grab what we need."
+        : "Okay. I'm listening—just… give me a second.",
+      rhine: "...Don't.",
+      shooter: "...Don't."
+    };
+    const text =
+      byId[id] ||
+      (isDecisive ? "Okay. We go with that." : "…Say that again. Slower.");
     return {
       speakerId: fallbackSpeaker.id,
       speakerName: fallbackSpeaker.displayName,
@@ -346,13 +464,14 @@ const AI = (() => {
 
     const systemContent = buildSystemPrompt({
       director,
-      characters,
+      charactersData,
       gameState,
       scene,
       background,
       interactive,
       isDecisive,
-      acting
+      acting,
+      dialogueHistory
     });
 
     const messages = [

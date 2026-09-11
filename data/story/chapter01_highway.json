@@ -50,7 +50,7 @@
       "background": "gas_station",
       "speaker": "xian",
       "speakerName": "Xian",
-      "text": "It's not a person. It's the wind. ...No, something's moving in the lens.",
+      "text": "It's not a person. It's the wind. ...No—something moved. Back by the freezer.",
       "character": "xian",
       "expression": "neutral"
     },
@@ -59,18 +59,28 @@
       "background": "gas_station",
       "speaker": "narrator",
       "speakerName": "",
-      "text": "Ringo freezes at the door gripping her crowbar, Xian raises her camera from the window. Miles stops mid-pump. You need to decide right now.",
+      "text": "Ringo freezes at the door gripping her crowbar. Xian stands at the RV door, eyes on the dark aisle—camera hanging unused at her chest. Miles stops mid-pump. You need to decide right now.",
       "playerTurn": true,
+      "present": [
+        { "id": "ringo", "state": "in the gas-station doorway, crowbar lowered to her side" },
+        { "id": "xian", "state": "at the RV door, looking with her own eyes; camera hanging unused" },
+        { "id": "miles", "state": "by the pump, hands still on the nozzle" }
+      ],
       "interactive": {
-        "objective": "[Current Objective] Defuse the standoff at the gas station: calm Ringo down, or get Xian to explain what she saw",
+        "objective": "[Current Objective] Defuse the standoff at the gas station: calm Ringo down, or get Xian to say what she saw",
         "playerPrompt": "What are you going to do?",
         "suggestions": [
           "Ringo, back up first. We'll go in together.",
-          "Xian, let me see the camera—what did you get?",
+          "Xian—what did you actually see in there?",
           "Don't go in. Grab the gas and go—something's wrong here."
         ],
         "maxFreeReplies": 2,
-        "aiGoal": "Gas station tension. After the player's choice, Ringo should hesitate briefly (ties to her guilt). Miles can chime in briefly. The situation still has to get worse—set up the next standoff. Don't describe the shooting directly.",
+        "aiGoal": "Gas station tension. After the player's choice, Ringo should hesitate briefly (ties to her guilt). Miles can chime in briefly. The situation still has to get worse—set up the next standoff. Don't describe the shooting directly. Xian is watching with her eyes, not through the viewfinder; do not have her raise the camera.",
+        "allowedExpressions": {
+          "xian": ["neutral", "surprised", "thinking", "numb"],
+          "ringo": ["serious", "guilty", "forced_smile", "resolute"],
+          "miles": ["worried", "serious", "fear"]
+        },
         "advanceSceneIds": [
           "ch1_misread"
         ],
@@ -90,13 +100,13 @@
       "background": "gas_station",
       "speaker": "narrator",
       "speakerName": "",
-      "text": "In Xian's camera view, deep inside the store, a shadow about your size steps back toward the freezer. Not a monster—a person. Hands shaking like they can't hold their own breath."
+      "text": "Deep inside the store, a shadow about your size steps back toward the freezer. Not a monster—a person. Hands shaking like they can't hold their own breath."
     },
     {
       "id": "ch1_student_warning",
       "background": "gas_station",
       "speaker": "shooter",
-      "speakerName": "枪击npc1",
+      "speakerName": "Rhine",
       "character": "shooter",
       "expression": "threatening",
       "text": "Don't come closer. The gas, the medicine, and that RV—leave it all. Take one more step and I'll shoot."
@@ -105,7 +115,7 @@
       "id": "ch1_bystander_pressure",
       "background": "gas_station",
       "speaker": "bystander",
-      "speakerName": "枪击npc2",
+      "speakerName": "Yuto",
       "character": "bystander",
       "expression": "neutral",
       "text": "...Don't look at us like that. She's been like this for two days. Just—don't crowd her."
@@ -114,23 +124,32 @@
       "id": "ch1_blank_leader",
       "background": "gas_station",
       "speaker": "gunshot_npc3",
-      "speakerName": "枪击npc3",
+      "speakerName": "Alice",
       "character": "gunshot_npc3",
       "expression": "neutral",
       "text": "......"
+    },
+    {
+      "id": "ch1_eisen_present",
+      "background": "gas_station",
+      "speaker": "narrator",
+      "speakerName": "",
+      "text": "Farther back, almost outside the light, another figure hasn't moved. Visual-kei makeup under dust. Eisen watches like this is already decided.",
+      "character": "visualkei_leader",
+      "expression": "confident"
     },
     {
       "id": "ch1_surprise",
       "background": "gas_station",
       "speaker": "narrator",
       "speakerName": "",
-      "text": "The moment the gun comes up, all you hear is your own heartbeat. Miles raises his hands by the pump; Ringo's throat bobs but she doesn't step back right away. Behind the girl, a blank face hasn't moved once."
+      "text": "The moment the gun comes up, all you hear is your own heartbeat. Miles raises his hands by the pump; Ringo's throat bobs but she doesn't step back right away. Behind Rhine—Alice frozen blank, and Eisen still as a cutout."
     },
     {
       "id": "ch1_student_fear",
       "background": "gas_station",
       "speaker": "shooter",
-      "speakerName": "枪击npc1",
+      "speakerName": "Rhine",
       "character": "shooter",
       "expression": "wavering",
       "text": "I'm not trying to rob you... I haven't seen a living person in two days. What were you saying at the door? Are you gonna leave me behind too?"
@@ -158,7 +177,7 @@
       "id": "ch1_student_panics",
       "background": "gas_station",
       "speaker": "shooter",
-      "speakerName": "枪击npc1",
+      "speakerName": "Rhine",
       "character": "shooter",
       "expression": "breaking",
       "text": "Don't lie to me! Everyone says that—and the second I put the gun down, you run."
@@ -166,10 +185,10 @@
     {
       "id": "ch1_blank_push",
       "background": "gas_station",
-      "speaker": "gunshot_npc3",
-      "speakerName": "枪击npc3",
-      "character": "gunshot_npc3",
-      "expression": "neutral",
+      "speaker": "visualkei_leader",
+      "speakerName": "Eisen",
+      "character": "visualkei_leader",
+      "expression": "confident",
       "text": "Do it."
     },
     {
@@ -177,18 +196,36 @@
       "background": "gas_station",
       "speaker": "narrator",
       "speakerName": "",
-      "text": "The gun barrel wavers in the light. The kid's eyes are red and dry, like they might cry any second or pull the trigger any second. You've got seconds to speak.",
+      "text": "The gun barrel wavers in the light. Rhine's eyes are red and dry, like she might cry any second or pull the trigger any second. You've got seconds to speak.",
       "playerTurn": true,
+      "present": [
+        { "id": "shooter", "state": "center aisle, pistol raised, both hands shaking" },
+        { "id": "bystander", "state": "half a step behind Rhine, watching the group" },
+        { "id": "gunshot_npc3", "state": "small figure behind them, blank and silent—does not speak" },
+        { "id": "visualkei_leader", "state": "farther back in the dark, unmoving, already decided" },
+        { "id": "ringo", "state": "front of the group, crowbar ready, not advancing" },
+        { "id": "xian", "state": "near the RV door, watching with her eyes; camera hanging unused" },
+        { "id": "miles", "state": "by the pump, hands partly raised" }
+      ],
       "interactive": {
-        "objective": "[Current Objective] Standoff negotiation: try to calm 枪击npc1 (no matter what you say, things will still spiral)",
-        "playerPrompt": "What do you say to 枪击npc1?",
+        "objective": "[Current Objective] Standoff negotiation: try to calm Rhine (no matter what you say, things will still spiral)",
+        "playerPrompt": "What do you say to Rhine?",
         "suggestions": [
           "We're not leaving you behind. Put the gun down—come with us.",
           "Ringo, don't move closer. She's scared.",
           "Look at me first. Deep breath. We can talk about the gun later."
         ],
         "maxFreeReplies": 1,
-        "aiGoal": "Short free talk during the shooting standoff (does NOT cost interrupt). 枪击npc1 does not want to shoot but is pushed by fear and by 枪击npc3's blank pressure. Player words matter but cannot fully stop the shot—at most who is hit / how bad. After dialogue, push to accidental discharge.",
+        "aiGoal": "Short free talk during the shooting standoff (does NOT cost interrupt). Rhine does not want to shoot but is pushed by fear and by Eisen's cold order. Alice stays silent. Player words matter but cannot fully stop the shot—at most who is hit / how bad. After dialogue, push to accidental discharge. Threat overrides habit: Xian does not raise the camera; she looks with her eyes.",
+        "allowedExpressions": {
+          "shooter": ["threatening", "wavering", "breaking"],
+          "bystander": ["neutral", "angry"],
+          "gunshot_npc3": ["neutral"],
+          "visualkei_leader": ["confident", "neutral"],
+          "xian": ["neutral", "surprised", "numb", "thinking"],
+          "ringo": ["serious", "guilty", "resolute"],
+          "miles": ["fear", "worried", "serious"]
+        },
         "advanceSceneIds": [
           "ch1_misstep",
           "ch1_shot"
@@ -219,13 +256,13 @@
       "speaker": "narrator",
       "speakerName": "",
       "sfx": { "id": "heartbeat", "label": "SFX · Ringing · Heartbeat" },
-      "text": "枪击npc1 stares at her own hands, face whiter than the wall. The world suddenly feels far away: neon flickering, gas smell sharp, your breath breaking into pieces."
+      "text": "Rhine stares at her own hands, face whiter than the wall. The world suddenly feels far away: neon flickering, gas smell sharp, your breath breaking into pieces."
     },
     {
       "id": "ch1_student_breaks",
       "background": "gas_station",
       "speaker": "shooter",
-      "speakerName": "枪击npc1",
+      "speakerName": "Rhine",
       "character": "shooter",
       "expression": "after_shot",
       "text": "I... I didn't mean to shoot. I thought she was going for the gun... It wasn't on purpose."
@@ -234,7 +271,7 @@
       "id": "ch1_bystander_failed",
       "background": "gas_station",
       "speaker": "bystander",
-      "speakerName": "枪击npc2",
+      "speakerName": "Yuto",
       "character": "bystander",
       "expression": "angry",
       "text": "You moved! You made her— Goddamn it!"
@@ -323,6 +360,11 @@
       "speakerName": "",
       "text": "Xian's consciousness slips in and out. Ringo's waiting for your voice, like waiting for an order that can pull her out of the guilt. Every word now is light, but it can keep the car moving forward.",
       "playerTurn": true,
+      "present": [
+        { "id": "xian", "state": "in the back seat, wounded, half-conscious; camera beside her, unused" },
+        { "id": "ringo", "state": "driving, white-knuckled on the wheel" },
+        { "id": "miles", "state": "twisted toward the back seat, ready to help with pressure/bandages" }
+      ],
       "interactive": {
         "objective": "[Current Objective] Calm your friends and decide: get to a hospital right now",
         "playerPrompt": "What do you say to Ringo and Xian?",
@@ -332,7 +374,12 @@
           "Miles, watch the back seat. I'll navigate."
         ],
         "maxFreeReplies": 2,
-        "aiGoal": "Emotions inside the RV after Xian gets shot. Respond to the player first, then have Ringo shift from guilt to action; Miles can help; Xian puts on a brave face through the pain but accepts company. The armed student is a scared peer who lost control. Keep replies in character dialogue. Group clearly heads for the hospital.",
+        "aiGoal": "Emotions inside the RV after Xian gets shot. Respond to the player first, then have Ringo shift from guilt to action; Miles can help; Xian puts on a brave face through the pain but accepts company. Rhine was a scared peer who lost control—Eisen pushed her. Keep replies in character dialogue. Group clearly heads for the hospital. Do not have Xian narrate through a viewfinder while injured.",
+        "allowedExpressions": {
+          "xian": ["pained", "numb", "neutral", "thinking"],
+          "ringo": ["guilty", "serious", "resolute", "forced_smile"],
+          "miles": ["worried", "tired", "serious", "fear"]
+        },
         "advanceSceneIds": [
           "ch1_hospital_drive",
           "ch1_hospital_arrival",
@@ -390,6 +437,11 @@
       "speakerName": "",
       "text": "Medicine's running low. So's the gas. Night outside looks like ink. What you do next decides whether Xian makes it to the next stop.",
       "playerTurn": true,
+      "present": [
+        { "id": "xian", "state": "bedridden in the back of the RV / hospital staging, feverish" },
+        { "id": "ringo", "state": "counting remaining antibiotics aloud" },
+        { "id": "miles", "state": "checking shelves / bag for more medicine" }
+      ],
       "interactive": {
         "objective": "[Current Objective] Plan your scavenging run: keep hunting for medicine, or follow the signal on the radio first?",
         "playerPrompt": "How do you split up what happens next?",
@@ -433,6 +485,11 @@
       "speakerName": "",
       "text": "The RV's parked at a highway fork. One road leads into ruined downtown, the other follows the signal and the light beam toward the horizon. Wind kicks up dust like an unfinished map.",
       "playerTurn": true,
+      "present": [
+        { "id": "ringo", "state": "in the driver seat at the fork" },
+        { "id": "miles", "state": "passenger side, watching both roads" },
+        { "id": "xian", "state": "lying in back, camera still aimed at the glowing road" }
+      ],
       "interactive": {
         "objective": "[Current Objective] Hit the road for real: choose to follow the signal (enter the highway arc)",
         "playerPrompt": "What order do you give?",

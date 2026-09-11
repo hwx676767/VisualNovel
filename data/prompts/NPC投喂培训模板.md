@@ -399,3 +399,70 @@ API 只读：`characters.json` · `acting_examples.json` · `director.json` · �
 | 表演示范（API 读） | `data/prompts/acting_examples.json` |
 | 导演规则（API 读） | `data/prompts/director.json` |
 | 章节对照 | `Resources/设计文档对照.md` |
+
+---
+
+## 10. 活人感规则 & 在场状态（2026-09-06 更新）
+
+### 10.1 director.json 新增的规则组
+
+`rules` 从 17 条整理为 31 条，按组排列（文件里用空行分隔）：
+
+| 组 | 条目 | 解决什么 |
+|---|---|---|
+| 语言/格式 | LANGUAGE LOCK · TYPOS · LENGTH · ONE SPEAKER | 原有 |
+| 剧情锁 | BEAT LOCK · NO SPOILERS · INTERRUPTS · ADVANCE · TEACHER · PLACEHOLDER | 原有 |
+| **物理状态** | WHO IS HERE · THREAT OVERRIDES HABIT · EXPRESSION IS A CHOICE | **闲在枪口下举相机** |
+| **活人感** | WHY NOW · SHEET IS NOT A SCRIPT · SAY LESS THAN YOU MEAN · NOT EVERYONE GOES QUIET · EMOTION HAS A TARGET · CARRY THE LAST FEW TURNS · ONE REAL CHANGE · KNOWLEDGE BOUNDARY · SWAP-NAME CHECK | **人设复读、解释动机、所有人都沉默** |
+| 声线 | UNIQUE REPLY · DON'T PLAY THE PLAYER · VOICE REFERENCE · MAIN THREE · OWN WORDS · BANNED OPENERS · NO STRAWMAN CONTRAST · COOL THE ADVERBS | 套话、翻译腔、"不是A而是B" |
+| 数值 | CONVICTION | 原有，加了 delta 上限 |
+
+**SWAP-NAME CHECK** 是最值钱的一条：让模型在输出前自问"换个人说这句还成立吗"，成立就重写。它把"要有角色感"变成了一个模型真能做的二元判断。
+
+### 10.2 场景新字段（story JSON）
+
+```json
+"present": [
+  { "id": "xian", "state": "at the RV door, camera hanging at her chest, not touching it" },
+  { "id": "ringo", "state": "in the doorway, crowbar lowered to her side" }
+],
+"interactive": {
+  "allowedExpressions": { "xian": ["neutral", "surprised", "thinking", "numb"] },
+  ...
+}
+```
+
+| 字段 | 位置 | 作用 |
+|---|---|---|
+| `present[]` | 场景顶层 | **只有列出的角色会被送进 prompt**（其余角色表不发，省 token 也少噪音）。`state` 写此刻的物理状态：站哪、手里拿什么、有没有受伤 |
+| `allowedExpressions` | `interactive` 内 | 按角色限制本拍可用的表情 id。对峙时把 `camera` 从闲的列表里拿掉，模型就选不到 |
+
+**没写 `present` 的场景不会坏**：ai.js 会退回推断——队伍成员 + `scene.character` + aiGoal/文本里提到的名字 + 最近 8 条历史里的发言者。但推断时 `state` 为空，物理约束就只剩规则层。**枪击、战斗、受伤这类场景务必手写 `present`。**
+
+写 `state` 的要点：**只写事实，不写情绪**。"crowbar in her right hand" 对；"nervously gripping her crowbar" 错——情绪是模型该从状态推出来的东西。
+
+### 10.3 acting_examples.json 新增
+
+- `globalCraft` 5 → 12 条（句长随压力变、问句可以当回答、表情和台词可以不一致、砍掉多余的第三句）
+- 新增 `contrastPairs`：6 组 ✗/✓ 对照，直接注入 prompt。**这比规则更管用**——模型看到"坏在哪"比听到"要写好"容易执行。
+
+要加新对照时，`bad` 写你实测里出现过的套话原句，`good` 写你改完的，`why` 一句话说差别。
+
+### 10.4 ai.js 改动（配合上面）
+
+- 角色表只发 `present` 里的人
+- `Personality:` 标签改为 `Long-term tendency (NOT a script)`
+- 表情列表按 `allowedExpressions` 裁剪
+- 语料样本与 `byCharacter` 示例去重（同一句不再发两遍）
+- 双重失败后的兜底台词改为按角色写死、不复读玩家（原来会说 `About "..." — I'm with you`，正是新规则禁的）
+
+### 10.5 已改的剧本（仅两处，为修相机问题）
+
+| 场景 | 改前 | 改后 |
+|---|---|---|
+| `ch1_interactive_tension` | Xian **raises** her camera from the window | Xian **lowers** the camera—whatever's in there, she wants to see it with her own eyes |
+| `ch1_shadow` | **In Xian's camera view**, deep inside the store... | Deep inside the store... **Xian's camera hangs forgotten at her chest** |
+
+原因：脚本旁白会进 `dialogueHistory` 被模型读到。持枪者是**透过闲的取景器**被介绍出来的，模型自然让她继续举着。改成她**放下**相机，还顺手给了她一个"主动放弃遮挡"的动作，接后面她推开你那一下。
+
+`prologue` 里的相机描写没动——篝火边给朋友拍照是相机该有的用法，那是对的基线。

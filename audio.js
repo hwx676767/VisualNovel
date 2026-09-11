@@ -1,17 +1,26 @@
 /**
  * Audio manager — BGM/SFX matched by id like character expressions.
- * Place files under audio/bgm/{id}.mp3 and audio/sfx/{id}.mp3.
- * Missing files fall back to on-screen cue labels.
+ * Place files under audio/bgm/{id}.mp3 and audio/sfx/{id}.{mp3,wav}.
+ *
+ * Why blob URLs: Cloudflare Pages often omits Accept-Ranges. HTML5 Audio
+ * streaming breaks online while localhost (Express) works. Fetch→blob→play
+ * avoids range requests.
  */
 window.VNAudio = (() => {
   let bgmEl = null;
   let currentBgm = null;
+  let currentBgmLabel = null;
   let muted = false;
   let volume = 0.55;
   let cueTimer = null;
   let catalog = { bgm: [], sfx: [] };
   let inventory = { bgm: {}, sfx: {} };
   let catalogReady = null;
+  let unlocked = false;
+  let unlockBound = false;
+  let pendingBgm = null;
+  const blobUrlCache = new Map();
+  const objectUrls = new Set();
 
   const EXT_CANDIDATES = ['.mp3', '.ogg', '.wav'];
 
@@ -35,56 +44,66 @@ window.VNAudio = (() => {
   }
 
   function getState() {
-    return { muted, volume, currentBgm };
+    return {
+      muted,
+      volume,
+      currentBgm,
+      unlocked,
+      paused: !bgmEl || bgmEl.paused,
+      src: bgmEl?.currentSrc || ''
+    };
   }
 
-  function showCue(label, { playing = false } = {}) {
+  function showCue(label, { playing = false, hint = false } = {}) {
     if (!label || typeof document === 'undefined') return;
     const gameContent = document.getElementById('game-content');
     if (!gameContent) return;
     const existing = document.getElementById('sound-cue');
     const cueEl = existing || document.createElement('div');
     cueEl.id = 'sound-cue';
-    cueEl.textContent = playing ? `♪ Now playing · ${label}` : `♪ ${label}`;
-    cueEl.classList.toggle('is-playing', playing);
-    cueEl.classList.toggle('is-missing', !playing);
+    cueEl.textContent = hint
+      ? `♪ Tap anywhere to enable sound · ${label}`
+      : playing
+        ? `♪ Now playing · ${label}`
+        : `♪ ${label}`;
+    cueEl.classList.toggle('is-playing', playing && !hint);
+    cueEl.classList.toggle('is-missing', !playing || hint);
     if (!existing) gameContent.appendChild(cueEl);
     cueEl.hidden = false;
     clearTimeout(cueTimer);
     cueTimer = setTimeout(() => {
       cueEl.hidden = true;
-    }, playing ? 2200 : 2600);
+    }, hint ? 4500 : playing ? 2200 : 2600);
   }
 
   function buildPaths(kind, id) {
     return EXT_CANDIDATES.map((ext) => `audio/${kind}/${id}${ext}`);
   }
 
-  function probeUrl(url) {
-    const ctrl = typeof AbortController !== 'undefined' ? new AbortController() : null;
-    const timer = ctrl ? setTimeout(() => ctrl.abort(), 2500) : null;
-    const opts = ctrl ? { method: 'HEAD', signal: ctrl.signal } : { method: 'HEAD' };
-    return fetch(url, opts)
-      .then((res) => {
-        if (res.ok) return true;
-        if (res.status !== 405 && res.status !== 501) return false;
-        const getOpts = ctrl
-          ? { method: 'GET', headers: { Range: 'bytes=0-1' }, signal: ctrl.signal }
-          : { method: 'GET', headers: { Range: 'bytes=0-1' } };
-        return fetch(url, getOpts).then((getRes) => getRes.ok);
-      })
-      .catch(() => false)
-      .finally(() => {
-        if (timer) clearTimeout(timer);
-      });
+  async function resolveBlobUrl(path) {
+    if (blobUrlCache.has(path)) return blobUrlCache.get(path);
+    const response = await fetch(path);
+    if (!response.ok) throw new Error(`HTTP ${response.status} for ${path}`);
+    const blob = await response.blob();
+    if (!blob || blob.size < 64) throw new Error(`Empty audio: ${path}`);
+    const url = URL.createObjectURL(blob);
+    blobUrlCache.set(path, url);
+    objectUrls.add(url);
+    return url;
   }
 
-  async function findExistingPath(kind, id) {
+  async function resolvePlayableUrl(kind, id) {
     const paths = buildPaths(kind, id);
+    let lastError = null;
     for (const path of paths) {
-      if (await probeUrl(path)) return path;
+      try {
+        const url = await resolveBlobUrl(path);
+        return { path, url };
+      } catch (err) {
+        lastError = err;
+      }
     }
-    return null;
+    throw lastError || new Error(`No audio file for ${kind}/${id}`);
   }
 
   async function loadCatalog() {
@@ -105,26 +124,49 @@ window.VNAudio = (() => {
     return catalogReady;
   }
 
+  /**
+   * Warm the first BGM (and optional ids) so Start Game can play without streaming.
+   */
+  async function preload(ids = ['campsite']) {
+    await loadCatalog();
+    const list = Array.isArray(ids) ? ids : [ids];
+    await Promise.all(
+      list.map(async (id) => {
+        try {
+          await resolvePlayableUrl('bgm', id);
+        } catch (err) {
+          console.warn('[Audio] preload failed', id, err);
+        }
+      })
+    );
+  }
+
   async function refreshInventory() {
     await loadCatalog();
     const next = { bgm: {}, sfx: {} };
-    const jobs = [];
     for (const kind of ['bgm', 'sfx']) {
-      for (const item of catalog[kind]) {
-        jobs.push(
-          findExistingPath(kind, item.id).then((path) => {
-            next[kind][item.id] = {
-              id: item.id,
-              label: item.label,
-              file: item.file,
-              found: Boolean(path),
-              path
-            };
-          })
-        );
+      for (const item of catalog[kind] || []) {
+        let found = false;
+        let path = null;
+        for (const candidate of buildPaths(kind, item.id)) {
+          try {
+            await resolveBlobUrl(candidate);
+            found = true;
+            path = candidate;
+            break;
+          } catch {
+            /* try next ext */
+          }
+        }
+        next[kind][item.id] = {
+          id: item.id,
+          label: item.label,
+          file: item.file,
+          found,
+          path
+        };
       }
     }
-    await Promise.all(jobs);
     inventory = next;
     return inventory;
   }
@@ -133,63 +175,125 @@ window.VNAudio = (() => {
     return { catalog, inventory };
   }
 
-  function tryPlayFile(paths, { loop = false } = {}) {
-    return new Promise((resolve) => {
-      let index = 0;
-      function next() {
-        if (index >= paths.length) {
-          resolve(false);
+  async function resumePendingBgm() {
+    if (!pendingBgm) return;
+    const { id, label } = pendingBgm;
+    pendingBgm = null;
+    currentBgm = null;
+    await playBgm(id, label);
+  }
+
+  function bindUnlockOnce() {
+    if (unlockBound || typeof document === 'undefined') return;
+    unlockBound = true;
+    const unlock = async () => {
+      unlocked = true;
+      document.removeEventListener('pointerdown', unlock);
+      document.removeEventListener('keydown', unlock);
+      document.removeEventListener('touchstart', unlock);
+      if (bgmEl && bgmEl.paused && currentBgm) {
+        try {
+          await bgmEl.play();
+          showCue((currentBgmLabel || currentBgm).replace(/^BGM\s*·\s*/i, ''), {
+            playing: true
+          });
+          pendingBgm = null;
           return;
+        } catch {
+          /* fall through */
         }
-        const path = paths[index++];
-        const audio = new Audio();
-        audio.loop = loop;
-        audio.volume = muted ? 0 : volume * (loop ? 1 : 0.9);
-        audio.oncanplaythrough = () => {
-          audio.play().catch(() => {});
-          resolve({ audio, path });
-        };
-        audio.onerror = () => next();
-        audio.src = path;
       }
-      next();
-    });
+      await resumePendingBgm();
+    };
+    document.addEventListener('pointerdown', unlock, { once: true, passive: true });
+    document.addEventListener('keydown', unlock, { once: true });
+    document.addEventListener('touchstart', unlock, { once: true, passive: true });
+  }
+
+  /**
+   * Call from Start Game click. Plays BGM from a preloaded blob when possible.
+   */
+  async function unlockAndPlayBgm(id, label) {
+    unlocked = true;
+    bindUnlockOnce();
+    if (!id) return false;
+    return playBgm(id, label);
   }
 
   async function playBgm(id, label) {
-    if (!id) return;
-    if (currentBgm === id && bgmEl && !bgmEl.paused) return;
+    if (!id) return false;
+    if (currentBgm === id && bgmEl && !bgmEl.paused) return true;
 
-    const paths = buildPaths('bgm', id);
-    const result = await tryPlayFile(paths, { loop: true });
+    bindUnlockOnce();
+
     const display = label || id;
-    if (!result) {
+    currentBgmLabel = display;
+
+    let resolved;
+    try {
+      resolved = await resolvePlayableUrl('bgm', id);
+    } catch (err) {
+      console.warn('[Audio] BGM missing', id, err);
       showCue(label || `BGM · ${id}`, { playing: false });
       currentBgm = id;
-      return;
+      return false;
     }
 
     if (bgmEl) {
-      bgmEl.pause();
+      try {
+        bgmEl.pause();
+      } catch {
+        /* ignore */
+      }
     }
-    bgmEl = result.audio;
-    bgmEl.loop = true;
+
+    const audio = new Audio();
+    audio.loop = true;
+    audio.preload = 'auto';
+    audio.volume = muted ? 0 : volume;
+    audio.src = resolved.url;
+    bgmEl = audio;
     currentBgm = id;
-    showCue(display.replace(/^BGM\s*·\s*/i, ''), { playing: true });
+
+    try {
+      await audio.play();
+      unlocked = true;
+      pendingBgm = null;
+      showCue(display.replace(/^BGM\s*·\s*/i, ''), { playing: true });
+      return true;
+    } catch (err) {
+      console.warn('[Audio] BGM blocked/failed', id, err?.name || err);
+      pendingBgm = { id, label: display };
+      showCue(display.replace(/^BGM\s*·\s*/i, ''), { playing: false, hint: true });
+      return false;
+    }
   }
 
   async function playSfx(id, label) {
     if (!id) return;
-    const paths = buildPaths('sfx', id);
-    const result = await tryPlayFile(paths, { loop: false });
-    if (!result) {
+    bindUnlockOnce();
+    let resolved;
+    try {
+      resolved = await resolvePlayableUrl('sfx', id);
+    } catch (err) {
+      console.warn('[Audio] SFX missing', id, err);
       showCue(label || `SFX · ${id}`, { playing: false });
+      return;
+    }
+
+    const audio = new Audio();
+    audio.loop = false;
+    audio.volume = muted ? 0 : volume * 0.9;
+    audio.src = resolved.url;
+    try {
+      await audio.play();
+      unlocked = true;
+    } catch (err) {
+      console.warn('[Audio] SFX blocked/failed', id, err?.name || err);
+      showCue(label || `SFX · ${id}`, { playing: false, hint: true });
     }
   }
 
-  /**
-   * Apply scene audio fields: bgm, sfx, soundCue (legacy label-only).
-   */
   function applySceneAudio(scene) {
     if (!scene) return;
     if (scene.bgm) {
@@ -208,6 +312,7 @@ window.VNAudio = (() => {
   }
 
   loadCatalog();
+  bindUnlockOnce();
 
   return {
     playBgm,
@@ -217,6 +322,9 @@ window.VNAudio = (() => {
     setVolume,
     setMuted,
     getState,
+    unlockAndPlayBgm,
+    unlockFromGesture: unlockAndPlayBgm.bind(null, null, null),
+    preload,
     loadCatalog,
     refreshInventory,
     getInventory

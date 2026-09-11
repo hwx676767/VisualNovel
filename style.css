@@ -903,3 +903,93 @@ body {
   color: rgba(255, 255, 255, 0.5);
   font-weight: normal;
 }
+
+/* ==========================================================================
+   Start screen — audio unlock gate
+   ========================================================================== */
+
+#start-screen {
+  position: absolute;
+  inset: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    radial-gradient(ellipse 70% 55% at 50% 35%, rgba(40, 55, 90, 0.55), transparent 70%),
+    linear-gradient(180deg, #0a0a12 0%, #12121f 45%, #0a0a12 100%);
+  transition: opacity 0.35s ease, visibility 0.35s ease;
+}
+
+#start-screen.is-hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.start-screen-inner {
+  text-align: center;
+  padding: 28px 32px;
+  max-width: 520px;
+}
+
+.start-kicker {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+  margin-bottom: 14px;
+}
+
+#start-title {
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: normal;
+  font-size: clamp(36px, 6vw, 56px);
+  color: #f2f2f5;
+  letter-spacing: 0.04em;
+  margin-bottom: 14px;
+}
+
+.start-tagline {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.62);
+  margin-bottom: 28px;
+}
+
+#start-game-btn {
+  appearance: none;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: 15px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 14px 36px;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+}
+
+#start-game-btn:hover {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: #fff;
+}
+
+#start-game-btn:active {
+  transform: translateY(1px);
+}
+
+#start-game-btn:disabled {
+  opacity: 0.5;
+  cursor: wait;
+}
+
+.start-hint {
+  margin-top: 16px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.38);
+}

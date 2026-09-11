@@ -51,6 +51,11 @@
       "speakerName": "",
       "text": "All four of them look at you at once. Night wind pours into camp, the fire's almost out. The guitar string's still vibrating, like a nerve pulled tight. Now you have to speak.",
       "playerTurn": true,
+      "present": [
+        { "id": "ringo", "state": "by the fire, guitar still in hand but not playing" },
+        { "id": "xian", "state": "near the tent line, camera at her side" },
+        { "id": "miles", "state": "packing/organizing near the RV" }
+      ],
       "interactive": {
         "objective": "[Current Objective] Convince your friends: drive back to the city right now to find Teacher",
         "playerPrompt": "What do you say to Ringo, Xian, and Miles?",
@@ -116,6 +121,11 @@
       "speakerName": "",
       "text": "The empty city's silence presses down. Ringo's holding it together, Miles grips his backpack strap, Xian stares out the window. What to do next—that's your call again.",
       "playerTurn": true,
+      "present": [
+        { "id": "ringo", "state": "on the empty street, forcing a smile" },
+        { "id": "miles", "state": "beside the RV, backpack strap in hand" },
+        { "id": "xian", "state": "looking out the RV window with the camera" }
+      ],
       "interactive": {
         "objective": "[Current Objective] Decide your next move in the empty city: find a hospital, or scavenge supplies first?",
         "playerPrompt": "What are you going to do?",

@@ -1,0 +1,115 @@
+{
+  "usage": "Feed to AI: mimic the writing and acting style—do not copy lines verbatim.",
+  "globalCraft": [
+    "VN dialogue stays short, with pauses and subtext; one emotional turn per line at most.",
+    "Characters don't explain the world—they say what they can actually say right now.",
+    "When scared, they can ramble a little—don't turn it into over-the-top web-novel shouting.",
+    "When caring about someone, they usually act or change the subject—not straight \"I'm worried about you.\"",
+    "If the player interrupted, react to the interruption, then yield the scene back—don't hijack the whole chapter.",
+    "Vary line length by pressure: short when scared or angry; longer only when someone finally feels safe enough to explain.",
+    "A question can be a whole reply. \"Why are you asking?\" is a dodge, a test, and an answer at once.",
+    "Half-sentences and dropped subjects are fine when someone's shaken, but the fragment still has to parse. \"Can't—no. Not that door.\" works; word salad doesn't.",
+    "Let the line and the expression disagree sometimes. A joke with a sad face says more than either alone.",
+    "Small physical specifics beat emotional labels. \"You're bleeding on my sleeve\" beats \"I'm so scared for you.\"",
+    "Mumbling, half-agreeing, and repeating one word of what someone said are all real speech—use them when the moment calls for it, not as filler.",
+    "Cut the last sentence if the first two already did the job. Under-explaining reads as confidence; over-explaining reads as AI."
+  ],
+  "byCharacter": {
+    "xian": [
+      "Oh, that's great.",
+      "I'm fine... I just want to be alone for a bit.",
+      "......",
+      "It's fine, you go on ahead. I'll... catch up later.",
+      "Talk with me a while? I... can't really sleep.",
+      "Light takes that many years to cross the universe... you idiots fighting over a cracker looked better than the stars. (laughs)",
+      "...Nothing. Hearing someone yell my name to come eat... feels kind of miraculous.",
+      "Take it. ...The camera. Don't drop it."
+    ],
+    "ringo": [
+      "Yes! Drinks when we get back!",
+      "You'll be okay... trust us... trust yourself... What are you talking about, I'm not crying.",
+      "Don't do anything that reckless again!",
+      "Okay. Behind me. Move.",
+      "I get why someone would build a wall. I just don't want us to become one."
+    ],
+    "miles": [
+      "Look, supplies here too!",
+      "Found a can of corn mush. Heated it up—a little underdone. Eat it while it's hot.",
+      "Gotta find something to do, or... my head starts overthinking.",
+      "Honestly... I've been scared this whole time... scared out of my mind.",
+      "Because we get tired, because we can't do everything—that's why the people we stumble toward together feel so precious."
+    ],
+    "shooter": [
+      "Don't come closer!",
+      "I'm not trying to rob you... everyone left.",
+      "...I didn't mean to.",
+      "If I put it down you'll run. I know you will."
+    ],
+    "hospital_occupier": [
+      "Call me doctor when you ask. Then we'll talk medicine.",
+      "Trade fair. Or play along. Or try forcing it—and watch the bottles break.",
+      "She needs antibiotics. That doesn't make you special."
+    ],
+    "visualkei_leader": [
+      "Do it.",
+      "You're soft. That's not an insult. It's a diagnosis.",
+      "I know what my people do. I need them anyway.",
+      "Join us and prove you're strong. Her weakness still isn't my problem."
+    ],
+    "kid_adultclothes": [
+      "I'm in charge here. ...Stop looking at my sleeves.",
+      "They're littler than me. Someone has to stand in front.",
+      "...Don't tell them I cried."
+    ],
+    "mechanic_boy": [
+      "Whoa, what happened to her? No—start from the gas station. I've got time.",
+      "He and I used to fix stuff together. Then he chose the stage.",
+      "Parts are easy. Listening to the end is the price."
+    ],
+    "roadblock": [
+      "This road's mine! ...Unless you've got food.",
+      "Bread talks louder than blades.",
+      "Fine. Pass. Don't make me regret being nice."
+    ],
+    "radiocult": [
+      "The light remembers footsteps that haven't happened yet...",
+      "Listen longer. The tower only answers static with static.",
+      "We live here. Sacred means leave the loud machines outside."
+    ]
+  },
+  "contrastPairs": {
+    "usage": "Bad → good. Learn the difference. Never copy the good line verbatim into play.",
+    "pairs": [
+      {
+        "bad": "I understand how you feel. We'll get through this together.",
+        "good": "...Eat something first. Then we talk.",
+        "why": "Stock comfort → an action that carries the comfort."
+      },
+      {
+        "bad": "I'm not angry, I'm just disappointed in myself for letting this happen.",
+        "good": "I saw the gun. I saw it and I still said go.",
+        "why": "Motive explained → the specific thing that's eating her."
+      },
+      {
+        "bad": "It's not that I don't trust you, it's that I've been alone too long.",
+        "good": "Two days. Nobody. You'd have run too.",
+        "why": "Strawman contrast → concrete fact in her own words."
+      },
+      {
+        "bad": "Oh my god, are you okay?! That was so scary!",
+        "good": "You're bleeding on my sleeve. Keep still.",
+        "why": "Filler opener + emotion label → observation + instruction."
+      },
+      {
+        "bad": "She looked away sadly, unable to meet your eyes.",
+        "good": "...It's fine. You go ahead.",
+        "why": "Narrator explaining the feeling → a character line that dodges."
+      },
+      {
+        "bad": "Yeah, I hear you. About what you said—I'm with you.",
+        "good": "Fine. But if she stops breathing, we pull over. No vote.",
+        "why": "Agreement as filler → agreement with a condition, which is how people actually agree."
+      }
+    ]
+  }
+}
