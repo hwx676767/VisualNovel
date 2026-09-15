@@ -4,86 +4,108 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Visual Novel</title>
-  <link rel="stylesheet" href="style.css?v=start1">
+  <link rel="stylesheet" href="style.css?v=ui12">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=IBM+Plex+Sans:ital,wght@0,500;0,700;1,700&display=swap" rel="stylesheet">
 </head>
 <body>
 
-  <!-- Outermost wrapper: fills viewport, black background -->
   <div id="game-wrapper">
+    <div id="game-canvas" class="ui-scrapbook">
 
-    <!-- 16:9 game area, centered -->
-    <div id="game-canvas">
+      <!-- TOP: photo stage only -->
+      <div id="layout-top">
+        <div id="scrapbook-matte" aria-hidden="true">
+          <span class="matte matte-red"></span>
+          <span class="matte matte-orange"></span>
+          <span class="matte matte-green"></span>
+          <span class="matte matte-blue"></span>
+        </div>
 
-      <!-- Pure white borders (top, bottom, left, right) -->
-      <div id="border-top">
-        <!-- Toolbar lives inside the top border -->
-        <nav id="toolbar" aria-label="Game toolbar">
-          <button type="button" class="toolbar-btn">BACK</button>
-          <span class="toolbar-divider">|</span>
-          <button type="button" class="toolbar-btn">LOG</button>
-          <span class="toolbar-divider">|</span>
-          <button type="button" class="toolbar-btn">PROGRESS</button>
-          <span class="toolbar-divider">|</span>
-          <button type="button" class="toolbar-btn">SKIP</button>
-          <span class="toolbar-divider">|</span>
-          <button type="button" class="toolbar-btn">AUTO</button>
-          <span class="toolbar-divider">|</span>
-          <button type="button" class="toolbar-btn">SAVE</button>
-          <span class="toolbar-divider">|</span>
-          <button type="button" class="toolbar-btn">LOAD</button>
-          <span class="toolbar-divider">|</span>
-          <button type="button" class="toolbar-btn">SETTINGS</button>
-        </nav>
+        <div id="stage-frame">
+          <div id="stage-layer">
+            <div id="background-layer">
+              <div id="background-label" aria-hidden="true"></div>
+            </div>
+
+            <div id="character-layer">
+              <div id="character-sprite" aria-hidden="true">
+                <img id="character-sprite-img" alt="" hidden>
+                <span id="character-sprite-label"></span>
+              </div>
+            </div>
+
+            <div id="atmosphere-layer" aria-hidden="true"></div>
+          </div>
+        </div>
       </div>
-      <div id="border-bottom"></div>
-      <div id="border-left"></div>
-      <div id="border-right"></div>
 
-      <!-- Inner area inside the borders -->
-      <div id="game-content">
-
-        <!-- Background image layer (text placeholder until art assets exist) -->
-        <div id="background-layer">
-          <div id="background-label" aria-hidden="true"></div>
-        </div>
-
-        <!-- Character sprite layer -->
-        <div id="character-layer">
-          <div id="character-sprite" aria-hidden="true">
-            <img id="character-sprite-img" alt="" hidden>
-            <span id="character-sprite-label"></span>
-          </div>
-        </div>
-
-        <!-- UI layer: dialogue box -->
+      <!-- BOTTOM: fixed notepad (native aspect, font shrinks to fit) -->
+      <div id="layout-bottom">
         <div id="ui-layer">
-          <div id="dialogue-box">
-            <div id="story-objective" hidden></div>
-            <div id="character-name">[NAME]</div>
-            <div id="dialogue-text"></div>
-            <div id="mode-hint" hidden></div>
-            <div id="interrupt-bar" hidden>
-              <span id="interrupt-count">Interrupt ×5</span>
-              <button type="button" id="interrupt-btn">Interrupt</button>
+          <div id="dialogue-box" class="notepad-box">
+            <img class="notepad-art" src="ui/notepad.png" alt="" draggable="false">
+            <div id="notepad-inner">
+              <div id="story-objective" hidden></div>
+              <div id="character-name">[NAME]</div>
+              <div id="dialogue-text"></div>
+              <div id="click-continue" hidden>(Click to continue)</div>
+              <div id="mode-hint" hidden></div>
+              <div id="interrupt-bar" hidden>
+                <span id="interrupt-count">Interrupt ×5</span>
+                <button type="button" id="interrupt-btn">Interrupt</button>
+              </div>
+              <button type="button" id="toggle-suggestions-btn" hidden aria-expanded="false">Show quick actions</button>
+              <div id="suggestion-chips" hidden></div>
+              <div id="player-input-area">
+                <input
+                  type="text"
+                  id="player-input"
+                  placeholder="Type your reply…"
+                  autocomplete="off"
+                >
+                <button type="button" id="send-btn">Send</button>
+              </div>
+              <button type="button" id="advance-mainline-btn" hidden>Continue story →</button>
             </div>
-            <button type="button" id="toggle-suggestions-btn" hidden aria-expanded="false">Show quick actions</button>
-            <div id="suggestion-chips" hidden></div>
-            <div id="player-input-area">
-              <input
-                type="text"
-                id="player-input"
-                placeholder="Type your reply…"
-                autocomplete="off"
-              >
-              <button type="button" id="send-btn">Send</button>
-            </div>
-            <button type="button" id="advance-mainline-btn" hidden>Continue story →</button>
           </div>
         </div>
+      </div>
 
-      </div><!-- /#game-content -->
+      <!-- Handheld: closed by default, open on hover -->
+      <div id="handheld-dock" title="Hover to open device">
+        <img id="handheld-closed" class="handheld-closed" src="ui/handheld_closed.png" alt="">
 
-      <!-- Title / start gate — click unlocks browser audio autoplay -->
+        <div id="handheld-open" class="handheld-open" role="toolbar" aria-label="Game device">
+          <div class="handheld-frame">
+            <img class="handheld-shell" src="ui/handheld.png" alt="">
+            <div class="handheld-screen">
+              <div id="handheld-hearts" aria-label="Lives">
+                <img class="heart is-full" src="ui/heart.png" alt="">
+                <img class="heart is-full" src="ui/heart.png" alt="">
+                <img class="heart is-full" src="ui/heart.png" alt="">
+              </div>
+
+              <button type="button" class="handheld-slot slot-interrupt" data-action="interrupt" aria-label="Interrupt">
+                <img src="ui/icon_interrupt.png" alt="">
+                <span id="handheld-interrupt-count" class="pixel-count">5</span>
+              </button>
+
+              <button type="button" class="handheld-slot slot-log" data-action="log" aria-label="Log">
+                <img src="ui/icon_log.png" alt="">
+              </button>
+
+              <button type="button" class="handheld-slot slot-settings" data-action="settings" aria-label="Settings">
+                <img src="ui/icon_settings.png" alt="">
+              </button>
+
+              <img id="handheld-selector" src="ui/selector.png" alt="" hidden>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div id="start-screen" role="dialog" aria-modal="true" aria-labelledby="start-title">
         <div class="start-screen-inner">
           <p class="start-kicker">Paul Project</p>
@@ -95,12 +117,11 @@
       </div>
 
     </div><!-- /#game-canvas -->
-
   </div><!-- /#game-wrapper -->
 
   <script src="auth.js?v=phaseA"></script>
   <script src="audio.js?v=blob1"></script>
   <script src="ai.js?v=slim1"></script>
-  <script src="main.js?v=blob2"></script>
+  <script src="main.js?v=ui12"></script>
 </body>
 </html>

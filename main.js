@@ -41,6 +41,8 @@ const gameState = {
   interruptsMaxA: 5,
   interruptsMaxB: 2,
   interruptMode: false,
+  /** Handheld life icons (3 max). Conservative — only story flags change this later. */
+  hearts: 3,
   currentPose: null,
   currentModifiers: {}
 };
@@ -53,12 +55,14 @@ let pendingInputIsDecisive = false;
 
 /** Loaded content registries */
 let backgroundsData = {};
+let atmospheresData = { presets: {} };
 let charactersData = {};
 let spritesData = { characters: {} };
 let storyScenes = [];
 let storySceneIndex = 0;
 let currentChapterMeta = null;
 let storyProgressData = null;
+let currentAtmosphereId = 'neutral';
 
 const CHAPTER_FILES = {
   prologue: 'data/story/prologue.json',
@@ -85,10 +89,13 @@ const characterSpriteLabelEl = document.getElementById('character-sprite-label')
 const characterSpriteImgEl = document.getElementById('character-sprite-img');
 const backgroundLayerEl = document.getElementById('background-layer');
 const backgroundLabelEl = document.getElementById('background-label');
-const gameContentEl = document.getElementById('game-content');
+const stageLayerEl = document.getElementById('stage-layer');
+const atmosphereLayerEl = document.getElementById('atmosphere-layer');
+const gameContentEl = document.getElementById('game-canvas');
 const characterNameEl = document.getElementById('character-name');
 const dialogueTextEl = document.getElementById('dialogue-text');
 const dialogueBoxEl = document.getElementById('dialogue-box');
+const clickContinueEl = document.getElementById('click-continue');
 const storyObjectiveEl = document.getElementById('story-objective');
 const modeHintEl = document.getElementById('mode-hint');
 const suggestionChipsEl = document.getElementById('suggestion-chips');
@@ -100,6 +107,11 @@ const sendBtnEl = document.getElementById('send-btn');
 const interruptBarEl = document.getElementById('interrupt-bar');
 const interruptCountEl = document.getElementById('interrupt-count');
 const interruptBtnEl = document.getElementById('interrupt-btn');
+const handheldDockEl = document.getElementById('handheld-dock');
+const handheldInterruptCountEl = document.getElementById('handheld-interrupt-count');
+const handheldHeartsEl = document.getElementById('handheld-hearts');
+const handheldSelectorEl = document.getElementById('handheld-selector');
+const handheldSlots = Array.from(document.querySelectorAll('.handheld-slot'));
 
 const interruptHudEl = document.createElement('div');
 interruptHudEl.id = 'interrupt-hud';
@@ -129,11 +141,109 @@ function showSoundCue(cue) {
  */
 function resolveSpeakerDisplayName(scene) {
   if (!scene) return '';
+  if (scene.uiMode === 'explore' || scene.mode === 'explore') return 'EXPLORE';
   if (scene.speaker === 'narrator') return '';
   const name = scene.speakerName;
   if (name === '旁白' || name === 'Narrator') return '';
   if (name) return name;
   return charactersData[scene.speaker]?.displayName || scene.speaker || '';
+}
+
+/**
+ * Nameplate color classes for scrapbook UI.
+ */
+function applyNameplateStyle(displayName, speakerId = '') {
+  if (!characterNameEl) return;
+  characterNameEl.classList.remove(
+    'name-xian',
+    'name-ringo',
+    'name-miles',
+    'name-you',
+    'name-other',
+    'name-explore'
+  );
+
+  const id = String(speakerId || '').toLowerCase();
+  const key = String(displayName || '').trim().toLowerCase();
+
+  if (key === 'explore' || id === 'explore') {
+    characterNameEl.classList.add('name-explore');
+    return;
+  }
+  if (id === 'xian' || key === 'xian') {
+    characterNameEl.classList.add('name-xian');
+    return;
+  }
+  if (id === 'ringo' || key === 'ringo') {
+    characterNameEl.classList.add('name-ringo');
+    return;
+  }
+  if (id === 'miles' || key === 'miles') {
+    characterNameEl.classList.add('name-miles');
+    return;
+  }
+  if (id === 'player' || key === 'you' || key === 'player') {
+    characterNameEl.classList.add('name-you');
+    return;
+  }
+  if (displayName) characterNameEl.classList.add('name-other');
+}
+
+function clampHearts(value) {
+  const n = typeof value === 'number' ? value : 3;
+  return Math.max(0, Math.min(3, Math.round(n * 2) / 2));
+}
+
+function applyHeartsDelta(delta) {
+  if (typeof delta !== 'number' || !delta) return;
+  gameState.hearts = clampHearts((typeof gameState.hearts === 'number' ? gameState.hearts : 3) + delta);
+  updateHeartsUI();
+}
+
+function applyEffectBag(effects) {
+  if (!effects || typeof effects !== 'object') return;
+  if (typeof effects.hearts === 'number') applyHeartsDelta(effects.hearts);
+  if (effects.flags) Object.assign(gameState.flags, effects.flags);
+  if (effects.resources) {
+    Object.entries(effects.resources).forEach(([key, delta]) => {
+      if (gameState.resources[key] !== undefined && typeof delta === 'number') {
+        gameState.resources[key] = clamp(gameState.resources[key] + delta, 0, 99);
+      }
+    });
+  }
+}
+
+function updateHeartsUI() {
+  if (!handheldHeartsEl) return;
+  let hearts = clampHearts(typeof gameState.hearts === 'number' ? gameState.hearts : 3);
+  if (gameState.flags?.xianAlive === false) hearts = 0;
+  const imgs = handheldHeartsEl.querySelectorAll('.heart');
+  imgs.forEach((img, index) => {
+    const filled = hearts - index;
+    img.classList.remove('is-full', 'is-half', 'is-empty');
+    if (filled >= 1) {
+      img.classList.add('is-full');
+      img.src = 'ui/heart.png';
+    } else if (filled >= 0.5) {
+      img.classList.add('is-half');
+      img.src = 'ui/heart_half.png';
+    } else {
+      img.classList.add('is-empty');
+      img.src = 'ui/heart_empty.png';
+    }
+  });
+}
+
+function moveHandheldSelector(slotEl) {
+  if (!handheldSelectorEl || !slotEl || !slotEl.parentElement) return;
+  handheldSlots.forEach((slot) => slot.classList.toggle('is-selected', slot === slotEl));
+  const parent = slotEl.parentElement.getBoundingClientRect();
+  const box = slotEl.getBoundingClientRect();
+  const width = Math.max(36, box.width * 1.15);
+  handheldSelectorEl.hidden = false;
+  handheldSelectorEl.style.width = `${width}px`;
+  handheldSelectorEl.style.left = `${box.left - parent.left + (box.width - width) / 2}px`;
+  handheldSelectorEl.style.top = `${box.top - parent.top + (box.height - width) / 2}px`;
 }
 
 /** Full text of the dialogue currently being typewritten (for click-to-skip). */
@@ -174,8 +284,9 @@ async function loadJson(path) {
  * Loads backgrounds, characters, saved state, and opening story.
  */
 async function loadGameData() {
-  const [backgrounds, characters, sprites, savedState, prologue, progress] = await Promise.all([
+  const [backgrounds, atmospheres, characters, sprites, savedState, prologue, progress] = await Promise.all([
     loadJson('data/backgrounds.json'),
+    loadJson('data/atmospheres.json'),
     loadJson('data/characters.json'),
     loadJson('data/sprites.json'),
     loadJson('data/gameState.json'),
@@ -186,6 +297,8 @@ async function loadGameData() {
   backgrounds.backgrounds.forEach((bg) => {
     backgroundsData[bg.id] = bg;
   });
+
+  atmospheresData = atmospheres && atmospheres.presets ? atmospheres : { presets: {} };
 
   characters.characters.forEach((char) => {
     charactersData[char.id] = char;
@@ -664,6 +777,49 @@ function updateBackground(backgroundId) {
   img.src = bgPath;
 }
 
+/**
+ * Resolves atmosphere id: scene.atmosphere > background default > neutral.
+ * Scene may pass a string id or { id, intensity }.
+ */
+function resolveAtmosphereId(scene, backgroundId) {
+  const raw = scene?.atmosphere;
+  if (typeof raw === 'string' && raw) return raw;
+  if (raw && typeof raw === 'object' && raw.id) return raw.id;
+  const bg = backgroundsData[backgroundId || gameState.currentBackground];
+  return bg?.atmosphere || 'neutral';
+}
+
+/**
+ * Applies CSS color grade + vignette over the stage (not the dialogue UI).
+ * @param {string|object|null} atmosphere
+ */
+function updateAtmosphere(atmosphere) {
+  if (!stageLayerEl || !atmosphereLayerEl) return;
+
+  let id = 'neutral';
+  let intensity = 1;
+  if (typeof atmosphere === 'string') {
+    id = atmosphere || 'neutral';
+  } else if (atmosphere && typeof atmosphere === 'object') {
+    id = atmosphere.id || 'neutral';
+    if (typeof atmosphere.intensity === 'number') {
+      intensity = Math.min(1.4, Math.max(0, atmosphere.intensity));
+    }
+  }
+
+  const preset = atmospheresData.presets?.[id] || atmospheresData.presets?.neutral;
+  if (!preset) return;
+
+  currentAtmosphereId = id;
+  stageLayerEl.style.filter = preset.filter && preset.filter !== 'none' ? preset.filter : '';
+  atmosphereLayerEl.style.background = preset.overlay || 'transparent';
+  atmosphereLayerEl.style.mixBlendMode = preset.blend || 'soft-light';
+  atmosphereLayerEl.style.opacity = String(Math.min(1, 0.35 + intensity * 0.65));
+  const vignette = (typeof preset.vignette === 'number' ? preset.vignette : 0) * intensity;
+  atmosphereLayerEl.style.setProperty('--atmosphere-vignette', String(vignette));
+  stageLayerEl.dataset.atmosphere = id;
+}
+
 function applySceneEnterEffects(scene) {
   if (scene.onEnterFlags) {
     Object.assign(gameState.flags, scene.onEnterFlags);
@@ -674,6 +830,12 @@ function applySceneEnterEffects(scene) {
         gameState.resources[key] = clamp(gameState.resources[key] + delta, 0, 99);
       }
     });
+  }
+  if (typeof scene.onEnterHearts === 'number') {
+    applyHeartsDelta(scene.onEnterHearts);
+  }
+  if (scene.onEnterEffects) {
+    applyEffectBag(scene.onEnterEffects);
   }
 }
 
@@ -688,12 +850,20 @@ function applyInteractiveCompleteEffects(interactive) {
       }
     });
   }
+  if (typeof interactive?.onCompleteHearts === 'number') {
+    applyHeartsDelta(interactive.onCompleteHearts);
+  }
+  if (interactive?.onCompleteEffects) {
+    applyEffectBag(interactive.onCompleteEffects);
+  }
 }
 
 function setStoryMode(mode) {
   gameState.storyMode = mode;
   dialogueBoxEl.classList.toggle('mode-scripted', mode === 'scripted');
   dialogueBoxEl.classList.toggle('mode-interactive', mode === 'interactive');
+  dialogueBoxEl.classList.toggle('mode-explore', mode === 'explore');
+  dialogueBoxEl.classList.toggle('is-explore', mode === 'explore');
   updateInterruptUI();
 }
 
@@ -713,19 +883,23 @@ function updateInterruptUI() {
   const left = Math.max(0, gameState.interruptsLeft | 0);
   const label = `Interrupt ×${left}`;
   if (interruptCountEl) interruptCountEl.textContent = label;
+  if (handheldInterruptCountEl) handheldInterruptCountEl.textContent = String(left);
   if (interruptHudEl) {
     interruptHudEl.textContent = label;
-    interruptHudEl.hidden = false;
+    interruptHudEl.hidden = true;
   }
-  const canShow =
+  const canInterrupt =
     gameState.storyMode === 'scripted' &&
     awaitingSceneAdvance &&
     !gameState.isTyping &&
     !gameState.isWaitingForAI &&
     !gameState.interruptMode &&
     left > 0;
-  if (interruptBarEl) interruptBarEl.hidden = !canShow;
-  if (interruptBtnEl) interruptBtnEl.disabled = !canShow;
+  if (interruptBarEl) interruptBarEl.hidden = true;
+  if (interruptBtnEl) interruptBtnEl.disabled = !canInterrupt;
+  const interruptSlot = document.querySelector('.slot-interrupt');
+  if (interruptSlot) interruptSlot.disabled = !canInterrupt;
+  updateHeartsUI();
 }
 
 /** Saved scripted continuation while the player interrupts. */
@@ -803,6 +977,17 @@ function getSceneById(id) {
   return storyScenes.find((s) => s.id === id);
 }
 
+function goToSceneById(sceneId) {
+  const idx = storyScenes.findIndex((s) => s.id === sceneId);
+  if (idx < 0) {
+    console.warn('[VN] Missing scene:', sceneId);
+    return false;
+  }
+  storySceneIndex = idx;
+  playScene(storyScenes[idx]);
+  return true;
+}
+
 function enterInteractiveMode(interactive) {
   gameState.currentInteractive = interactive;
   gameState.interactiveReplyCount = 0;
@@ -811,10 +996,10 @@ function enterInteractiveMode(interactive) {
   storyObjectiveEl.textContent = interactive.objective;
   storyObjectiveEl.hidden = false;
   modeHintEl.textContent =
-    `${interactive.playerPrompt} · System talk is FREE · Tap "Quick actions" to decide; type your own reply for up to ${interactive.maxFreeReplies} free turns`;
+    `${interactive.playerPrompt} · Click a choice below, or type your own reply (${interactive.maxFreeReplies} free turns)`;
   modeHintEl.hidden = false;
 
-  renderSuggestionChips(interactive.suggestions || []);
+  renderSuggestionChips(interactive.suggestions || [], { alwaysShow: true, explore: false });
   advanceMainlineBtnEl.hidden = false;
   updateAdvanceButtonLabel();
 }
@@ -832,8 +1017,76 @@ function exitInteractiveMode() {
   advanceMainlineBtnEl.hidden = true;
 }
 
-function renderSuggestionChips(suggestions) {
+/**
+ * Explore beat: clickable choices in the notepad (no AI).
+ */
+function enterExploreMode(explore) {
+  if (!explore?.choices?.length) return;
+  gameState.currentInteractive = null;
+  setStoryMode('explore');
+  setAwaitingAdvance(false);
+
+  const prompt = explore.prompt || 'What do you do?';
+  storyObjectiveEl.textContent = explore.objective || '[Explore]';
+  storyObjectiveEl.hidden = false;
+  modeHintEl.textContent = prompt;
+  modeHintEl.hidden = false;
+  advanceMainlineBtnEl.hidden = true;
+  toggleSuggestionsBtnEl.hidden = true;
+
+  renderExploreChoices(explore.choices);
+  fitDialogueText();
+}
+
+function renderExploreChoices(choices) {
   suggestionChipsEl.innerHTML = '';
+  suggestionChipsEl.hidden = false;
+  suggestionChipsEl.classList.add('is-explore-choices');
+
+  const label = document.createElement('div');
+  label.className = 'suggestion-label';
+  label.textContent = '▸ Choose an action';
+  suggestionChipsEl.appendChild(label);
+
+  choices.forEach((choice, index) => {
+    const chip = document.createElement('button');
+    chip.type = 'button';
+    chip.className = 'suggestion-chip explore-choice';
+    chip.textContent = choice.label || choice.text || `Option ${index + 1}`;
+    chip.addEventListener('click', () => handleExploreChoice(choice));
+    suggestionChipsEl.appendChild(chip);
+  });
+}
+
+function handleExploreChoice(choice) {
+  if (gameState.storyMode !== 'explore' || gameState.isTyping) return;
+  applyEffectBag(choice.effects);
+  if (typeof choice.hearts === 'number') applyHeartsDelta(choice.hearts);
+  if (choice.flags) Object.assign(gameState.flags, choice.flags);
+  if (choice.resources) applyEffectBag({ resources: choice.resources });
+
+  suggestionChipsEl.innerHTML = '';
+  suggestionChipsEl.hidden = true;
+  suggestionChipsEl.classList.remove('is-explore-choices');
+  storyObjectiveEl.hidden = true;
+  modeHintEl.hidden = true;
+
+  const nextId = choice.goto || choice.next || choice.sceneId;
+  if (nextId) {
+    goToSceneById(nextId);
+    return;
+  }
+  // Fall through to next scene in chapter list
+  setStoryMode('scripted');
+  if (storySceneIndex < storyScenes.length - 1) {
+    storySceneIndex += 1;
+    playScene(storyScenes[storySceneIndex]);
+  }
+}
+
+function renderSuggestionChips(suggestions, options = {}) {
+  suggestionChipsEl.innerHTML = '';
+  suggestionChipsEl.classList.remove('is-explore-choices');
 
   if (!suggestions.length) {
     suggestionChipsEl.hidden = true;
@@ -841,13 +1094,16 @@ function renderSuggestionChips(suggestions) {
     return;
   }
 
-  toggleSuggestionsBtnEl.hidden = false;
-  toggleSuggestionsBtnEl.textContent = 'Show quick actions';
-  toggleSuggestionsBtnEl.setAttribute('aria-expanded', 'false');
+  const alwaysShow = Boolean(options.alwaysShow);
+  toggleSuggestionsBtnEl.hidden = alwaysShow;
+  toggleSuggestionsBtnEl.textContent = alwaysShow ? 'Hide choices' : 'Show choices';
+  toggleSuggestionsBtnEl.setAttribute('aria-expanded', String(alwaysShow));
 
   const label = document.createElement('div');
   label.className = 'suggestion-label';
-  label.textContent = '▸ Quick actions (auto-advances after the character responds)';
+  label.textContent = options.explore
+    ? '▸ Explore actions'
+    : '▸ Choices (click one to decide)';
   suggestionChipsEl.appendChild(label);
 
   suggestions.forEach((text) => {
@@ -863,8 +1119,8 @@ function renderSuggestionChips(suggestions) {
     });
     suggestionChipsEl.appendChild(chip);
   });
-  // Keep suggested choices out of the way until the player asks for them.
-  suggestionChipsEl.hidden = true;
+
+  suggestionChipsEl.hidden = !alwaysShow;
 }
 
 /**
@@ -947,6 +1203,7 @@ function playScene(scene, options = {}) {
   }
   applySceneEnterEffects(scene);
   updateBackground(scene.background);
+  updateAtmosphere(scene.atmosphere || resolveAtmosphereId(scene, scene.background));
   if (window.VNAudio) {
     window.VNAudio.applySceneAudio(scene);
   } else {
@@ -976,6 +1233,28 @@ function playScene(scene, options = {}) {
   }
 
   const speakerName = resolveSpeakerDisplayName(scene);
+  const isExplore = Boolean(
+    scene.explore?.choices?.length ||
+    scene.uiMode === 'explore' ||
+    scene.mode === 'explore'
+  );
+  const dialogueOptions = {
+    explore: isExplore,
+    speakerId: isExplore ? 'explore' : scene.character || scene.speaker || ''
+  };
+
+  // Explore hub: show text, then clickable choices (no AI)
+  if (scene.explore?.choices?.length) {
+    onTypewriterCompleteAfterPlayerLine = null;
+    awaitingSceneAdvance = false;
+    onTypewriterComplete = () => {
+      enterExploreMode(scene.explore);
+    };
+    setStoryMode('scripted');
+    displayDialogue(isExplore ? 'EXPLORE' : speakerName, scene.text, false, dialogueOptions);
+    updateChapterProgressUI();
+    return;
+  }
 
   if (scene.playerTurn) {
     onTypewriterComplete = null;
@@ -988,12 +1267,28 @@ function playScene(scene, options = {}) {
       setStoryMode('interactive');
     }
 
-    displayDialogue(speakerName, scene.text);
+    displayDialogue(speakerName, scene.text, false, dialogueOptions);
+    updateChapterProgressUI();
     return;
   }
 
   setStoryMode('scripted');
   onTypewriterCompleteAfterPlayerLine = null;
+
+  const advanceToNext = () => {
+    if (scene.next) {
+      goToSceneById(scene.next);
+      return;
+    }
+    if (scene.chapterEnd) {
+      handleChapterEnd();
+      return;
+    }
+    if (storySceneIndex < storyScenes.length - 1) {
+      storySceneIndex += 1;
+      playScene(storyScenes[storySceneIndex]);
+    }
+  };
 
   if (options.fromQueue) {
     onTypewriterComplete = () => {
@@ -1009,6 +1304,10 @@ function playScene(scene, options = {}) {
         transitionToNextChapter();
         return;
       }
+      if (scene.next) {
+        goToSceneById(scene.next);
+        return;
+      }
       // Queue drained — continue the main scene list (fixes stuck after ch1_shot etc.)
       if (storySceneIndex < storyScenes.length - 1) {
         storySceneIndex += 1;
@@ -1017,19 +1316,16 @@ function playScene(scene, options = {}) {
     };
   } else {
     onTypewriterComplete = () => {
-      if (scene.chapterEnd) {
-        handleChapterEnd();
+      if (scene.id === 'prologue_closing') {
+        transitionToNextChapter();
         return;
       }
-      if (storySceneIndex < storyScenes.length - 1) {
-        storySceneIndex += 1;
-        playScene(storyScenes[storySceneIndex]);
-      }
+      advanceToNext();
     };
   }
 
   awaitingSceneAdvance = false;
-  displayDialogue(speakerName, scene.text);
+  displayDialogue(speakerName, scene.text, false, dialogueOptions);
   updateChapterProgressUI();
 }
 
@@ -1154,7 +1450,9 @@ function updateChapterProgressUI() {
     return;
   }
 
-  if (!storyObjectiveEl.hidden && gameState.storyMode === 'interactive') return;
+  if (!storyObjectiveEl.hidden && (gameState.storyMode === 'interactive' || gameState.storyMode === 'explore')) {
+    return;
+  }
 
   if (gameState.storyMode === 'scripted' && !awaitingSceneAdvance) {
     storyObjectiveEl.hidden = false;
@@ -1195,9 +1493,34 @@ function setDialogueTypingCursor(isTyping) {
   dialogueTextEl.classList.toggle('is-typing', isTyping);
 }
 
+/**
+ * Keep notepad size fixed — shrink font until text fits the inner area.
+ */
+function fitDialogueText() {
+  if (!dialogueTextEl) return;
+  const styles = getComputedStyle(document.documentElement);
+  const maxPx = parseFloat(styles.getPropertyValue('--dialogue-font-max')) || 18;
+  const minPx = parseFloat(styles.getPropertyValue('--dialogue-font-min')) || 10;
+  let size = maxPx;
+  dialogueTextEl.style.fontSize = `${size}px`;
+
+  // Guard against missing layout during first paint.
+  if (dialogueTextEl.clientHeight < 8) {
+    requestAnimationFrame(() => fitDialogueText());
+    return;
+  }
+
+  let guard = 48;
+  while (guard-- > 0 && size > minPx && dialogueTextEl.scrollHeight > dialogueTextEl.clientHeight + 1) {
+    size -= 0.5;
+    dialogueTextEl.style.fontSize = `${size}px`;
+  }
+}
+
 function setAwaitingAdvance(waiting) {
   awaitingSceneAdvance = waiting;
   dialogueTextEl.classList.toggle('awaiting-advance', waiting);
+  if (clickContinueEl) clickContinueEl.hidden = !waiting;
   if (waiting) {
     setDialogueTypingCursor(true);
   }
@@ -1227,6 +1550,7 @@ function finishTypewriter() {
   clearTypewriter();
   gameState.isTyping = false;
   setDialogueTypingCursor(false);
+  fitDialogueText();
 
   if (pendingDialogue) {
     addToHistory('npc', pendingDialogue);
@@ -1279,7 +1603,7 @@ function skipTypewriter() {
 // Dialogue display
 // ---------------------------------------------------------------------------
 
-function displayDialogue(characterName, text, skipHistory = false) {
+function displayDialogue(characterName, text, skipHistory = false, options = {}) {
   clearTypewriter();
   if (readDelayTimer) {
     clearTimeout(readDelayTimer);
@@ -1290,9 +1614,13 @@ function displayDialogue(characterName, text, skipHistory = false) {
     modeHintEl.hidden = true;
   }
 
+  const isExplore = Boolean(options.explore);
+  if (dialogueBoxEl) dialogueBoxEl.classList.toggle('is-explore', isExplore);
+
   characterNameEl.textContent = characterName || '';
   characterNameEl.hidden = !characterName;
   characterNameEl.classList.toggle('is-narration', !characterName);
+  applyNameplateStyle(characterName, options.speakerId || (isExplore ? 'explore' : ''));
   dialogueTextEl.textContent = '';
   currentTypewriterText = text;
   pendingDialogue = skipHistory ? null : { name: characterName || '', text };
@@ -1306,6 +1634,7 @@ function displayDialogue(characterName, text, skipHistory = false) {
   gameState.typewriterTimer = setInterval(() => {
     index += 1;
     dialogueTextEl.textContent = text.slice(0, index);
+    fitDialogueText();
 
     if (index >= text.length) {
       finishTypewriter();
@@ -1389,7 +1718,7 @@ function processPlayerInput(text, options = {}) {
         reply.speakerId === 'narrator' || reply.speakerName === '旁白' || reply.speakerName === 'Narrator'
           ? ''
           : reply.speakerName;
-      displayDialogue(replyName, reply.text);
+      displayDialogue(replyName, reply.text, false, { speakerId: reply.speakerId || '' });
     })
     .catch((error) => {
       console.error('[AI]', error);
@@ -1518,9 +1847,11 @@ function toggleLogPanel() {
     renderLogPanel();
     logPanelEl.hidden = false;
     progressPanelEl.hidden = true;
+    if (typeof settingsPanelEl !== 'undefined' && settingsPanelEl) settingsPanelEl.hidden = true;
   } else {
     logPanelEl.hidden = true;
   }
+  if (typeof syncHandheldDockOpen === 'function') syncHandheldDockOpen();
 }
 
 // ---------------------------------------------------------------------------
@@ -1632,6 +1963,7 @@ document.addEventListener('keydown', (event) => {
 
 logPanelCloseBtn.addEventListener('click', () => {
   logPanelEl.hidden = true;
+  if (typeof syncHandheldDockOpen === 'function') syncHandheldDockOpen();
 });
 
 document.querySelectorAll('.toolbar-btn').forEach((btn) => {
@@ -1645,6 +1977,46 @@ document.querySelectorAll('.toolbar-btn').forEach((btn) => {
     btn.addEventListener('click', toggleSettingsPanel);
   }
 });
+
+function handleHandheldAction(action, slotEl) {
+  if (slotEl) moveHandheldSelector(slotEl);
+  if (handheldDockEl) handheldDockEl.classList.add('is-open');
+
+  if (action === 'interrupt') {
+    beginInterrupt();
+    return;
+  }
+  if (action === 'log') {
+    toggleLogPanel();
+    return;
+  }
+  if (action === 'settings') {
+    toggleSettingsPanel();
+  }
+}
+
+handheldSlots.forEach((slot) => {
+  slot.addEventListener('mouseenter', () => moveHandheldSelector(slot));
+  slot.addEventListener('focus', () => moveHandheldSelector(slot));
+  slot.addEventListener('click', (event) => {
+    event.preventDefault();
+    handleHandheldAction(slot.dataset.action, slot);
+  });
+});
+
+function syncHandheldDockOpen() {
+  if (!handheldDockEl) return;
+  const logOpen = logPanelEl && !logPanelEl.hidden;
+  const settingsNode = document.getElementById('settings-panel');
+  const settingsOpen = settingsNode && !settingsNode.hidden;
+  handheldDockEl.classList.toggle('is-open', Boolean(logOpen || settingsOpen));
+}
+
+if (handheldDockEl) {
+  handheldDockEl.addEventListener('mouseleave', () => {
+    syncHandheldDockOpen();
+  });
+}
 
 // ---------------------------------------------------------------------------
 // Settings panel (AI status)
@@ -1662,6 +2034,9 @@ settingsPanelEl.innerHTML = `
     <label class="settings-hint" for="audio-volume">Volume</label>
     <input type="range" id="audio-volume" min="0" max="100" value="55" style="width:100%;margin:8px 0;" />
     <label class="settings-hint"><input type="checkbox" id="audio-mute" /> Mute</label>
+    <p style="margin-top:12px;">
+      <button type="button" id="open-progress-btn" class="toolbar-btn" style="display:inline-block;border:1px solid rgba(255,255,255,0.35);padding:6px 10px;">PROGRESS</button>
+    </p>
     <p id="audio-library-status">Audio library: Checking…</p>
     <table class="settings-table" id="audio-library">
       <thead><tr><th></th><th>id</th><th>status</th></tr></thead>
@@ -1778,18 +2153,30 @@ async function refreshAudioLibrary() {
 function toggleSettingsPanel() {
   if (settingsPanelEl.hidden) {
     settingsPanelEl.hidden = false;
+    if (logPanelEl) logPanelEl.hidden = true;
     refreshAIStatus();
     refreshAudioLibrary();
   } else {
     settingsPanelEl.hidden = true;
   }
+  if (typeof syncHandheldDockOpen === 'function') syncHandheldDockOpen();
 }
 
 document.getElementById('settings-panel-close').addEventListener('click', () => {
   settingsPanelEl.hidden = true;
+  if (typeof syncHandheldDockOpen === 'function') syncHandheldDockOpen();
 });
 
 document.getElementById('ai-recheck-btn').addEventListener('click', refreshAIStatus);
+
+const openProgressBtn = document.getElementById('open-progress-btn');
+if (openProgressBtn) {
+  openProgressBtn.addEventListener('click', () => {
+    settingsPanelEl.hidden = true;
+    toggleProgressPanel();
+    if (typeof syncHandheldDockOpen === 'function') syncHandheldDockOpen();
+  });
+}
 
 const audioVolumeEl = document.getElementById('audio-volume');
 const audioMuteEl = document.getElementById('audio-mute');
@@ -1874,6 +2261,8 @@ loadGameData()
   .then(() => {
     setStoryMode('scripted');
     updateBackground(gameState.currentBackground);
+    fitDialogueText();
+    window.addEventListener('resize', () => fitDialogueText());
 
     // Unlock Start as soon as story JSON is ready.
     gameReadyToStart = true;

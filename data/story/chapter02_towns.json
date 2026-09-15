@@ -129,7 +129,8 @@
           "ch2_rv_night"
         ],
         "onCompleteFlags": { "townOneCleared": true },
-        "onCompleteResources": { "antibiotics": 1 }
+        "onCompleteResources": { "antibiotics": 1 },
+        "onCompleteHearts": 0.5
       }
     },
     {
@@ -244,7 +245,8 @@
           "ch2_dawn_depart",
           "ch2_gas_low"
         ],
-        "onCompleteResources": { "antibiotics": -1 }
+        "onCompleteResources": { "antibiotics": -1 },
+        "onCompleteHearts": -0.5
       }
     },
     {

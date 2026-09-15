@@ -5,6 +5,7 @@
     {
       "id": "prologue_campsite",
       "background": "campsite_night",
+      "atmosphere": "warm",
       "speaker": "narrator",
       "speakerName": "",
       "bgm": { "id": "campsite", "label": "BGM · Campfire Night" },
@@ -13,6 +14,7 @@
     {
       "id": "prologue_empty_bag",
       "background": "campsite_night",
+      "atmosphere": "melancholy",
       "speaker": "narrator",
       "speakerName": "",
       "text": "The water bottle's still leaning against a rock, cap not screwed on tight. Getting water shouldn't take an hour. Trampled pine needles lead deeper into the woods, but there are no return footprints on top."
@@ -20,6 +22,7 @@
     {
       "id": "prologue_teacher_missing",
       "background": "campsite_night",
+      "atmosphere": "melancholy",
       "speaker": "ringo",
       "speakerName": "Ringo",
       "text": "...Something's wrong. Teacher went to get water. It's been an hour.",
@@ -70,8 +73,8 @@
           "prologue_pack",
           "prologue_rv_departure",
           "prologue_empty_city",
-          "prologue_ringo_react",
-          "prologue_interactive_city"
+          "prologue_city_detail",
+          "prologue_explore_hub"
         ]
       }
     },
@@ -94,6 +97,7 @@
     {
       "id": "prologue_empty_city",
       "background": "empty_city",
+      "atmosphere": "cold",
       "speaker": "narrator",
       "speakerName": "",
       "text": "You reach the city. Streetlights are on, shop doors stand open, traffic lights still cycling on schedule—and there's nobody on the streets. No adults. Not a single person. Like the whole city got muted."
@@ -101,13 +105,71 @@
     {
       "id": "prologue_city_detail",
       "background": "empty_city",
+      "atmosphere": "cold",
       "speaker": "narrator",
       "speakerName": "",
       "text": "Inside the convenience store, the freezer's still humming. A half-eaten bento sits on the counter, chopsticks stuck in at an angle, like the owner just stepped out back. Miles instinctively lightens his step, afraid to disturb this too-perfect emptiness."
     },
     {
+      "id": "prologue_explore_hub",
+      "background": "empty_city",
+      "atmosphere": "cold",
+      "uiMode": "explore",
+      "speaker": "narrator",
+      "speakerName": "",
+      "text": "The empty street stretches both ways. Shop doors hang open. Ringo waits by the RV. You could search for supplies—or stick with the group.",
+      "explore": {
+        "objective": "[Explore] Empty city",
+        "prompt": "Where do you look first?",
+        "choices": [
+          {
+            "label": "Check the convenience store counter",
+            "goto": "prologue_explore_counter",
+            "effects": {
+              "flags": { "foundCampSupplies": true }
+            }
+          },
+          {
+            "label": "Scavenge the pharmacy across the street",
+            "goto": "prologue_explore_pharmacy",
+            "effects": {
+              "resources": { "antibiotics": 1 },
+              "flags": { "foundPharmacyStash": true }
+            }
+          },
+          {
+            "label": "Stay with the group by the RV",
+            "goto": "prologue_ringo_react"
+          }
+        ]
+      }
+    },
+    {
+      "id": "prologue_explore_counter",
+      "background": "empty_city",
+      "atmosphere": "cold",
+      "uiMode": "explore",
+      "speaker": "narrator",
+      "speakerName": "",
+      "text": "You check the counter. Under a sticky notepad: a half-roll of gauze and a cold pack still sweating condensation.\n\n[Found] Bandages · cold pack",
+      "onEnterFlags": { "foundCampSupplies": true },
+      "next": "prologue_ringo_react"
+    },
+    {
+      "id": "prologue_explore_pharmacy",
+      "background": "pharmacy_ruins",
+      "atmosphere": "cold",
+      "uiMode": "explore",
+      "speaker": "narrator",
+      "speakerName": "",
+      "text": "Glass crunches underfoot. Most shelves are stripped—but one locked drawer gives way. A blister pack of antibiotics, still sealed.\n\n[Found] Antibiotics ×1",
+      "onEnterFlags": { "foundPharmacyStash": true },
+      "next": "prologue_ringo_react"
+    },
+    {
       "id": "prologue_ringo_react",
       "background": "empty_city",
+      "atmosphere": "cold",
       "speaker": "ringo",
       "speakerName": "Ringo",
       "text": "...Don't panic yet. Find a hospital first, or a pharmacy. As long as there's still medicine, we've still got options.",

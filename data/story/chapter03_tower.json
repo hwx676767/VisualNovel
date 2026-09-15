@@ -358,7 +358,8 @@
           "ch3_closing"
         ],
         "onCompleteFlags": { "chapter03Complete": true },
-        "onCompleteResources": { "antibiotics": -1 }
+        "onCompleteResources": { "antibiotics": -1 },
+        "onCompleteHearts": -0.5
       }
     },
     {

@@ -24,6 +24,7 @@
     {
       "id": "ch1_gas_station",
       "background": "gas_station",
+      "atmosphere": "tense",
       "speaker": "narrator",
       "speakerName": "",
       "bgm": { "id": "tension", "label": "BGM · Low Tension" },
@@ -132,6 +133,7 @@
     {
       "id": "ch1_eisen_present",
       "background": "gas_station",
+      "atmosphere": { "id": "tense", "intensity": 1.15 },
       "speaker": "narrator",
       "speakerName": "",
       "text": "Farther back, almost outside the light, another figure hasn't moved. Visual-kei makeup under dust. Eisen watches like this is already decided.",
@@ -248,7 +250,8 @@
       "sfx": { "id": "gunshot", "label": "SFX · Gunshot · Short Ringing" },
       "text": "The shot isn't a threat. It's a trigger pulled by fear. Xian jolts beside you and still instinctively shoves you down. Warm blood soaks through your collar fast.",
       "onEnterFlags": { "xianInjured": true },
-      "onEnterResources": { "gasoline": 1 }
+      "onEnterResources": { "gasoline": 1 },
+      "onEnterHearts": -1.5
     },
     {
       "id": "ch1_shot_aftermath",
@@ -398,10 +401,12 @@
     {
       "id": "ch1_hospital_arrival",
       "background": "hospital",
+      "atmosphere": "bleach",
       "speaker": "narrator",
       "speakerName": "",
       "bgm": { "id": "hospital", "label": "BGM · Abandoned Hospital" },
-      "text": "The ER lobby's lit up bright, but there's no doctor. Gurneys tipped over, medicine cabinets half open. You dig bandages and half a box of antibiotics from abandoned shelves—smell's sharp, but it feels like a lifeline."
+      "text": "The ER lobby's lit up bright, but there's no doctor. Gurneys tipped over, medicine cabinets half open. You dig bandages and half a box of antibiotics from abandoned shelves—smell's sharp, but it feels like a lifeline.",
+      "onEnterHearts": 0.5
     },
     {
       "id": "ch1_miles_bandage",
@@ -419,7 +424,8 @@
       "speakerName": "",
       "text": "But a few hours later, Xian starts running a fever. The wound's red and swollen—infection's spreading. She can't stand anymore, just lies on the RV's back seat.",
       "onEnterFlags": { "xianImmobile": true },
-      "onEnterResources": { "antibiotics": -1 }
+      "onEnterResources": { "antibiotics": -1 },
+      "onEnterHearts": -0.5
     },
     {
       "id": "ch1_ringo_medicine",

@@ -3,80 +3,135 @@
     {
       "id": "campsite_night",
       "displayName": "Graduation Camp Night",
-      "description": "[Background placeholder] Mountain campsite, dying campfire embers, tent silhouettes. The night before the teacher vanished.",
-      "color": "#1a1a2e"
+      "description": "Mountain campsite, dying campfire embers, tent silhouettes. The night before the teacher vanished.",
+      "color": "#1a1a2e",
+      "atmosphere": "warm"
     },
     {
       "id": "rv_interior",
       "displayName": "Inside the RV",
-      "description": "[Background placeholder] 90s RV interior, narrow aisle, wasteland highway out the window.",
-      "color": "#2d2d44"
+      "description": "90s RV interior, narrow aisle, wasteland highway out the window.",
+      "color": "#2d2d44",
+      "atmosphere": "night"
     },
     {
       "id": "highway_wasteland",
       "displayName": "Wasteland Highway",
-      "description": "[Background placeholder] Empty freeway, rusted signs, city skyline in the distance.",
-      "color": "#3d3d2e"
+      "description": "Empty freeway, rusted signs, city skyline in the distance.",
+      "color": "#3d3d2e",
+      "atmosphere": "dust"
     },
     {
       "id": "empty_city",
       "displayName": "Empty City",
-      "description": "[Background placeholder] City streets after all the adults vanished—still cars, scattered debris.",
-      "color": "#2a2a35"
+      "description": "City streets after all the adults vanished—still cars, scattered debris.",
+      "color": "#2a2a35",
+      "atmosphere": "cold"
     },
     {
       "id": "hospital",
       "displayName": "Abandoned Hospital",
-      "description": "[Background placeholder] ER lobby, flickering cold white lights, half-empty medicine shelves.",
-      "color": "#1e2a2e"
+      "description": "ER lobby, flickering cold white lights, half-empty medicine shelves.",
+      "color": "#1e2a2e",
+      "atmosphere": "bleach"
     },
     {
       "id": "pharmacy_ruins",
       "displayName": "Ruined Pharmacy",
-      "description": "[Background placeholder] Corner pharmacy, shattered window—antibiotics are the prize here.",
-      "color": "#2e2a1e"
+      "description": "Corner pharmacy, shattered window—antibiotics are the prize here.",
+      "color": "#2e2a1e",
+      "atmosphere": "dust"
     },
     {
       "id": "gas_station",
       "displayName": "Gas Station",
-      "description": "[Background placeholder] Abandoned gas station, pumps dead—gas decides whether you keep moving.",
-      "color": "#3a2e1a"
+      "description": "Abandoned gas station, pumps dead—gas decides whether you keep moving.",
+      "color": "#3a2e1a",
+      "atmosphere": "tense"
     },
     {
       "id": "radio_tower",
       "displayName": "Radio Tower",
-      "description": "[Background placeholder] At the end of a distant light beam—a tall transmission tower, nothing on top.",
-      "color": "#1a2030"
+      "description": "At the end of a distant light beam—a tall transmission tower, nothing on top.",
+      "color": "#1a2030",
+      "atmosphere": "melancholy"
     },
     {
       "id": "rooftop_campfire",
       "displayName": "Rooftop Campfire",
-      "description": "[Background placeholder] Radio tower roof, campfire under the stars, teens talking late into the night.",
-      "color": "#1a1a30"
+      "description": "Radio tower roof, campfire under the stars, teens talking late into the night.",
+      "color": "#1a1a30",
+      "atmosphere": "warm"
     },
     {
       "id": "modern_apartment",
       "displayName": "Modern Apartment",
-      "description": "[Background placeholder] Cramped city rental—the normal ending's landing in the real world.",
-      "color": "#252525"
+      "description": "Cramped city rental—the normal ending's landing in the real world.",
+      "color": "#252525",
+      "atmosphere": "melancholy"
     },
     {
       "id": "graveyard",
       "displayName": "Before the Headstone",
-      "description": "[Background placeholder] Ten years later, black suits, stone marker—the bad ending's real world.",
-      "color": "#1a1a1a"
+      "description": "Ten years later, black suits, stone marker—the bad ending's real world.",
+      "color": "#1a1a1a",
+      "atmosphere": "stark"
     },
     {
       "id": "green_screen",
       "displayName": "Green Screen Set",
-      "description": "[Background placeholder] Hidden ending—characters break the fourth wall and leave the set.",
-      "color": "#1a3d1a"
+      "description": "Hidden ending—characters break the fourth wall and leave the set.",
+      "color": "#1a3d1a",
+      "atmosphere": "meta"
     },
     {
       "id": "meta_white",
       "displayName": "Pure White Backdrop",
-      "description": "[Background placeholder] True ending meta curtain call—characters in everyday clothes, standing in light.",
-      "color": "#e8e8e8"
+      "description": "True ending meta curtain call—characters in everyday clothes, standing in light.",
+      "color": "#e8e8e8",
+      "atmosphere": "meta"
+    },
+    {
+      "id": "liminal_highway_overlook",
+      "displayName": "Liminal Highway Overlook",
+      "description": "Y2K digicam overlook of a hillside road above a city that shouldn't be empty.",
+      "color": "#2a3040",
+      "atmosphere": "liminal"
+    },
+    {
+      "id": "liminal_parking",
+      "displayName": "Liminal Parking Structure",
+      "description": "Infinite multi-level parking garage—fluorescent hum, no cars that matter.",
+      "color": "#2a2e32",
+      "atmosphere": "liminal"
+    },
+    {
+      "id": "liminal_school_hall",
+      "displayName": "Liminal School Hall",
+      "description": "Empty school corridor, digicam noise, footsteps that don't echo right.",
+      "color": "#303028",
+      "atmosphere": "liminal"
+    },
+    {
+      "id": "liminal_mall",
+      "displayName": "Liminal Department Store",
+      "description": "Hollow department-store atrium under sickly atrium light.",
+      "color": "#2e2a30",
+      "atmosphere": "liminal"
+    },
+    {
+      "id": "liminal_inverted_tower",
+      "displayName": "Inverted Tower in the Mountains",
+      "description": "Pseudo-documentary ridge—an inverted Tokyo Tower half-hidden in the range.",
+      "color": "#1e2430",
+      "atmosphere": "liminal"
+    },
+    {
+      "id": "liminal_tower_ridge",
+      "displayName": "Hung Towers on the Ridge",
+      "description": "A ridge line of hung Tokyo Towers in regular intervals—wrong geometry.",
+      "color": "#1a2030",
+      "atmosphere": "liminal"
     }
   ]
 }
