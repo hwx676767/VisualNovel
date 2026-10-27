@@ -238,8 +238,10 @@ function moveHandheldSelector(slotEl) {
   if (!handheldSelectorEl || !slotEl || !slotEl.parentElement) return;
   handheldSlots.forEach((slot) => slot.classList.toggle('is-selected', slot === slotEl));
   const parent = slotEl.parentElement.getBoundingClientRect();
-  const box = slotEl.getBoundingClientRect();
-  const width = Math.max(36, box.width * 1.15);
+  const icon = slotEl.querySelector('img');
+  const box = (icon || slotEl).getBoundingClientRect();
+  // Fit tightly around the icon (was oversized at ~1.15× slot).
+  const width = Math.max(22, Math.min(box.width, box.height) * 1.08);
   handheldSelectorEl.hidden = false;
   handheldSelectorEl.style.width = `${width}px`;
   handheldSelectorEl.style.left = `${box.left - parent.left + (box.width - width) / 2}px`;
@@ -996,12 +998,15 @@ function enterInteractiveMode(interactive) {
   storyObjectiveEl.textContent = interactive.objective;
   storyObjectiveEl.hidden = false;
   modeHintEl.textContent =
-    `${interactive.playerPrompt} · Click a choice below, or type your own reply (${interactive.maxFreeReplies} free turns)`;
+    `${interactive.playerPrompt} · Type a reply, or open Choices (${interactive.maxFreeReplies} free turns)`;
   modeHintEl.hidden = false;
 
-  renderSuggestionChips(interactive.suggestions || [], { alwaysShow: true, explore: false });
+  // Choices stay collapsed until the player clicks "Show choices".
+  renderSuggestionChips(interactive.suggestions || [], { alwaysShow: false, explore: false });
+  setChoicesExpanded(false);
   advanceMainlineBtnEl.hidden = false;
   updateAdvanceButtonLabel();
+  setDialogueReplyBusy(false);
 }
 
 function exitInteractiveMode() {
@@ -1041,7 +1046,9 @@ function enterExploreMode(explore) {
 function renderExploreChoices(choices) {
   suggestionChipsEl.innerHTML = '';
   suggestionChipsEl.hidden = false;
+  suggestionChipsEl.classList.remove('is-collapsed');
   suggestionChipsEl.classList.add('is-explore-choices');
+  suggestionChipsEl.setAttribute('aria-hidden', 'false');
 
   const label = document.createElement('div');
   label.className = 'suggestion-label';
@@ -1084,20 +1091,38 @@ function handleExploreChoice(choice) {
   }
 }
 
+/**
+ * Interactive choice list: collapsed by default; only expand when player toggles.
+ */
+function setChoicesExpanded(expanded) {
+  if (!suggestionChipsEl || !toggleSuggestionsBtnEl) return;
+  const open = Boolean(expanded);
+  suggestionChipsEl.hidden = !open;
+  suggestionChipsEl.classList.toggle('is-collapsed', !open);
+  suggestionChipsEl.setAttribute('aria-hidden', String(!open));
+  toggleSuggestionsBtnEl.setAttribute('aria-expanded', String(open));
+  toggleSuggestionsBtnEl.textContent = open ? '▾ Hide choices' : '▸ Show choices';
+}
+
+/**
+ * While AI is thinking / NPC is typing, free the notepad for dialogue text.
+ */
+function setDialogueReplyBusy(busy) {
+  if (dialogueBoxEl) dialogueBoxEl.classList.toggle('is-replying', Boolean(busy));
+  if (!busy) return;
+  setChoicesExpanded(false);
+}
+
 function renderSuggestionChips(suggestions, options = {}) {
   suggestionChipsEl.innerHTML = '';
   suggestionChipsEl.classList.remove('is-explore-choices');
 
   if (!suggestions.length) {
     suggestionChipsEl.hidden = true;
+    suggestionChipsEl.classList.add('is-collapsed');
     toggleSuggestionsBtnEl.hidden = true;
     return;
   }
-
-  const alwaysShow = Boolean(options.alwaysShow);
-  toggleSuggestionsBtnEl.hidden = alwaysShow;
-  toggleSuggestionsBtnEl.textContent = alwaysShow ? 'Hide choices' : 'Show choices';
-  toggleSuggestionsBtnEl.setAttribute('aria-expanded', String(alwaysShow));
 
   const label = document.createElement('div');
   label.className = 'suggestion-label';
@@ -1120,7 +1145,9 @@ function renderSuggestionChips(suggestions, options = {}) {
     suggestionChipsEl.appendChild(chip);
   });
 
-  suggestionChipsEl.hidden = !alwaysShow;
+  // Always show the toggle; list starts collapsed unless explicitly requested.
+  toggleSuggestionsBtnEl.hidden = false;
+  setChoicesExpanded(Boolean(options.alwaysShow));
 }
 
 /**
@@ -1142,8 +1169,10 @@ function isDecisiveInput(input, suggestions) {
 function updateAdvanceButtonLabel() {
   const max = gameState.currentInteractive?.maxFreeReplies ?? 2;
   const left = Math.max(0, max - gameState.interactiveReplyCount);
-  advanceMainlineBtnEl.textContent =
-    left > 0 ? `Continue story → (${left} free ${left === 1 ? 'turn' : 'turns'} left)` : 'Continue story →';
+  // Compact label — button sits beside the input, not a full-width row.
+  advanceMainlineBtnEl.textContent = left > 0 ? `Continue ×${left}` : 'Continue →';
+  advanceMainlineBtnEl.title =
+    left > 0 ? `Continue story (${left} free ${left === 1 ? 'turn' : 'turns'} left)` : 'Continue story';
 }
 
 /**
@@ -1582,13 +1611,18 @@ function finishTypewriter() {
     onTypewriterCompleteAfterPlayerLine = null;
     callback();
     gameState.turn = 'player';
+    setDialogueReplyBusy(false);
     unlockInput();
-    modeHintEl.textContent = gameState.currentInteractive?.playerPrompt || 'Type your reply…';
+    modeHintEl.textContent = gameState.currentInteractive?.playerPrompt
+      ? `${gameState.currentInteractive.playerPrompt} · Type a reply, or open Choices`
+      : 'Type your reply…';
+    modeHintEl.hidden = false;
     playerInputEl.focus();
     return;
   }
 
   gameState.turn = 'player';
+  setDialogueReplyBusy(false);
   unlockInput();
   playerInputEl.focus();
 }
@@ -1675,7 +1709,12 @@ function processPlayerInput(text, options = {}) {
   gameState.isWaitingForAI = true;
   gameState.interactiveReplyCount += 1;
   updateAdvanceButtonLabel();
-  displayDialogue('…', '…', true);
+  // Keep current dialogue visible — don't replace it with "…" while waiting.
+  setDialogueReplyBusy(true);
+  if (modeHintEl) {
+    modeHintEl.hidden = false;
+    modeHintEl.textContent = 'Waiting for reply…';
+  }
 
   AI.sendPlayerMessage(text, {
     gameState,
@@ -1709,15 +1748,28 @@ function processPlayerInput(text, options = {}) {
 
       if (shouldAdvance) {
         onTypewriterCompleteAfterPlayerLine = null;
-        onTypewriterComplete = () => endInteractiveAndAdvanceMainline();
+        onTypewriterComplete = () => {
+          setDialogueReplyBusy(false);
+          endInteractiveAndAdvanceMainline();
+        };
       } else {
         onTypewriterComplete = null;
+        onTypewriterCompleteAfterPlayerLine = () => {
+          setDialogueReplyBusy(false);
+          if (modeHintEl && gameState.currentInteractive?.playerPrompt) {
+            modeHintEl.hidden = false;
+            modeHintEl.textContent =
+              `${gameState.currentInteractive.playerPrompt} · Type a reply, or open Choices`;
+          }
+        };
       }
 
       const replyName =
         reply.speakerId === 'narrator' || reply.speakerName === '旁白' || reply.speakerName === 'Narrator'
           ? ''
           : reply.speakerName;
+      // Still busy while typewriter runs so choices can't cover the reply.
+      setDialogueReplyBusy(true);
       displayDialogue(replyName, reply.text, false, { speakerId: reply.speakerId || '' });
     })
     .catch((error) => {
@@ -1725,6 +1777,7 @@ function processPlayerInput(text, options = {}) {
       gameState.isWaitingForAI = false;
       gameState.interactiveReplyCount = Math.max(0, gameState.interactiveReplyCount - 1);
       updateAdvanceButtonLabel();
+      setDialogueReplyBusy(false);
 
       const scene = storyScenes[storySceneIndex];
       const fallbackId = scene?.character || 'ringo';
@@ -2201,10 +2254,10 @@ advanceMainlineBtnEl.addEventListener('click', () => {
 });
 
 toggleSuggestionsBtnEl.addEventListener('click', () => {
-  const willShow = suggestionChipsEl.hidden;
-  suggestionChipsEl.hidden = !willShow;
-  toggleSuggestionsBtnEl.textContent = willShow ? 'Hide quick actions' : 'Show quick actions';
-  toggleSuggestionsBtnEl.setAttribute('aria-expanded', String(willShow));
+  if (gameState.storyMode !== 'interactive') return;
+  if (gameState.isTyping || gameState.isWaitingForAI) return;
+  const willShow = suggestionChipsEl.hidden || suggestionChipsEl.classList.contains('is-collapsed');
+  setChoicesExpanded(willShow);
 });
 
 const startScreenEl = document.getElementById('start-screen');

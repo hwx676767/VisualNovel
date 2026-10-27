@@ -4,10 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Visual Novel</title>
-  <link rel="stylesheet" href="style.css?v=ui12">
+  <link rel="stylesheet" href="style.css?v=ui27">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=IBM+Plex+Sans:ital,wght@0,500;0,700;1,700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Special+Elite&family=IBM+Plex+Sans:ital,wght@0,500;0,700;1,700&display=swap" rel="stylesheet">
 </head>
 <body>
 
@@ -56,18 +56,20 @@
                 <span id="interrupt-count">Interrupt ×5</span>
                 <button type="button" id="interrupt-btn">Interrupt</button>
               </div>
-              <button type="button" id="toggle-suggestions-btn" hidden aria-expanded="false">Show quick actions</button>
-              <div id="suggestion-chips" hidden></div>
-              <div id="player-input-area">
-                <input
-                  type="text"
-                  id="player-input"
-                  placeholder="Type your reply…"
-                  autocomplete="off"
-                >
-                <button type="button" id="send-btn">Send</button>
+              <button type="button" id="toggle-suggestions-btn" hidden aria-expanded="false">▸ Show choices</button>
+              <div id="suggestion-chips" class="is-collapsed" hidden></div>
+              <div id="dialogue-action-row">
+                <button type="button" id="advance-mainline-btn" hidden>Continue →</button>
+                <div id="player-input-area">
+                  <input
+                    type="text"
+                    id="player-input"
+                    placeholder="Type your reply…"
+                    autocomplete="off"
+                  >
+                  <button type="button" id="send-btn">Send</button>
+                </div>
               </div>
-              <button type="button" id="advance-mainline-btn" hidden>Continue story →</button>
             </div>
           </div>
         </div>
@@ -122,6 +124,6 @@
   <script src="auth.js?v=phaseA"></script>
   <script src="audio.js?v=blob1"></script>
   <script src="ai.js?v=slim1"></script>
-  <script src="main.js?v=ui12"></script>
+  <script src="main.js?v=ui27"></script>
 </body>
 </html>
