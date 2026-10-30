@@ -2344,7 +2344,7 @@ loadGameData()
   .catch((error) => {
     console.error(error);
     startBlockedMessage =
-      "Couldn't load story data (needs a local server—don't use file://). Run npx serve and refresh.";
+      "Story data can't load from a file:// page. Run npm start in this project, then open http://localhost:8765 in your browser.";
     gameReadyToStart = true;
     if (startGameBtnEl) {
       startGameBtnEl.disabled = false;

@@ -24,9 +24,9 @@
 
   /* Layout — top photo / bottom UI (fig.3 proportions, native asset ratios) */
   /* notepad 1392×524 · handheld open 554×896 · closed 503×457 */
-  /* Tuned from live DevTools (canvas ~1275×717): top 420px, bottom@300px, dock 650×70 */
-  --layout-top-height: 58.5%;
-  --layout-bottom-top: 39%;
+  /* Reference composition: photo dominates; the notepad only occupies the lower band. */
+  --layout-top-height: 60%;
+  --layout-bottom-top: 56.5%;
   --dialogue-font-max: 19px;
   --dialogue-font-min: 10px;
   --notepad-ratio: 1392 / 524;
@@ -117,13 +117,14 @@ body {
   position: absolute;
   inset: 0;
   z-index: 2;
-  overflow: hidden;
+  /* The background stays framed; the character may continue into the note's transparent header. */
+  overflow: visible;
   background: #121218;
   box-shadow: 0 8px 22px rgba(0, 0, 0, 0.28);
   border: 3px solid #ffffff;
 }
 
-/* BOTTOM band: overlaps lower photo (live-tuned top) */
+/* BOTTOM band: a compact note overlaps only the lower edge of the photo. */
 #layout-bottom {
   position: absolute;
   left: 0;
@@ -147,7 +148,7 @@ body {
   position: absolute;
   inset: 0;
   z-index: 1;
-  overflow: hidden;
+  overflow: visible;
   transition: filter 0.75s ease;
   isolation: isolate;
   background: #121218;
@@ -165,6 +166,7 @@ body {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -229,25 +231,26 @@ body {
   justify-content: center;
   pointer-events: none;
   z-index: 2;
-  overflow: hidden;
-  /* Leave a little top room so the head isn't flush-clipped */
-  padding-top: 3%;
+  overflow: visible;
+  /* Leave room for hair/head while keeping the figure anchored to the note edge. */
+  padding-top: 1.5%;
   padding-bottom: 0;
 }
 
 #character-sprite {
-  /* Half-body bust — shifted down; head kept via object-position */
-  width: min(560px, 56%);
-  height: min(97%, 720px);
-  max-height: 100%;
+  /* Medium full-body portrait: it continues beneath the note's transparent upper margin. */
+  width: min(429px, 57.2%);
+  height: 155.1%;
+  max-height: none;
   background-color: transparent;
   display: none;
   align-items: flex-end;
   justify-content: center;
   padding: 0;
-  overflow: hidden;
+  overflow: visible;
   opacity: 0;
-  transform: translateY(-8%);
+  /* NPC layer sits between the background and the foreground notepad. */
+  transform: translateY(30%);
   transition: opacity 0.18s ease, transform 0.18s ease;
 }
 
@@ -281,10 +284,11 @@ body {
 
 #character-sprite-img {
   display: block;
-  width: 100%;
+  width: auto;
   height: 100%;
-  /* Half-body zoom; bias to top so hair/head aren't cropped */
-  object-fit: cover;
+  max-width: 100%;
+  /* Render the full lower body; only the opaque paper can naturally cover it. */
+  object-fit: contain;
   object-position: center top;
   pointer-events: none;
   user-select: none;
@@ -328,18 +332,16 @@ body {
   z-index: 5;
 }
 
-/*
- * Notepad: sit lower; taller writing band for more visible dialogue.
- */
+/* Compact notepad, matching the lower-third reference composition. */
 #dialogue-box {
   position: absolute;
-  left: 1%;
+  left: 3.25%;
   top: auto;
   bottom: 0;
   height: 100%;
   width: auto;
   aspect-ratio: var(--notepad-ratio);
-  max-width: 88%;
+  max-width: 70%;
   transform: none;
   background: transparent;
   border: none;
@@ -362,13 +364,13 @@ body {
   filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.22));
 }
 
-/* Writing area — taller text band */
+/* Writing area is rebalanced for the shorter paper asset. */
 #notepad-inner {
   position: absolute;
-  left: 17.5%;
-  right: 19.5%;
-  top: 30%;
-  bottom: 8%;
+  left: 17%;
+  right: 18%;
+  top: 28%;
+  bottom: 9%;
   display: flex;
   flex-direction: column;
   min-height: 0;
